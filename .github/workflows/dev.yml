@@ -23,7 +23,7 @@ jobs:
           echo "GIT_AUTHOR=$(git log -n 1 --format=%ae)" >> $GITHUB_ENV
           echo "GIT_COMMIT_SHORT=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
           echo "GIT_BRANCH=${{ github.ref_name }}" >> $GITHUB_ENV
-          echo "JOB_NAME=Follow Backend Dev" >> $GITHUB_ENV
+          echo "JOB_NAME=SHO-Tikets-Front-Admin" >> $GITHUB_ENV
           echo "TEXT_BREAK=----------------------------------------------------" >> $GITHUB_ENV
 
       - name: Enviar mensaje de inicio a Telegram
@@ -54,7 +54,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           push: true
-          tags: prodevsolution/sho_tickets_backend_dev:latest
+          tags: prodevsolution/sho_tickets_front_admin_dev:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
           build-args: |
@@ -63,9 +63,9 @@ jobs:
       - name: Deploy en el servidor remoto
         run: |
           curl -X POST -H "Content-Type: application/json" -H "x-deploy-token: ${{ secrets.DEPLOY_TOKEN }}"  -d '{
-            "container_name": "sho_tickets_backend_dev",
-            "docker_image": "prodevsolution/sho_tickets_backend_dev:latest",
-            "host_port": 8106,
+            "container_name": "sho_tickets_front_admin_dev",
+            "docker_image": "prodevsolution/sho_tickets_front_admin_dev:latest",
+            "host_port": 8107,
             "container_port": 80
           }' ${{ secrets.BOT_DEPLOY_URL }}
 
