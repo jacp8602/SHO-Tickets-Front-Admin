@@ -1,0 +1,90 @@
+name: SOH BACKEND DEV
+
+on:
+  push:
+    branches:
+      - dev
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Obtener información del commit
+        id: git_info
+        run: |
+          echo "GIT_MESSAGE=$(git log -n 1 --format=%s)" >> $GITHUB_ENV
+          echo "GIT_AUTHOR=$(git log -n 1 --format=%ae)" >> $GITHUB_ENV
+          echo "GIT_COMMIT_SHORT=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
+          echo "GIT_BRANCH=${{ github.ref_name }}" >> $GITHUB_ENV
+          echo "JOB_NAME=Follow Backend Dev" >> $GITHUB_ENV
+          echo "TEXT_BREAK=----------------------------------------------------" >> $GITHUB_ENV
+
+      - name: Enviar mensaje de inicio a Telegram
+        run: |
+          curl --location --request POST "https://api.telegram.org/bot${{ secrets.TELEGRAM_TOKEN }}/sendMessage" \
+          --form "text=${{ env.TEXT_BREAK }}
+          Branch: ${{ env.GIT_BRANCH }}
+          Commit: ${{ env.GIT_COMMIT_SHORT }}
+          Message: ${{ env.GIT_MESSAGE }}
+          Author: ${{ env.GIT_AUTHOR }}
+          ${{ env.JOB_NAME }} is Building" \
+          --form "chat_id=${{ secrets.SOH_CHAT_ID }}"
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USER }}
+          password: ${{ secrets.DOCKER_PASS }}
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+        with:
+          driver: cloud
+          endpoint: "prodevsolution/prodevsolutions"
+          install: true
+
+      - name: Build and push image with Build Cloud
+        uses: docker/build-push-action@v5
+        with:
+          push: true
+          tags: prodevsolution/sho_tickets_backend_dev:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          build-args: |
+           
+
+      - name: Deploy en el servidor remoto
+        run: |
+          curl -X POST -H "Content-Type: application/json" -H "x-deploy-token: ${{ secrets.DEPLOY_TOKEN }}"  -d '{
+            "container_name": "sho_tickets_backend_dev",
+            "docker_image": "prodevsolution/sho_tickets_backend_dev:latest",
+            "host_port": 8106,
+            "container_port": 80
+          }' ${{ secrets.BOT_DEPLOY_URL }}
+
+      - name: Enviar mensaje de éxito a Telegram
+        if: success()
+        run: |
+          curl --location --request POST "https://api.telegram.org/bot${{ secrets.TELEGRAM_TOKEN }}/sendMessage" \
+            --form "text=${{ env.JOB_NAME }} is Success
+          TEXT_SITE_URL=URL:
+          URL: https://shoticketback-api.prodevsolution.dev" \
+            --form "chat_id=${{ secrets.SOH_CHAT_ID }}"
+
+      - name: Enviar mensaje de fallo a Telegram con logs
+        if: failure()
+        run: |
+          curl --location --request POST "https://api.telegram.org/bot${{ secrets.TELEGRAM_TOKEN }}/sendMessage" \
+            --form "text=${{ env.JOB_NAME }} is Failure
+          Branch: ${{ env.GIT_BRANCH }}
+          Commit: ${{ env.GIT_COMMIT_SHORT }}
+          Error Logs:
+          $(echo ${{ env.ERROR_LOGS }} | base64 -d | tail -n 15)" \
+            --form "chat_id=${{ secrets.SOH_CHAT_ID }}"
