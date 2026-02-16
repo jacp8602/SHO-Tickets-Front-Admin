@@ -1,6 +1,6 @@
 export const environment = {
     production: false,
-    apiUrl: '',
+    apiUrl: 'https://ts-admin-api-dev.prodevsolution.dev/api',
     // apiUrl: 'http://localhost:3000/api',
     // TS Dev
     firebaseConfig: {
