@@ -12,12 +12,12 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 import { fuseAnimations } from '@fuse/animations';
 import { FuseAlertComponent, FuseAlertType } from '@fuse/components/alert';
 import { FuseValidators } from '@fuse/validators';
 import { AuthService } from 'app/core/auth/auth.service';
-import { finalize } from 'rxjs';
+import { finalize, Subject, takeUntil } from 'rxjs';
 
 @Component({
     selector: 'auth-reset-password',
@@ -32,8 +32,7 @@ import { finalize } from 'rxjs';
         MatInputModule,
         MatButtonModule,
         MatIconModule,
-        MatProgressSpinnerModule,
-        RouterLink,
+        MatProgressSpinnerModule
     ],
 })
 export class AuthResetPasswordComponent implements OnInit {
@@ -45,13 +44,20 @@ export class AuthResetPasswordComponent implements OnInit {
     };
     resetPasswordForm: UntypedFormGroup;
     showAlert: boolean = false;
+    // ✅ Propiedad para almacenar los estados de validación
+    passwordRequirements = {
+        minLength: false,
+        hasUppercase: false,
+        hasNumber: false
+    };
 
     /**
      * Constructor
      */
     constructor(
         private _authService: AuthService,
-        private _formBuilder: UntypedFormBuilder
+        private _formBuilder: UntypedFormBuilder,
+        private router: Router,
     ) {}
 
     // -----------------------------------------------------------------------------------------------------
@@ -61,12 +67,12 @@ export class AuthResetPasswordComponent implements OnInit {
     /**
      * On init
      */
-    ngOnInit(): void {
+    ngOnInit(): void {        
         // Create the form
         this.resetPasswordForm = this._formBuilder.group(
             {
-                password: ['', Validators.required],
-                passwordConfirm: ['', Validators.required],
+                password: ['admin', Validators.required],
+                passwordConfirm: ['admin', Validators.required],
             },
             {
                 validators: FuseValidators.mustMatch(
@@ -74,7 +80,7 @@ export class AuthResetPasswordComponent implements OnInit {
                     'passwordConfirm'
                 ),
             }
-        );
+        );        
     }
 
     // -----------------------------------------------------------------------------------------------------
@@ -127,5 +133,13 @@ export class AuthResetPasswordComponent implements OnInit {
                     };
                 }
             );
+    }
+
+    togglePasswordVisibility(field: HTMLInputElement) {
+        field.type = field.type === 'password' ? 'text' : 'password';
+    }
+
+    goBack() {
+        this.router.navigate(['/sign-in']);
     }
 }

@@ -30,7 +30,7 @@ import { finalize } from 'rxjs';
         MatInputModule,
         MatButtonModule,
         MatProgressSpinnerModule,
-        RouterLink,
+        // RouterLink,
     ],
 })
 export class AuthForgotPasswordComponent implements OnInit {
@@ -61,7 +61,7 @@ export class AuthForgotPasswordComponent implements OnInit {
     ngOnInit(): void {
         // Create the form
         this.forgotPasswordForm = this._formBuilder.group({
-            email: ['', [Validators.required, Validators.email]],
+            email: ['ejemplo@email.com', [Validators.required, Validators.email]],
         });
     }
 

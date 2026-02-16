@@ -17,15 +17,25 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { fuseAnimations } from '@fuse/animations';
 import { FuseAlertComponent, FuseAlertType } from '@fuse/components/alert';
 import { AuthService } from 'app/core/auth/auth.service';
+import { 
+    slideInTop, 
+    slideInBottom, 
+    slideInLeft, 
+    slideInRight,
+    slideOutTop,
+    slideOutBottom,
+    slideOutLeft,
+    slideOutRight 
+} from '@fuse/animations/slide'; // Ajusta la ruta según tu estructura
 
 @Component({
     selector: 'auth-sign-in',
     templateUrl: './sign-in.component.html',
     encapsulation: ViewEncapsulation.None,
-    animations: fuseAnimations,
+    animations: [fuseAnimations, slideInRight],
     imports: [
         RouterLink,
-        FuseAlertComponent,
+        // FuseAlertComponent,
         FormsModule,
         ReactiveFormsModule,
         MatFormFieldModule,
@@ -53,7 +63,7 @@ export class AuthSignInComponent implements OnInit {
         private _activatedRoute: ActivatedRoute,
         private _authService: AuthService,
         private _formBuilder: UntypedFormBuilder,
-        private _router: Router
+        private _router: Router,        
     ) {}
 
     // -----------------------------------------------------------------------------------------------------
@@ -72,7 +82,7 @@ export class AuthSignInComponent implements OnInit {
             ],
             password: ['admin', Validators.required],
             rememberMe: [''],
-        });
+        });        
     }
 
     // -----------------------------------------------------------------------------------------------------
@@ -126,5 +136,9 @@ export class AuthSignInComponent implements OnInit {
                 this.showAlert = true;
             }
         );
+    }
+
+    togglePasswordVisibility(passwordField: HTMLInputElement) {
+        passwordField.type = passwordField.type === 'password' ? 'text' : 'password';
     }
 }

@@ -1,95 +1,67 @@
 <div
-    class="flex min-w-0 flex-auto flex-col items-center sm:flex-row sm:justify-center md:items-start md:justify-start"
->
+    class="flex min-w-0 flex-auto flex-col items-center justify-center sm:flex-row sm:justify-center md:items-start md:justify-start h-screen"
+>    
     <div
-        class="w-full px-4 py-8 sm:bg-card sm:w-auto sm:rounded-2xl sm:p-12 sm:shadow md:flex md:h-full md:w-1/2 md:items-center md:justify-end md:rounded-none md:p-16 md:shadow-none"
+        class="relative hidden h-full w-3/5 flex-auto items-center justify-center overflow-hidden bg-blue-100 p-16 dark:border-l md:flex lg:px-28"
     >
-        <div class="mx-auto w-full max-w-80 sm:mx-0 sm:w-80">
-            <!-- Logo -->
-            <div class="w-12">
-                <img src="images/logo/logo.svg" />
+        <!-- Content -->
+        <div 
+            class="relative z-10 w-full max-w-2xl flex flex-col items-center justify-center text-center"
+        >
+            <!-- Logo + SHOhub (EN ESTE PUNTO VA EL LOGO CON EL COLOR AZUL ESPECÍFICO) -->
+            <div class="flex items-center gap-4 mb-6">
+                <div class="w-20 h-20 rounded-full bg-[#1565FF] flex items-center justify-center">  <!-- ← AQUÍ VA EL CÓDIGO DEL LOGO -->
+                    <img src="images/logo/ticket-02.svg" alt="Logo" class="w-12 h-12">
+                </div>
+                <h1 class="text-8xl font-bold text-black">SHOhub</h1>
             </div>
 
-            <!-- Title -->
-            <div
-                class="mt-8 text-4xl font-extrabold leading-tight tracking-tight"
-            >
-                Confirmation required
-            </div>
-            <div class="mt-4">
-                A confirmation mail with instructions has been sent to your
-                email address. Follow those instructions to confirm your email
-                address and activate your account.
-            </div>
+            <!-- Subtítulo -->            
+            <h2 class="text-2xl font-bold text-gray-900">Welcome to SHOhub</h2>
 
-            <!-- Form footer -->
-            <div class="text-secondary mt-8 text-md font-medium">
-                <span>Return to</span>
-                <a
-                    class="ml-1 text-primary-500 hover:underline"
-                    [routerLink]="['/sign-in']"
-                    >sign in
-                </a>
+            <!-- Descripción -->
+            <p class="text-gray-600">
+                With our tool, you can find a variety of features to improve productivity and data efficiency.
+            </p>
+
+            <!-- Indicador de progreso (EN ESTE PUNTO VAN LOS PUNTOS CON EL COLOR ESPECÍFICO) -->
+            <div class="mt-8 flex space-x-2">
+                <div class="w-2 h-2 rounded-full bg-[#1d6ad4]"></div>  <!-- ← AQUÍ VA EL CÓDIGO DEL PUNTO ACTIVO -->
+                <div class="w-2 h-2 rounded-full bg-gray-400"></div>
+                <div class="w-2 h-2 rounded-full bg-gray-400"></div>
+                <div class="w-2 h-2 rounded-full bg-gray-400"></div>
             </div>
         </div>
     </div>
     <div
-        class="relative hidden h-full w-1/2 flex-auto items-center justify-center overflow-hidden bg-gray-800 p-16 dark:border-l md:flex lg:px-28"
-    >
-        <!-- Background -->
-        <!-- Rings -->
-        <!-- prettier-ignore -->
-        <svg class="absolute inset-0 pointer-events-none"
-             viewBox="0 0 960 540" width="100%" height="100%" preserveAspectRatio="xMidYMax slice" xmlns="http://www.w3.org/2000/svg">
-            <g class="text-gray-700 opacity-25" fill="none" stroke="currentColor" stroke-width="100">
-                <circle r="234" cx="196" cy="23"></circle>
-                <circle r="234" cx="790" cy="491"></circle>
-            </g>
-        </svg>
-        <!-- Dots -->
-        <!-- prettier-ignore -->
-        <svg class="absolute -top-16 -right-16 text-gray-700"
-             viewBox="0 0 220 192" width="220" height="192" fill="none">
-            <defs>
-                <pattern id="837c3e70-6c3a-44e6-8854-cc48c737b659" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse">
-                    <rect x="0" y="0" width="4" height="4" fill="currentColor"></rect>
-                </pattern>
-            </defs>
-            <rect width="220" height="192" fill="url(#837c3e70-6c3a-44e6-8854-cc48c737b659)"></rect>
-        </svg>
-        <!-- Content -->
-        <div class="relative z-10 w-full max-w-2xl">
-            <div class="text-7xl font-bold leading-none text-gray-100">
-                <div>Welcome to</div>
-                <div>our community</div>
+        class="flex items-center justify-center w-full px-4 py-8 sm:bg-card sm:w-auto sm:rounded-2xl sm:p-12 sm:shadow md:flex md:h-full md:w-1/2 md:items-center md:justify-center md:rounded-none md:p-16 md:shadow-none"
+    >    
+        <div class="mx-auto w-full max-w-80 sm:mx-0 sm:w-80">
+            <!-- Logo -->
+            <!-- <div class="w-12">
+                <img src="images/logo/logo.svg" />
+            </div> -->
+
+            <!-- Title -->
+            <div
+                class="mt-8 text-2xl font-extrabold leading-tight tracking-tight"
+            >
+                Check your email
             </div>
-            <div class="mt-6 text-lg leading-6 tracking-tight text-gray-400">
-                Fuse helps developers to build organized and well coded
-                dashboards full of beautiful and rich modules. Join us and start
-                building your application today.
+            <div class="mt-8">
+                We have sent the link to your email address
+                example&#64;email.com. Please check your spam folder
+                if you don´t find it in your inbox.
             </div>
-            <div class="mt-8 flex items-center">
-                <div class="flex flex-0 items-center -space-x-1.5">
-                    <img
-                        class="h-10 w-10 flex-0 rounded-full object-cover ring-4 ring-gray-800 ring-offset-1 ring-offset-gray-800"
-                        src="images/avatars/female-18.jpg"
-                    />
-                    <img
-                        class="h-10 w-10 flex-0 rounded-full object-cover ring-4 ring-gray-800 ring-offset-1 ring-offset-gray-800"
-                        src="images/avatars/female-11.jpg"
-                    />
-                    <img
-                        class="h-10 w-10 flex-0 rounded-full object-cover ring-4 ring-gray-800 ring-offset-1 ring-offset-gray-800"
-                        src="images/avatars/male-09.jpg"
-                    />
-                    <img
-                        class="h-10 w-10 flex-0 rounded-full object-cover ring-4 ring-gray-800 ring-offset-1 ring-offset-gray-800"
-                        src="images/avatars/male-16.jpg"
-                    />
-                </div>
-                <div class="ml-4 font-medium tracking-tight text-gray-400">
-                    More than 17k people joined us, it's your turn
-                </div>
+
+            <!-- Form footer -->
+            <div class="text-secondary mt-8 text-md font-medium">
+                <strong>Haven´t you received the code?</strong>
+                <a
+                    class="ml-1 text-primary-500 hover:underline"
+                    [routerLink]="['/sign-in']"
+                    >Resend
+                </a>
             </div>
         </div>
     </div>

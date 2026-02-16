@@ -6,6 +6,9 @@ import { catchError, Observable, of, switchMap, throwError } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
+    verifyCode(code: string) {
+        throw new Error('Method not implemented.');
+    }
     private _authenticated: boolean = false;
     private _httpClient = inject(HttpClient);
     private _userService = inject(UserService);
