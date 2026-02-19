@@ -75,7 +75,7 @@ jobs:
           curl --location --request POST "https://api.telegram.org/bot${{ secrets.TELEGRAM_TOKEN }}/sendMessage" \
             --form "text=${{ env.JOB_NAME }} is Success
           TEXT_SITE_URL=URL:
-          URL: https://shoticketback-api.prodevsolution.dev" \
+          URL: https://ts-admin-api-dev.prodevsolution.dev https://ts-admin-dev.prodevsolution.dev" \
             --form "chat_id=${{ secrets.SOH_CHAT_ID }}"
 
       - name: Enviar mensaje de fallo a Telegram con logs
