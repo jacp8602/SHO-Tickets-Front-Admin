@@ -12,14 +12,14 @@ export const defaultNavigation: FuseNavigationItem[] = [
                 id   : 'dashboard',
                 title: 'Dashboard',
                 type : 'basic',
-                icon : 'heroicons_outline:chart-pie',
+                icon : 'sho_sidebar:dashboard',
                 link : '/example'
             },
             {
                 id   : 'venue_mgmt',
                 title: 'Venue Management',
                 type : 'basic',
-                icon : 'heroicons_outline:chart-pie',
+                icon : 'sho_sidebar:venue_mgmt',
                 link : '/example01'
             }
         ]
@@ -34,14 +34,14 @@ export const defaultNavigation: FuseNavigationItem[] = [
                 id   : 'layout_mgmt',
                 title: 'Layout Management',
                 type : 'basic',
-                icon : 'heroicons_outline:chart-pie',
+                icon : 'sho_sidebar:layout_mgmt',
                 link : '/example'
             },
             {
                 id   : 'order',
                 title: 'Orders',
                 type : 'basic',
-                icon : 'heroicons_outline:chart-pie',
+                icon : 'sho_sidebar:order',
                 link : '/example01'
             }
         ]
@@ -56,28 +56,28 @@ export const defaultNavigation: FuseNavigationItem[] = [
                 id   : 'total_sales_info',
                 title: 'Overview Total Sales Info',
                 type : 'basic',
-                icon : 'heroicons_outline:chart-pie',
+                icon : 'sho_sidebar:total_sales_info',
                 link : '/example'
             },
             {
                 id   : 'current_future_sales',
                 title: 'Current and Future Sales',
                 type : 'basic',
-                icon : 'heroicons_outline:chart-pie',
+                icon : 'sho_sidebar:current_future_sales',
                 link : '/example01'
             },
             {
                 id   : 'gross_sales',
                 title: 'Gross Sales',
                 type : 'basic',
-                icon : 'heroicons_outline:chart-pie',
+                icon : 'sho_sidebar:gross_sales',
                 link : '/example'
             },
             {
                 id   : 'administrative',
                 title: 'Administrative',
                 type : 'basic',
-                icon : 'heroicons_outline:chart-pie',
+                icon : 'sho_sidebar:administrative',
                 link : '/example01'
             }
         ]
@@ -92,42 +92,42 @@ export const defaultNavigation: FuseNavigationItem[] = [
                 id   : 'users',
                 title: 'Users',
                 type : 'basic',
-                icon : 'heroicons_outline:chart-pie',
+                icon : 'sho_sidebar:user-multiple',
                 link : '/example'
             },
             {
                 id   : 'fee_taxes',
                 title: 'Fee and Taxes',
                 type : 'basic',
-                icon : 'heroicons_outline:chart-pie',
+                icon : 'sho_sidebar:percent-square',
                 link : '/example01'
             },
             {
                 id   : 'discounts',
                 title: 'Discounts',
                 type : 'basic',
-                icon : 'heroicons_outline:chart-pie',
+                icon : 'sho_sidebar:discount',
                 link : '/example'
             },
             {
                 id   : 'productions',
                 title: 'Productions',
                 type : 'basic',
-                icon : 'heroicons_outline:chart-pie',
+                icon : 'sho_sidebar:calendar',
                 link : '/example01'
             },
             {
                 id   : 'shows',
                 title: 'Shows',
                 type : 'basic',
-                icon : 'heroicons_outline:chart-pie',
+                icon : 'sho_sidebar:show',
                 link : '/example'
             },
             {
                 id   : 'vendors',
                 title: 'Vendors',
                 type : 'basic',
-                icon : 'heroicons_outline:chart-pie',
+                icon : 'sho_sidebar:store-01',
                 link : '/example01'
             }
         ]
