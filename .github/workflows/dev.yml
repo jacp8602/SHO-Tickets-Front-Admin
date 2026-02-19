@@ -3,7 +3,7 @@ name: SOH BACKEND DEV
 on:
   push:
     branches:
-      - dev
+      - develop
 
 jobs:
   build:
