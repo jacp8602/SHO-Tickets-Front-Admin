@@ -3,160 +3,160 @@ import { FuseNavigationItem } from '@fuse/components/navigation';
 
 export const defaultNavigation: FuseNavigationItem[] = [
     {
-        id   : 'main',
+        id: 'main',
         title: 'MAIN',
-        type : 'group',
+        type: 'group',
         disabled: true,
         children: [
             {
-                id   : 'dashboard',
+                id: 'dashboard',
                 title: 'Dashboard',
-                type : 'basic',
-                icon : 'heroicons_outline:chart-pie',
-                link : '/example'
+                type: 'basic',
+                icon: 'sho_sidebar:dashboard',
+                link: '/example'
             },
             {
-                id   : 'venue_mgmt',
+                id: 'venue_mgmt',
                 title: 'Venue Management',
-                type : 'basic',
-                icon : 'heroicons_outline:chart-pie',
-                link : '/example01'
+                type: 'basic',
+                icon: 'sho_sidebar:venue_mgmt',
+                link: ''
             }
         ]
     },
     {
-        id   : 'layout_configuration',
+        id: 'layout_configuration',
         title: 'LAYOUT CONFIGURATION',
-        type : 'group',
+        type: 'group',
         disabled: true,
         children: [
             {
-                id   : 'layout_mgmt',
+                id: 'layout_mgmt',
                 title: 'Layout Management',
-                type : 'basic',
-                icon : 'heroicons_outline:chart-pie',
-                link : '/example'
+                type: 'basic',
+                icon: 'sho_sidebar:layout_mgmt',
+                link: ''
             },
             {
-                id   : 'order',
+                id: 'order',
                 title: 'Orders',
-                type : 'basic',
-                icon : 'heroicons_outline:chart-pie',
-                link : '/example01'
+                type: 'basic',
+                icon: 'sho_sidebar:order',
+                link: ''
             }
         ]
     },
     {
-        id   : 'financial_reports',
+        id: 'financial_reports',
         title: 'FINANCIAL REPORTS',
-        type : 'group',
+        type: 'group',
         disabled: true,
         children: [
             {
-                id   : 'total_sales_info',
+                id: 'total_sales_info',
                 title: 'Overview Total Sales Info',
-                type : 'basic',
-                icon : 'heroicons_outline:chart-pie',
-                link : '/example'
+                type: 'basic',
+                icon: 'sho_sidebar:total_sales_info',
+                link: ''
             },
             {
-                id   : 'current_future_sales',
+                id: 'current_future_sales',
                 title: 'Current and Future Sales',
-                type : 'basic',
-                icon : 'heroicons_outline:chart-pie',
-                link : '/example01'
+                type: 'basic',
+                icon: 'sho_sidebar:current_future_sales',
+                link: ''
             },
             {
-                id   : 'gross_sales',
+                id: 'gross_sales',
                 title: 'Gross Sales',
-                type : 'basic',
-                icon : 'heroicons_outline:chart-pie',
-                link : '/example'
+                type: 'basic',
+                icon: 'sho_sidebar:gross_sales',
+                link: ''
             },
             {
-                id   : 'administrative',
+                id: 'administrative',
                 title: 'Administrative',
-                type : 'basic',
-                icon : 'heroicons_outline:chart-pie',
-                link : '/example01'
+                type: 'basic',
+                icon: 'sho_sidebar:administrative',
+                link: ''
             }
         ]
     },
     {
-        id   : 'settings',
+        id: 'settings',
         title: 'SETTINGS',
-        type : 'group',
+        type: 'group',
         disabled: true,
         children: [
             {
-                id   : 'users',
+                id: 'users',
                 title: 'Users',
-                type : 'basic',
-                icon : 'heroicons_outline:chart-pie',
-                link : '/example'
+                type: 'basic',
+                icon: 'sho_sidebar:user-multiple',
+                link: ''
             },
             {
-                id   : 'fee_taxes',
+                id: 'fee_taxes',
                 title: 'Fee and Taxes',
-                type : 'basic',
-                icon : 'heroicons_outline:chart-pie',
-                link : '/example01'
+                type: 'basic',
+                icon: 'sho_sidebar:percent-square',
+                link: ''
             },
             {
-                id   : 'discounts',
+                id: 'discounts',
                 title: 'Discounts',
-                type : 'basic',
-                icon : 'heroicons_outline:chart-pie',
-                link : '/example'
+                type: 'basic',
+                icon: 'sho_sidebar:discount',
+                link: ''
             },
             {
-                id   : 'productions',
+                id: 'productions',
                 title: 'Productions',
-                type : 'basic',
-                icon : 'heroicons_outline:chart-pie',
-                link : '/example01'
+                type: 'basic',
+                icon: 'sho_sidebar:calendar',
+                link: ''
             },
             {
-                id   : 'shows',
+                id: 'shows',
                 title: 'Shows',
-                type : 'basic',
-                icon : 'heroicons_outline:chart-pie',
-                link : '/example'
+                type: 'basic',
+                icon: 'sho_sidebar:show',
+                link: ''
             },
             {
-                id   : 'vendors',
+                id: 'vendors',
                 title: 'Vendors',
-                type : 'basic',
-                icon : 'heroicons_outline:chart-pie',
-                link : '/example01'
+                type: 'basic',
+                icon: 'sho_sidebar:store-01',
+                link: ''
             }
         ]
     }
 ];
 export const compactNavigation: FuseNavigationItem[] = [
     {
-        id   : 'example',
+        id: 'example',
         title: 'Example',
-        type : 'basic',
-        icon : 'heroicons_outline:chart-pie',
-        link : '/example'
+        type: 'basic',
+        icon: 'heroicons_outline:chart-pie',
+        link: '/example'
     }
 ];
 export const futuristicNavigation: FuseNavigationItem[] = [
     {
-        id   : 'example',
+        id: 'example',
         title: 'Example',
-        type : 'basic',
-        icon : 'heroicons_outline:chart-pie',
-        link : '/example'
+        type: 'basic',
+        icon: 'heroicons_outline:chart-pie',
+        link: '/example'
     }
 ];
 export const horizontalNavigation: FuseNavigationItem[] = [
     {
-        id   : 'example',
+        id: 'example',
         title: 'Example',
-        type : 'basic',
-        icon : 'heroicons_outline:chart-pie',
-        link : '/example'
+        type: 'basic',
+        icon: 'heroicons_outline:chart-pie',
+        link: '/example'
     }
 ];

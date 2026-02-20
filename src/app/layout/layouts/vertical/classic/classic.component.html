@@ -12,19 +12,23 @@
     <!-- Navigation header hook -->
     <ng-container fuseVerticalNavigationContentHeader>
         <!-- Logo -->
-        <div class="flex h-20 items-center p-6 pb-0">
+        <div class="flex h-20 items-center p-6 pb-0 gap-3">
             <!-- Light version -->
-            <img
+            <!-- <img
                 class="w-30 dark:hidden"
                 src="images/logo/logo-text.svg"
                 alt="Logo image"
-            />
+            /> -->
             <!-- Dark version -->
-            <img
+            <!-- <img
                 class="hidden w-30 dark:flex"
                 src="images/logo/logo-text-on-dark.svg"
                 alt="Logo image"
-            />
+            /> -->
+            <div class="w-15 h-15 rounded-full bg-[#1565FF] flex items-center justify-center">  <!-- ← AQUÍ VA EL CÓDIGO DEL LOGO -->
+                <img src="images/logo/ticket-02.svg" alt="Logo image" class="w-12 h-12">
+            </div>
+            <h1 class="text-3xl font-bold text-black">SHOhub</h1>
         </div>
     </ng-container>
 </fuse-vertical-navigation>
