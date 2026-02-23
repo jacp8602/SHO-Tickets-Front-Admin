@@ -100,7 +100,7 @@ export const defaultNavigation: FuseNavigationItem[] = [
                 title: 'Fee and Taxes',
                 type: 'basic',
                 icon: 'sho_sidebar:percent-square',
-                link: ''
+                link: '/fees_taxes'
             },
             {
                 id: 'discounts',
