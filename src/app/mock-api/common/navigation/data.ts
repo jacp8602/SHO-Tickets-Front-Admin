@@ -93,7 +93,7 @@ export const defaultNavigation: FuseNavigationItem[] = [
                 title: 'Users',
                 type: 'basic',
                 icon: 'sho_sidebar:user-multiple',
-                link: ''
+                link: '/users'
             },
             {
                 id: 'fee_taxes',

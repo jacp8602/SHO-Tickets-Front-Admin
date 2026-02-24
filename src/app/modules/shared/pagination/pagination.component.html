@@ -1,0 +1,70 @@
+@if (totalItems > 0) {
+    <div class="mt-6 flex items-center justify-between w-full">
+        <!-- Contenedor centrado con números y flechas -->
+        <div class="flex-1 flex justify-center">
+            <div class="flex items-center gap-1">
+                <!-- Flecha anterior -->
+                <button
+                    mat-icon-button
+                    [disabled]="pageIndex === 1"
+                    (click)="goToPage(pageIndex - 1)"
+                    class="text-gray-400 hover:text-gray-600"
+                    matTooltip="Previous page"
+                    aria-label="Previous page"
+                >
+                    <mat-icon>chevron_left</mat-icon>
+                </button>
+
+                <!-- Números de página -->
+                @for (page of pagesToShow; track $index) {
+                    @if (page === -1) {
+                        <span class="w-8 h-8 flex items-center justify-center text-gray-500">...</span>
+                    } @else {
+                        <button
+                            class="w-8 h-8 flex items-center justify-center rounded-full text-sm font-medium transition-colors"
+                            [class.bg-blue-600]="pageIndex === page"
+                            [class.text-white]="pageIndex === page"
+                            [class.text-gray-700]="pageIndex !== page"
+                            [class.hover:bg-gray-100]="pageIndex !== page"
+                            (click)="goToPage(page)"
+                            [attr.aria-label]="'Page ' + page"
+                        >
+                            {{ page }}
+                        </button>
+                    }
+                }
+
+                <!-- Flecha siguiente -->
+                <button
+                    mat-icon-button
+                    [disabled]="pageIndex >= totalPages"
+                    (click)="goToPage(pageIndex + 1)"
+                    class="text-gray-400 hover:text-gray-600"
+                    matTooltip="Next page"
+                    aria-label="Next page"
+                >
+                    <mat-icon>chevron_right</mat-icon>
+                </button>
+            </div>
+        </div>
+
+        <!-- Go to X of Y a la derecha -->
+        <div class="flex items-center gap-2">
+            <span class="text-sm text-gray-600">Go to</span>
+            <div class="relative">
+                <input
+                    type="text"
+                    inputmode="numeric"
+                    pattern="[0-9]*"
+                    [value]="pageInputValue"
+                    (input)="onPageInputChange($event)"
+                    (keydown.enter)="onPageEnter($event)"
+                    (blur)="validateAndGoToPage()"
+                    class="w-12 h-8 text-center text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
+                    aria-label="Go to page"
+                >
+            </div>
+            <span class="text-sm text-gray-600">of {{ totalPages }}</span>
+        </div>
+    </div>
+}
