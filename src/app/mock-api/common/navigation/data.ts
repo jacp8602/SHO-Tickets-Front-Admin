@@ -93,21 +93,21 @@ export const defaultNavigation: FuseNavigationItem[] = [
                 title: 'Users',
                 type: 'basic',
                 icon: 'sho_sidebar:user-multiple',
-                link: ''
+                link: '/users'
             },
             {
                 id: 'fee_taxes',
                 title: 'Fee and Taxes',
                 type: 'basic',
                 icon: 'sho_sidebar:percent-square',
-                link: ''
+                link: '/fees_taxes'
             },
             {
                 id: 'discounts',
                 title: 'Discounts',
                 type: 'basic',
                 icon: 'sho_sidebar:discount',
-                link: ''
+                link: '/discounts'
             },
             {
                 id: 'productions',

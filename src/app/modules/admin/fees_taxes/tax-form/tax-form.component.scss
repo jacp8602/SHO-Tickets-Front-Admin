@@ -1,0 +1,189 @@
+app-tax-form {
+    display: block;
+    
+    .mat-mdc-dialog-container {
+        padding: 0 !important;
+        border-radius: 1rem !important;
+    }
+    
+    // Estilos para los campos del formulario
+    .mat-mdc-form-field {
+        .mdc-text-field--outlined {
+            --mdc-outlined-text-field-container-shape: 0.75rem;
+            --mdc-outlined-text-field-outline-color: rgba(0, 0, 0, 0.12);
+            --mdc-outlined-text-field-hover-outline-color: rgba(0, 0, 0, 0.24);
+            --mdc-outlined-text-field-focus-outline-color: #1d6ad4;
+            
+            .mdc-notched-outline__leading,
+            .mdc-notched-outline__notch,
+            .mdc-notched-outline__trailing {
+                border-color: inherit;
+            }
+        }
+        
+        .mat-mdc-form-field-flex {
+            height: 52px;
+        }
+        
+        .mat-mdc-form-field-infix {
+            padding-top: 12px;
+            padding-bottom: 12px;
+            min-height: 52px;
+        }
+        
+        input.mat-mdc-input-element {
+            margin-top: 0;
+            font-size: 0.95rem;
+        }
+        
+        // Estilo para el select
+        .mat-mdc-select {
+            font-size: 0.95rem;
+            padding: 8px 0;
+        }
+        
+        // Estilo para los mensajes de error
+        .mat-mdc-form-field-error {
+            font-size: 0.75rem;
+            margin-top: 4px;
+        }
+    }
+    
+    // Estilos específicos para el campo de porcentaje
+    .mat-mdc-form-field:has(input[type="number"]) {
+        .mat-mdc-form-field-icon-suffix {
+            padding-right: 8px;
+            
+            .text-gray-500 {
+                font-size: 0.95rem;
+                font-weight: 500;
+            }
+        }
+    }
+    
+    // Estilos para el slide toggle
+    .mat-mdc-slide-toggle {
+        &.tax-active-toggle {
+            .mdc-switch {
+                .mdc-switch__track {
+                    border-radius: 24px;
+                    height: 24px;
+                }
+                
+                .mdc-switch__handle-track {
+                    .mdc-switch__handle {
+                        width: 20px;
+                        height: 20px;
+                        border-radius: 20px;
+                    }
+                }
+            }
+            
+            &.mat-primary {
+                --mdc-switch-selected-focus-state-layer-color: #1d6ad4;
+                --mdc-switch-selected-handle-color: #1d6ad4;
+                --mdc-switch-selected-hover-state-layer-color: #1d6ad4;
+                --mdc-switch-selected-pressed-state-layer-color: #1d6ad4;
+                --mdc-switch-selected-focus-handle-color: #ffffff;
+                --mdc-switch-selected-hover-handle-color: #ffffff;
+                --mdc-switch-selected-pressed-handle-color: #ffffff;
+                --mdc-switch-selected-focus-track-color: rgba(29, 106, 212, 0.4);
+                --mdc-switch-selected-hover-track-color: rgba(29, 106, 212, 0.4);
+                --mdc-switch-selected-pressed-track-color: rgba(29, 106, 212, 0.4);
+                --mdc-switch-selected-track-color: rgba(29, 106, 212, 0.3);
+            }
+        }
+    }
+    
+    // Estilos para los labels
+    label {
+        display: block;
+        margin-bottom: 4px;
+        font-size: 0.9rem;
+        font-weight: 500;
+        color: #374151;
+    }
+    
+    // Estilos para el divider
+    .mat-divider {
+        border-top-color: rgba(0, 0, 0, 0.08);
+        margin: 16px 0 !important;
+    }
+    
+    // Estilos para los botones
+    button[mat-stroked-button] {
+        border-width: 1.5px;
+        font-weight: 500;
+        letter-spacing: 0.3px;
+        transition: all 0.2s ease;
+        
+        &:hover:not([disabled]) {
+            background-color: rgba(0, 0, 0, 0.02);
+            border-color: #9ca3af;
+        }
+    }
+    
+    button[mat-flat-button] {
+        font-weight: 500;
+        letter-spacing: 0.3px;
+        transition: all 0.2s ease;
+        
+        &:hover:not([disabled]) {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        
+        &:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+    }
+    
+    // Estilos para el select panel
+    .mat-mdc-select-panel {
+        border-radius: 0.75rem !important;
+        margin-top: 8px;
+        padding: 8px 0 !important;
+        
+        .mat-mdc-option {
+            font-size: 0.95rem;
+            min-height: 44px;
+            
+            &:hover:not(.mdc-list-item--disabled) {
+                background-color: rgba(29, 106, 212, 0.04);
+            }
+            
+            &.mat-mdc-option-active {
+                background-color: rgba(29, 106, 212, 0.08);
+            }
+        }
+    }
+    
+    // Animaciones
+    .mat-slide-toggle {
+        .mat-slide-toggle-bar {
+            transition: background-color 0.2s ease;
+        }
+        
+        .mat-slide-toggle-thumb {
+            transition: transform 0.2s ease;
+        }
+    }
+    
+    // Responsive
+    @media (max-width: 640px) {
+        .p-6 {
+            padding: 1.25rem;
+        }
+        
+        .text-2xl {
+            font-size: 1.5rem;
+        }
+        
+        .space-y-5 {
+            > * + * {
+                margin-top: 1rem;
+            }
+        }
+    }
+}

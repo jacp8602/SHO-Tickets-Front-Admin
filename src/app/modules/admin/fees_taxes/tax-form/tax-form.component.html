@@ -1,0 +1,102 @@
+<div class="flex flex-col max-w-lg mx-auto bg-white rounded-2xl overflow-hidden">
+    <!-- Header -->
+    <div class="flex items-center justify-between px-6 py-4 border-b">
+        <h2 class="text-2xl font-bold text-gray-900">{{ isEditing ? 'Edit Tax' : 'New Taxes' }}</h2>
+        <button mat-icon-button (click)="cancel()" class="text-gray-500 hover:text-gray-700">
+            <mat-icon [svgIcon]="'heroicons_solid:x'"></mat-icon>
+        </button>
+    </div>
+
+    <!-- Form -->
+    <form [formGroup]="taxForm" class="flex flex-col p-6 space-y-5">
+        <!-- Name Field -->
+        <div class="space-y-1.5">
+            <label class="text-sm font-medium text-gray-700">Name</label>
+            <mat-form-field appearance="outline" class="w-full">
+                <input 
+                    matInput 
+                    formControlName="name" 
+                    placeholder="Enter tax name"
+                    class="text-base">
+                @if (taxForm.get('name').hasError('required') && taxForm.get('name').touched) {
+                    <mat-error>Name is required</mat-error>
+                }
+            </mat-form-field>
+        </div>
+
+        <div class="grid grid-cols-2 gap-4">
+            <!-- State Field -->
+            <div class="space-y-1">
+                <label class="text-sm font-medium text-gray-700">State</label>
+                <mat-form-field appearance="outline" class="w-full">
+                    <mat-select formControlName="state" placeholder="Select a state">
+                        @for (state of states; track state) {
+                            <mat-option [value]="state">{{ state }}</mat-option>
+                        }
+                    </mat-select>
+                    @if (taxForm.get('state').hasError('required') && taxForm.get('state').touched) {
+                        <mat-error>State is required</mat-error>
+                    }
+                </mat-form-field>
+            </div>
+
+            <!-- Percentage Field -->
+            <div class="space-y-1">
+                <label class="text-sm font-medium text-gray-700">Percent</label>
+                <mat-form-field appearance="outline" class="w-full">
+                    <input 
+                        matInput 
+                        type="number" 
+                        formControlName="percentage"
+                        placeholder="Enter percentage"
+                        step="0.01"
+                        min="0"
+                        max="100"
+                        class="text-base">
+                    <span matTextSuffix class="text-gray-500 ml-1">%</span>
+                    @if (taxForm.get('percentage').hasError('required') && taxForm.get('percentage').touched) {
+                        <mat-error>Percentage is required</mat-error>
+                    }
+                    @if (taxForm.get('percentage').hasError('min')) {
+                        <mat-error>Percentage must be greater than 0</mat-error>
+                    }
+                    @if (taxForm.get('percentage').hasError('max')) {
+                        <mat-error>Percentage must be less than 100</mat-error>
+                    }
+                </mat-form-field>
+            </div>
+        </div>
+        
+        <!-- Active Toggle -->
+        <div class="flex items-center justify-start py-2">
+            <mat-slide-toggle 
+                formControlName="isActive"
+                color="primary">
+            </mat-slide-toggle>
+            <span class="text-sm font-medium text-gray-700">Active</span>            
+        </div>
+
+        <!-- Divider -->
+        <mat-divider class="!my-2"></mat-divider>
+
+        <!-- Actions -->
+        <div class="flex justify-end space-x-3 pt-2">
+            <button 
+                mat-stroked-button 
+                type="button"
+                (click)="cancel()"
+                class="px-6 min-w-[100px] text-gray-600 border-gray-300 hover:bg-gray-50">
+                Cancel
+            </button>
+            <button 
+                mat-flat-button 
+                color="primary"
+                type="button"
+                (click)="save()"
+                [disabled]="taxForm.invalid"
+                class="px-6 min-w-[100px] bg-blue-600 hover:bg-blue-700 text-white shadow-sm">
+                {{ isEditing ? 'Update' : 'Create' }}
+            </button>
+        </div>
+    </form>
+</div>
