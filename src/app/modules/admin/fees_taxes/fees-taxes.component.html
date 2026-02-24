@@ -1,184 +1,177 @@
-<div class="flex flex-col flex-auto min-w-0">    
-    <!-- Header -->
-    <div class="flex flex-col sm:flex-row flex-0 sm:items-center sm:justify-between p-6 sm:p-8 sm:px-10 border-b bg-card">
-        <div class="flex-1 min-w-0">
-            <!-- Breadcrumbs -->
-            <!-- <div class="flex flex-wrap items-center font-medium">
-                <div>
-                    <a class="whitespace-nowrap text-primary-500">Configuration</a>
+<div class="flex min-w-0 flex-auto flex-col">
+    <!-- Main -->
+     <!-- Breadcrumbs -->
+    <div class="flex flex-wrap items-center font-medium pt-6 pl-6">
+        <div>
+            <a class="whitespace-nowrap text-primary-500">Settings</a>
+        </div>
+        <div class="flex items-center ml-1 whitespace-nowrap">
+            <mat-icon class="icon-size-4 text-secondary" [svgIcon]="'heroicons_solid:chevron-right'"></mat-icon>
+            <span class="ml-1 text-secondary">Fee and Taxes</span>
+        </div>
+    </div>
+    <div class="flex-auto p-6 sm:p-10 ">
+        <!-- CONTENT GOES HERE -->
+        <!-- <div
+            class="h-400 max-h-400 min-h-400 rounded-2xl border-2 border-dashed border-gray-300"
+        > -->
+        
+        <div
+            class="h-400 max-h-400 min-h-400 rounded-2xl border-3 border-dashed border-gray-100"
+        >
+
+        <div class="flex flex-col flex-auto min-w-0">    
+            <!-- Header -->
+            <div class="flex flex-col sm:flex-row flex-0 sm:items-center sm:justify-between p-6 sm:p-8 sm:px-10 border-b bg-card">
+                <div class="flex-1 min-w-0">                    
+                    <!-- Title -->
+                    <div class="mt-2">
+                        <h3 class="text-3xl md:text-4xl font-extrabold tracking-tight leading-7 sm:leading-10 truncate">
+                            Fees and Taxes
+                        </h3>
+                    </div>
+                    <!-- Subtitle -->
+                    <div class="mt-2 text-secondary">
+                        <span class="flex items-center">
+                            <!-- <mat-icon class="icon-size-5 mr-2" [svgIcon]="'heroicons_solid:information-circle'"></mat-icon> -->
+                            Enable the calendars that should be visible on the calendar grid.
+                        </span>
+                    </div>
+
+                    @for (section of feesTaxesData.sections; track section.title; let last = $last) {
+                    <div class="mt-2 text-secondary pt-6">
+                        <!-- Content -->                        
+                            <!-- Sections -->
+                            <h3 class="text-lg font-bold text-gray-900">{{ section.title }}</h3> 
+                            <div class="flex flex-col flex-auto p-0 overflow-hidden border-0 space-x-1 space-y-2 py-2">
+                        
+                        <!-- Table -->
+                        <div class="flex flex-col space-y-2">
+                            <!-- Table Rows -->
+                            @for (item of section.items; track item.name; let i = $index) {
+                                <div class="grid grid-cols-1 sm:grid-cols-12 gap-3 sm:gap-4 px-4 sm:px-6 py-1 border hover:bg-gray-50 transition-colors rounded-2xl">
+                                    <!-- Mobile: Name and Value on same line -->
+                                    @if (section.title === 'Fees') {
+                                        <div class="sm:col-span-7 flex items-center">
+                                            <span class="sm:hidden text-secondary mr-2">Fee:</span>
+                                            <span class="font-medium text-gray-900">{{ item.name }}</span>
+                                        </div>
+                                    }
+                                    @if (section.title === 'Taxes') {
+                                        <div class="sm:col-span-4 flex items-center">
+                                            <span class="sm:hidden text-secondary mr-2">Tax:</span>
+                                            <span class="font-medium text-gray-900">{{ item.name }}</span>
+                                        </div>
+                                        <div class="sm:col-span-3 flex items-center">
+                                            <span class="sm:hidden text-secondary mr-2">State:</span>
+                                            <span class="font-medium text-gray-900">{{ item.state }}</span>
+                                        </div>
+                                    }
+                                    
+                                    <div class="sm:col-span-3 flex items-center">
+                                        <span class="sm:hidden text-secondary mr-2">Value:</span>
+                                        <span class="font-mono text-primary-700 bg-primary-50 px-3 py-1 rounded-full text-sm">
+                                            {{ getFormattedValue(item) }}
+                                        </span>
+                                    </div>
+                                    
+                                    <!-- Actions -->
+                                    <div class="sm:col-span-2 flex items-center justify-end space-x-2">
+                                        <button 
+                                            mat-icon-button 
+                                            [matTooltip]="'Edit ' + item.name"
+                                            (click)="editItem(item, section)">
+                                            <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:pencil'"></mat-icon>
+                                        </button>
+                                        <button 
+                                            mat-icon-button 
+                                            [matTooltip]="'Delete ' + item.name"
+                                            (click)="deleteItem(item)">
+                                            <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:trash'"></mat-icon>
+                                        </button>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+
+                        <!-- Pagination -->
+                        @if (section.showPagination) {
+                            <div class="flex items-center justify-between px-6 py-4 border-t bg-gray-50/50">
+                                <!-- Add button -->
+                                <button 
+                                    mat-button 
+                                    color="primary"
+                                    (click)="addNewItem(section)"
+                                    class="min-w-[100px]">
+                                    <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:plus'"></mat-icon>
+                                    <span>Add New</span>
+                                </button>
+
+                                <!-- Pages info (mobile) -->
+                                <div class="sm:hidden text-sm text-secondary">
+                                    Page {{ section.currentPage }} of {{ section.totalPages }}
+                                </div>
+                                
+                                <!-- Pagination controls -->
+                                <div class="flex items-center space-x-2">
+                                    <!-- Previous button -->
+                                    <button 
+                                        mat-icon-button 
+                                        [disabled]="section.currentPage === 1"
+                                        (click)="changePage(section, section.currentPage - 1)">
+                                        <mat-icon [svgIcon]="'heroicons_solid:chevron-left'"></mat-icon>
+                                    </button>
+                                    
+                                    <!-- Page numbers (hidden on mobile) -->
+                                    <div class="hidden sm:flex items-center space-x-1">
+                                        @for (page of getPagesArray(section.totalPages); track $index) {
+                                            @if (page === '...') {
+                                                <span class="px-3 py-1 text-secondary">...</span>
+                                            } @else {
+                                                <button 
+                                                    mat-button 
+                                                    class="min-w-[40px]"
+                                                    [color]="section.currentPage === page ? 'primary' : ''"
+                                                    (click)="changePage(section, page)">
+                                                    {{ page }}
+                                                </button>
+                                            }
+                                        }
+                                    </div>
+                                    
+                                    <!-- Next button -->
+                                    <button 
+                                        mat-icon-button 
+                                        [disabled]="section.currentPage === section.totalPages"
+                                        (click)="changePage(section, section.currentPage + 1)">
+                                        <mat-icon [svgIcon]="'heroicons_solid:chevron-right'"></mat-icon>
+                                    </button>
+                                </div>
+                                
+                                <!-- Go to page (desktop) -->
+                                <div class="hidden sm:flex items-center space-x-2">
+                                    <span class="text-sm text-secondary">Go to page</span>
+                                    <mat-form-field class="w-16" appearance="outline">
+                                        <input 
+                                            matInput 
+                                            type="number" 
+                                            [value]="section.currentPage"
+                                            min="1" 
+                                            [max]="section.totalPages"
+                                            (change)="changePage(section, $event.target.value)"
+                                            class="text-center">
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                        <!-- </div> -->
+                    </div>
+                    }
+
                 </div>
-                <div class="flex items-center ml-1 whitespace-nowrap">
-                    <mat-icon class="icon-size-4 text-secondary" [svgIcon]="'heroicons_solid:chevron-right'"></mat-icon>
-                    <span class="ml-1 text-secondary">Fees & Taxes</span>
-                </div>
-            </div> -->
-            <!-- Title -->
-            <div class="mt-2">
-                <h3 class="text-3xl md:text-4xl font-extrabold tracking-tight leading-7 sm:leading-10 truncate">
-                    Fees and Taxes
-                </h3>
-            </div>
-            <!-- Subtitle -->
-            <div class="mt-2 text-secondary">
-                <span class="flex items-center">
-                    <!-- <mat-icon class="icon-size-5 mr-2" [svgIcon]="'heroicons_solid:information-circle'"></mat-icon> -->
-                    Enable the calendars that should be visible on the calendar grid.
-                </span>
             </div>
         </div>
-        
-        <!-- Actions -->
-        <!-- <div class="flex items-center mt-4 sm:mt-0 space-x-2">
-            <!-- Calendar toggle -->
-            <!-- <mat-checkbox 
-                [color]="'primary'" 
-                [(ngModel)]="showCalendars"
-                (change)="toggleCalendar($event)"
-                class="mr-4">
-                <span class="text-sm font-medium">Show calendars</span>
-            </mat-checkbox> -->
-            
-            <!-- <button mat-stroked-button color="primary">
-                <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:save'"></mat-icon>
-                <span>Save changes</span>
-            </button> -->
-        <!-- </div> -->
-         
-    </div>
-
-    <!-- Content -->
-    <div class="flex flex-col flex-auto p-6 sm:p-8 space-y-6">
-        <!-- Sections -->
-        @for (section of feesTaxesData.sections; track section.title; let last = $last) {
-            <!-- Section Card -->
-            <!-- <fuse-card class="flex flex-col flex-auto p-0 overflow-hidden border bg-card"> -->
-            <fuse-card class="flex flex-col flex-auto p-0 overflow-hidden space-x-1 space-y-2">
-                <!-- Section Header -->
-                <!-- <div class="flex items-center justify-between px-2 py-2 border-b bg-gray-50"> -->
-                <div class="flex items-center justify-between px-2 py-2">
-                    <h3 class="text-lg font-bold text-gray-900">{{ section.title }}</h3>                    
-                </div>
-
-                <!-- Table -->
-                <div class="flex flex-col space-x-1 space-y-2">
-                    <!-- Table Rows -->
-                    @for (item of section.items; track item.name; let i = $index) {
-                        <div class="grid grid-cols-1 sm:grid-cols-12 gap-3 sm:gap-4 px-4 sm:px-6 py-1 border hover:bg-gray-50 transition-colors rounded-2xl">
-                            <!-- Mobile: Name and Value on same line -->
-                            @if (section.title === 'Fees') {
-                                <div class="sm:col-span-7 flex items-center">
-                                    <span class="sm:hidden text-secondary mr-2">Fee:</span>
-                                    <span class="font-medium text-gray-900">{{ item.name }}</span>
-                                </div>
-                            }
-                            @if (section.title === 'Taxes') {
-                                <div class="sm:col-span-4 flex items-center">
-                                    <span class="sm:hidden text-secondary mr-2">Tax:</span>
-                                    <span class="font-medium text-gray-900">{{ item.name }}</span>
-                                </div>
-                                <div class="sm:col-span-3 flex items-center">
-                                    <span class="sm:hidden text-secondary mr-2">State:</span>
-                                    <span class="font-medium text-gray-900">{{ item.state }}</span>
-                                </div>
-                            }
-                            
-                            <div class="sm:col-span-3 flex items-center">
-                                <span class="sm:hidden text-secondary mr-2">Value:</span>
-                                <span class="font-mono text-primary-700 bg-primary-50 px-3 py-1 rounded-full text-sm">
-                                    {{ getFormattedValue(item) }}
-                                </span>
-                            </div>
-                            
-                            <!-- Actions -->
-                            <div class="sm:col-span-2 flex items-center justify-end space-x-2">
-                                <button 
-                                    mat-icon-button 
-                                    [matTooltip]="'Edit ' + item.name"
-                                    (click)="editItem(item, section)">
-                                    <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:pencil'"></mat-icon>
-                                </button>
-                                <button 
-                                    mat-icon-button 
-                                    [matTooltip]="'Delete ' + item.name"
-                                    (click)="deleteItem(item)">
-                                    <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:trash'"></mat-icon>
-                                </button>
-                            </div>
-                        </div>
-                    }
-                </div>
-
-                <!-- Pagination -->
-                @if (section.showPagination) {
-                    <div class="flex items-center justify-between px-6 py-4 border-t bg-gray-50/50">
-                        <!-- Add button -->
-                        <button 
-                            mat-button 
-                            color="primary"
-                            (click)="addNewItem(section)"
-                            class="min-w-[100px]">
-                            <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:plus'"></mat-icon>
-                            <span>Add New</span>
-                        </button>
-
-                        <!-- Pages info (mobile) -->
-                        <div class="sm:hidden text-sm text-secondary">
-                            Page {{ section.currentPage }} of {{ section.totalPages }}
-                        </div>
-                        
-                        <!-- Pagination controls -->
-                        <div class="flex items-center space-x-2">
-                            <!-- Previous button -->
-                            <button 
-                                mat-icon-button 
-                                [disabled]="section.currentPage === 1"
-                                (click)="changePage(section, section.currentPage - 1)">
-                                <mat-icon [svgIcon]="'heroicons_solid:chevron-left'"></mat-icon>
-                            </button>
-                            
-                            <!-- Page numbers (hidden on mobile) -->
-                            <div class="hidden sm:flex items-center space-x-1">
-                                @for (page of getPagesArray(section.totalPages); track $index) {
-                                    @if (page === '...') {
-                                        <span class="px-3 py-1 text-secondary">...</span>
-                                    } @else {
-                                        <button 
-                                            mat-button 
-                                            class="min-w-[40px]"
-                                            [color]="section.currentPage === page ? 'primary' : ''"
-                                            (click)="changePage(section, page)">
-                                            {{ page }}
-                                        </button>
-                                    }
-                                }
-                            </div>
-                            
-                            <!-- Next button -->
-                            <button 
-                                mat-icon-button 
-                                [disabled]="section.currentPage === section.totalPages"
-                                (click)="changePage(section, section.currentPage + 1)">
-                                <mat-icon [svgIcon]="'heroicons_solid:chevron-right'"></mat-icon>
-                            </button>
-                        </div>
-                        
-                        <!-- Go to page (desktop) -->
-                        <div class="hidden sm:flex items-center space-x-2">
-                            <span class="text-sm text-secondary">Go to page</span>
-                            <mat-form-field class="w-16" appearance="outline">
-                                <input 
-                                    matInput 
-                                    type="number" 
-                                    [value]="section.currentPage"
-                                    min="1" 
-                                    [max]="section.totalPages"
-                                    (change)="changePage(section, $event.target.value)"
-                                    class="text-center">
-                            </mat-form-field>
-                        </div>
-                    </div>
-                }
-            </fuse-card>
-        }
+        </div>
     </div>
 </div>

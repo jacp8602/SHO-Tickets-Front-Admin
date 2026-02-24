@@ -33,8 +33,7 @@ import { TaxFormComponent } from './tax-form/tax-form.component';
         MatCheckboxModule,
         MatMenuModule,
         MatDividerModule,
-        MatTooltipModule,
-        FuseCardComponent
+        MatTooltipModule
     ]
 })
 export class FeesTaxesComponent implements OnInit {
