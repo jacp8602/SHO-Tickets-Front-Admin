@@ -1,0 +1,167 @@
+<div class="flex min-w-0 flex-auto flex-col">
+    <!-- Main -->
+    <div class="flex-auto p-6 sm:p-10">
+        <!-- Header -->
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
+            <div>
+                <p class="text-gray-600 text-base">
+                    Manage event types, shows, venues, event dates, seat types and layout assignments
+                </p>
+            </div>
+
+            <!-- Botón Create -->
+            <button
+                class="mt-4 sm:mt-0 py-2 px-6 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors flex items-center gap-2"
+                mat-flat-button
+                [color]="'primary'"
+                (click)="createPromocode()"
+            >
+                Create
+            </button>
+        </div>
+
+        <!-- Search Bar - Estilo completamente personalizado -->
+        <div class="mb-6 w-full">
+            <div class="relative w-full group">
+                <mat-icon class="absolute left-0 top-1/2 -translate-y-1/2 text-gray-400 text-xl">search</mat-icon>
+                <input 
+                    type="text"
+                    [formControl]="searchForm.get('keyword')"
+                    placeholder="Search"
+                    class="w-full pl-8 pr-10 py-3 text-gray-900 bg-transparent border-0 border-b-2 border-gray-200 focus:border-blue-500 focus:ring-0 outline-none transition-all duration-200 text-base placeholder-gray-400"
+                >
+                @if (searchForm.get('keyword')?.value) {
+                    <button
+                        class="absolute right-0 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+                        (click)="searchForm.patchValue({keyword: ''})"
+                    >
+                        <mat-icon class="text-xl">close</mat-icon>
+                    </button>
+                }
+                
+                <!-- Línea de animación al hacer focus (opcional) -->
+                <div class="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-500 transition-all duration-300 group-focus-within:w-full"></div>
+            </div>
+        </div>
+
+        <!-- Alert -->
+        @if (showAlert) {
+            <fuse-alert
+                class="mb-6"
+                [appearance]="'outline'"
+                [showIcon]="false"
+                [type]="alert.type"
+                [@shake]="alert.type === 'error'"
+            >
+                {{ alert.message }}
+            </fuse-alert>
+        }
+
+        <!-- Loading indicator -->
+        @if (isLoading) {
+            <div class="flex flex-col items-center justify-center py-16">
+                <mat-progress-spinner
+                    [diameter]="48"
+                    [mode]="'indeterminate'"
+                ></mat-progress-spinner>
+                <p class="text-gray-500 mt-4">Loading promocodes...</p>
+            </div>
+        } @else {
+            <!-- Tabla de Promocodes -->
+            <div class="bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm">
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead class="bg-gray-50 border-b border-gray-200">
+                            <tr>
+                                <th class="text-left text-xs font-bold text-gray-600 tracking-wider px-4 py-3">Promo Code Name</th>
+                                <th class="text-left text-xs font-bold text-gray-600 tracking-wider px-4 py-3">Promo Code</th>
+                                <th class="text-left text-xs font-bold text-gray-600 tracking-wider px-4 py-3">Amount</th>
+                                <th class="text-left text-xs font-bold text-gray-600 tracking-wider px-4 py-3">Total Uses</th>
+                                <th class="text-left text-xs font-bold text-gray-600 tracking-wider px-4 py-3">Effective From</th>
+                                <th class="text-left text-xs font-bold text-gray-600 tracking-wider px-4 py-3">Effective Until</th>
+                                <th class="text-left text-xs font-bold text-gray-600 tracking-wider px-4 py-3">Status</th>
+                                <th class="text-left text-xs font-bold text-gray-600 tracking-wider px-4 py-3">Active</th>
+                                <th class="text-left text-xs font-bold text-gray-600 tracking-wider px-4 py-3">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-200">
+                            @for (promo of promocodes; track promo.id) {
+                                <tr class="hover:bg-gray-50 transition-colors cursor-pointer" (click)="editPromocode(promo)">
+                                    <td class="px-4 py-3 text-sm text-gray-900">{{ promo.promoCodeName }}</td>
+                                    <td class="px-4 py-3 text-sm text-gray-600">{{ promo.promoCode }}</td>
+                                    <td class="px-4 py-3 text-sm text-gray-600">{{ promo.amount }}</td>
+                                    <td class="px-4 py-3 text-sm text-gray-600">{{ promo.totalUses }}</td>
+                                    <td class="px-4 py-3 text-sm text-gray-600">{{ promo.effectiveFrom }}</td>
+                                    <td class="px-4 py-3 text-sm text-gray-600">{{ promo.effectiveUntil }}</td>
+                                    <td class="px-4 py-3">
+                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {{ getStatusClass(promo.status) }}">
+                                            {{ promo.status }}
+                                        </span>
+                                    </td>
+                                    <td class="px-4 py-3" (click)="$event.stopPropagation()">
+                                        <span 
+                                            class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium"
+                                            [class.bg-green-100]="promo.active"
+                                            [class.text-green-800]="promo.active"
+                                            [class.bg-red-100]="!promo.active"
+                                            [class.text-red-800]="!promo.active"
+                                        >
+                                            {{ promo.active ? 'Yes' : 'No' }}
+                                        </span>
+                                    </td>
+                                    <td class="px-4 py-3" (click)="$event.stopPropagation()">
+                                        <div class="flex items-center gap-1">
+                                            <button
+                                                mat-icon-button
+                                                class="w-7 h-7 text-blue-500 hover:text-blue-700 hover:bg-blue-50 rounded-full transition-colors flex items-center justify-center"
+                                                (click)="editPromocode(promo)"
+                                                matTooltip="Edit promo code"
+                                                matTooltipPosition="above"
+                                            >
+                                                <mat-icon class="text-base">edit</mat-icon>
+                                            </button>
+                                            <!-- <button
+                                                mat-icon-button
+                                                class="w-7 h-7 text-red-500 hover:text-red-700 hover:bg-red-50 rounded-full transition-colors flex items-center justify-center"
+                                                (click)="deletePromocode(promo)"
+                                                matTooltip="Delete promo code"
+                                                matTooltipPosition="above"
+                                            >
+                                                <mat-icon class="text-base">delete</mat-icon>
+                                            </button> -->
+                                        </div>
+                                    </td>
+                                </tr>
+                            } @empty {
+                                <tr>
+                                    <td colspan="9" class="px-4 py-12">
+                                        <div class="flex flex-col items-center justify-center text-center">
+                                            <mat-icon class="text-5xl text-gray-300 mb-3">local_offer</mat-icon>
+                                            <h3 class="text-lg font-medium text-gray-900 mb-1">No promocodes found</h3>
+                                            <p class="text-gray-500 text-sm mb-4">Try adjusting your search</p>
+                                            <button
+                                                class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors text-sm"
+                                                mat-flat-button
+                                                (click)="createPromocode()"
+                                            >
+                                                Create your first promo code
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Paginación -->
+            <app-pagination
+                [totalItems]="totalItems"
+                [pageSize]="pageSize"
+                [pageIndex]="pageIndex"
+                (pageChange)="onPageChange($event)"
+            ></app-pagination>
+        }
+    </div>
+</div>
