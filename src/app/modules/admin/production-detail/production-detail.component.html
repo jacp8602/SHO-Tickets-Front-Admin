@@ -1,0 +1,134 @@
+<div class="flex min-w-0 flex-auto flex-col h-full">
+    <!-- Header con breadcrumb y botón close -->
+    <div class="flex items-center justify-between px-6 py-4 border-b border-gray-200 bg-white">
+        <div class="flex items-center gap-2 text-sm">
+            <span class="text-gray-900 font-medium">Productions</span>
+            <mat-icon class="text-lg text-gray-400">chevron_right</mat-icon>
+            <span class="text-gray-500">Settings</span>
+        </div>
+        <button
+            type="button"
+            mat-stroked-button
+            (click)="onClose()"
+            class="px-6 py-2 min-w-[100px] rounded-lg"
+        >
+            Close
+        </button>
+    </div>
+
+    <!-- Contenedor principal con menú lateral y contenido -->
+    <div class="flex flex-1 overflow-hidden">
+        <!-- Menú lateral compartido -->
+        <app-production-menu 
+            [activeItemId]="'basic'"
+            [productionId]="productionId"
+        ></app-production-menu>
+
+        <!-- Contenido principal -->
+        <div class="flex-1 overflow-y-auto bg-gray-50 p-6">
+            <div class="max-w-4xl">
+                <!-- Título de la sección -->
+                <h2 class="text-xl font-bold text-gray-900 mb-6">Information</h2>
+
+                <!-- Divisor -->
+                <mat-divider class="!mb-6"></mat-divider>
+
+                <!-- Formulario -->
+                <form [formGroup]="productionForm" class="space-y-1">
+                    <div>
+                        <mat-form-field class="w-full">
+                            <mat-label>Layout Workspace</mat-label>
+                            <input 
+                                matInput 
+                                formControlName="layoutWorkspace" 
+                                placeholder="Enter workspace key"
+                            >
+                            @if (productionForm.get('layoutWorkspace')?.hasError('required') && productionForm.get('layoutWorkspace')?.touched) {
+                                <mat-error>Layout Workspace is required</mat-error>
+                            }
+                        </mat-form-field>
+                    </div>
+
+                    <!-- Current Show - Select -->
+                    <div>
+                        <mat-form-field class="w-full">
+                            <mat-label>Current Show</mat-label>
+                            <mat-select formControlName="currentShow">
+                                @for (option of currentShowOptions; track option.value) {
+                                    <mat-option [value]="option.value">{{ option.label }}</mat-option>
+                                }
+                            </mat-select>
+                            @if (productionForm.get('currentShow')?.hasError('required') && productionForm.get('currentShow')?.touched) {
+                                <mat-error>Current Show is required</mat-error>
+                            }
+                        </mat-form-field>
+                    </div>
+
+                    <!-- Upload Image Section -->
+                    <div class="space-y-4 border border-gray-200 rounded-lg p-6">
+                        <!-- Título con icono a la izquierda y botón a la derecha -->
+                        <div class="flex items-start justify-between">
+                            <div class="flex items-start gap-3">
+                                <!-- Icono que abarca todo el alto del título y descripción -->
+                                <mat-icon class="text-3xl text-gray-500 mt-0.5">cloud_upload</mat-icon>
+                                <div>
+                                    <h3 class="text-base font-medium text-gray-900">Upload Your Identification Image</h3>
+                                    <p class="text-sm text-gray-500 mt-1">DOCX or PDF formats, up to 5MB.</p>
+                                </div>
+                            </div>
+                            
+                            <!-- Botón Upload alineado a la derecha -->
+                            <button
+                                type="button"
+                                mat-stroked-button
+                                (click)="fileInput.click()"
+                                class="px-6 py-2 rounded-lg"
+                            >
+                                Upload
+                            </button>
+                            
+                            <!-- Input oculto para seleccionar archivo -->
+                            <input 
+                                type="file" 
+                                #fileInput 
+                                class="hidden" 
+                                (change)="onFileSelected($event)" 
+                                accept=".docx,.pdf"
+                            >
+                        </div>
+
+                        <!-- Mostrar archivo seleccionado (si existe) -->
+                        @if (selectedFile) {
+                            <div class="flex items-center gap-2 mt-2 p-3 bg-blue-50 rounded-lg border border-blue-200">
+                                <mat-icon class="text-blue-500 text-lg">description</mat-icon>
+                                <span class="text-sm text-gray-700 flex-1 truncate">{{ fileName }}</span>
+                                <button 
+                                    mat-icon-button 
+                                    class="w-7 h-7 text-red-500 hover:bg-red-100 rounded-full"
+                                    (click)="removeFile(); $event.stopPropagation()"
+                                    type="button"
+                                >
+                                    <mat-icon class="text-sm">close</mat-icon>
+                                </button>                                
+                            </div>
+                        }
+                    </div>
+
+                    <!-- Botón Save Change alineado a la izquierda -->
+                    <div class="flex justify-start pt-4 border-t border-gray-200">
+                        <button
+                            type="button"
+                            mat-flat-button
+                            color="primary"
+                            (click)="onSave()"
+                            class="px-4 py-1.5 min-w-[100px] bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors disabled:opacity-50 text-sm"
+                        >                            
+                            Save Change
+                        </button>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

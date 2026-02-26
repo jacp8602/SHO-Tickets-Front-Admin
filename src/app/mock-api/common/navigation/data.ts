@@ -114,7 +114,7 @@ export const defaultNavigation: FuseNavigationItem[] = [
                 title: 'Productions',
                 type: 'basic',
                 icon: 'sho_sidebar:calendar',
-                link: ''
+                link: '/productions'
             },
             {
                 id: 'shows',
