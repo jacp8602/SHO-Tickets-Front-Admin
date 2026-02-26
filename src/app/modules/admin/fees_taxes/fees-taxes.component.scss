@@ -1,0 +1,94 @@
+app-fees-taxes {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+    width: 100%;
+    
+    // Checkbox personalizado para el toggle de calendarios
+    .mat-mdc-checkbox {
+        .mdc-checkbox {
+            .mdc-checkbox__native-control:enabled:checked ~ .mdc-checkbox__background {
+                background-color: #1d6ad4 !important;
+                border-color: #1d6ad4 !important;
+            }
+        }
+    }
+    
+    // Estilos para las cards
+    .fuse-card {
+        box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.05), 0 1px 2px -1px rgb(0 0 0 / 0.05);
+        
+        &:hover {
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        }
+
+        width: 100%;
+    }
+    
+    // Animación para las filas de la tabla
+    .grid > div {
+        transition: background-color 0.2s ease;
+    }
+    
+    // Estilos para la paginación
+    .mat-mdc-form-field {
+        &.w-16 {
+            .mat-mdc-text-field-wrapper {
+                padding: 0 4px;
+            }
+            
+            .mat-mdc-form-field-infix {
+                min-height: 40px;
+                padding: 8px 0;
+            }
+            
+            input {
+                text-align: center;
+                
+                /* Eliminar flechas del input number */
+                &::-webkit-outer-spin-button,
+                &::-webkit-inner-spin-button {
+                    -webkit-appearance: none;
+                    margin: 0;
+                }
+                
+                &[type=number] {
+                    -moz-appearance: textfield;
+                }
+            }
+        }
+    }
+    
+    // Badge para los valores
+    .font-mono {
+        font-size: 0.875rem;
+        line-height: 1.25rem;
+    }
+    
+    // Responsive adjustments
+    @media (max-width: 640px) {
+        .grid {
+            .sm\:col-span-7,
+            .sm\:col-span-3,
+            .sm\:col-span-2 {
+                grid-column: span 12 / span 12;
+            }
+        }
+        
+        // Ajustar padding en móvil
+        .p-6 {
+            padding: 1rem;
+        }
+    }
+}
+
+// Estilos para los breadcrumbs (para mantener consistencia con el ejemplo)
+.flex-wrap {
+    a {
+        transition: color 0.2s ease;
+        
+        &:hover {
+            color: rgb(29 106 212 / var(--tw-text-opacity));
+        }
+    }
+}

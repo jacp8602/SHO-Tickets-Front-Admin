@@ -1,0 +1,101 @@
+<div class="flex flex-col max-w-lg mx-auto bg-white rounded-2xl overflow-hidden">
+    <!-- Header -->
+    <div class="flex items-center justify-between px-6 py-4 border-b">
+        <h2 class="text-2xl font-bold text-gray-900">{{ isEditing ? 'Edit Fee' : 'New Fee' }}</h2>
+        <button mat-icon-button (click)="cancel()" class="text-gray-500 hover:text-gray-700">
+            <mat-icon [svgIcon]="'heroicons_solid:x'"></mat-icon>
+        </button>
+    </div>
+
+    <!-- Form -->
+    <form [formGroup]="feeForm" class="flex flex-col p-6 space-y-4">
+        <!-- Name Field -->
+        <div class="space-y-1">
+            <label class="text-sm font-medium text-gray-700">Name</label>
+            <mat-form-field appearance="outline" class="w-full">
+                <input matInput formControlName="name" placeholder="Enter fee name">
+                @if (feeForm.get('name').hasError('required') && feeForm.get('name').touched) {
+                    <mat-error>Name is required</mat-error>
+                }
+            </mat-form-field>
+        </div>
+
+        <!-- Description Field -->
+        <div class="space-y-1">
+            <label class="text-sm font-medium text-gray-700">Description</label>
+            <mat-form-field appearance="outline" class="w-full">
+                <textarea 
+                    matInput 
+                    formControlName="description" 
+                    placeholder="Enter description"
+                    rows="2"></textarea>
+                @if (feeForm.get('description').hasError('required') && feeForm.get('description').touched) {
+                    <mat-error>Description is required</mat-error>
+                }
+            </mat-form-field>
+        </div>
+
+        <!-- Fee Type and Amount (side by side) -->
+        <div class="grid grid-cols-2 gap-4">
+            <!-- Fee Type -->
+            <div class="space-y-1">
+                <label class="text-sm font-medium text-gray-700">Fee by</label>
+                <mat-form-field appearance="outline" class="w-full">
+                    <mat-select formControlName="feeType">
+                        <mat-option value="percentage">Percent</mat-option>
+                        <mat-option value="fixed">Fixed Amount</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+
+            <!-- Amount -->
+            <div class="space-y-1">
+                <label class="text-sm font-medium text-gray-700">Amount</label>
+                <mat-form-field appearance="outline" class="w-full">
+                    <input 
+                        matInput 
+                        type="number" 
+                        formControlName="amount"
+                        [placeholder]="feeForm.get('feeType').value === 'percentage' ? 'Enter percentage' : 'Enter amount'">
+                    @if (feeForm.get('feeType').value === 'percentage') {
+                        <span matTextSuffix class="text-gray-500">%</span>
+                    } @else {
+                        <span matTextPrefix class="text-gray-500 mr-1">US $</span>
+                    }
+                </mat-form-field>
+            </div>
+        </div>
+
+        <!-- Active Toggle -->
+        <div class="flex items-center justify-start py-2">
+            <mat-slide-toggle 
+                formControlName="isActive"
+                color="primary">
+            </mat-slide-toggle>
+            <span class="text-sm font-medium text-gray-700">Active</span>            
+        </div>
+
+        <!-- Divider -->
+        <mat-divider class="!my-2"></mat-divider>
+
+        <!-- Actions -->
+        <div class="flex justify-between space-x-3 pt-2">
+            <button 
+                mat-stroked-button 
+                type="button"
+                (click)="cancel()"
+                class="px-6">
+                Cancel
+            </button>
+            <button 
+                mat-flat-button 
+                color="primary"
+                type="button"
+                (click)="save()"
+                [disabled]="feeForm.invalid"
+                class="px-6 bg-blue-600 hover:bg-blue-700 text-white">
+                {{ isEditing ? 'Update' : 'Create' }}
+            </button>
+        </div>
+    </form>
+</div>

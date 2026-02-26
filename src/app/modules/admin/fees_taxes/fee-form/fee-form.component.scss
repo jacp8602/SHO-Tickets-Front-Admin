@@ -1,0 +1,77 @@
+app-fee-form {
+    display: block;
+    
+    .mat-mdc-dialog-container {
+        padding: 0 !important;
+        border-radius: 1rem !important;
+    }
+    
+    .mat-mdc-form-field {
+        .mdc-text-field--outlined {
+            --mdc-outlined-text-field-container-shape: 0.75rem;
+        }
+        
+        .mat-mdc-form-field-flex {
+            height: 48px;
+        }
+        
+        &.mat-mdc-form-field-type-mat-textarea {
+            .mat-mdc-form-field-flex {
+                height: auto;
+                min-height: 80px;
+            }
+        }
+    }
+    
+    // Estilos para el slide toggle
+    .mat-mdc-slide-toggle {
+        .mdc-switch {
+            .mdc-switch__track {
+                border-radius: 20px;
+            }
+        }
+        
+        &.mat-primary {
+            --mdc-switch-selected-focus-state-layer-color: #1d6ad4;
+            --mdc-switch-selected-handle-color: #1d6ad4;
+            --mdc-switch-selected-hover-state-layer-color: #1d6ad4;
+            --mdc-switch-selected-pressed-state-layer-color: #1d6ad4;
+            --mdc-switch-selected-focus-handle-color: #1d6ad4;
+            --mdc-switch-selected-hover-handle-color: #1d6ad4;
+            --mdc-switch-selected-pressed-handle-color: #1d6ad4;
+            --mdc-switch-selected-focus-track-color: #1d6ad4;
+            --mdc-switch-selected-hover-track-color: #1d6ad4;
+            --mdc-switch-selected-pressed-track-color: #1d6ad4;
+            --mdc-switch-selected-track-color: #1d6ad4;
+        }
+    }
+    
+    // Estilos para el divider
+    .mat-divider {
+        border-top-color: rgba(0, 0, 0, 0.08);
+    }
+    
+    // Animación para el toggle
+    .mat-slide-toggle {
+        .mat-slide-toggle-bar {
+            transition: background-color 0.2s ease;
+        }
+        
+        .mat-slide-toggle-thumb {
+            transition: transform 0.2s ease;
+        }
+    }
+}
+
+.fee-form-dialog {
+    .mat-mdc-dialog-container {
+        padding: 0 !important;
+        border-radius: 1rem !important;
+        box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+    }
+    
+    .mdc-dialog__surface {
+        border-radius: 1rem !important;
+        overflow: hidden;
+    }
+}
