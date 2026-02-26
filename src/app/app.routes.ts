@@ -79,6 +79,11 @@ export const appRoutes: Route[] = [
             {path: 'users', loadChildren: () => import('app/modules/admin/users-table/users-table.routes')},
             {path: 'fees_taxes', loadChildren: () => import('app/modules/admin/fees_taxes/fees-taxes.routes')},
             {path: 'discounts', loadChildren: () => import('app/modules/admin/promocodes-list/promocodes-list.routes')},
+            {path: 'productions', loadChildren: () => import('app/modules/admin/production-list/production-list.routes')},
+            {path: 'productions/:id', loadChildren: () => import('app/modules/admin/production-detail/production-detail.routes')},
+            {path: 'layouts', loadChildren: () => import('app/modules/admin/layout-management/layout-management.routes')},
+            {path: 'tickets', loadChildren: () => import('app/modules/admin/tickets/tickets.routes')},
+            {path: 'addons', loadChildren: () => import('app/modules/admin/addons/addons.routes')},
         ]
     }
 ];

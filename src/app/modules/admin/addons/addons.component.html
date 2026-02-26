@@ -1,0 +1,215 @@
+<div class="flex min-w-0 flex-auto flex-col h-full">
+    <!-- Header con breadcrumb y botón close -->
+    <div class="flex items-center justify-between px-6 py-4 border-b border-gray-200 bg-white">
+        <div class="flex items-center gap-2 text-sm">
+            <span class="text-gray-900 font-medium">Productions</span>
+            <mat-icon class="text-lg text-gray-400">chevron_right</mat-icon>
+            <span class="text-gray-500">Settings</span>
+        </div>
+        <button
+            type="button"
+            mat-stroked-button
+            (click)="onClose()"
+            class="px-6 py-2 min-w-[100px] rounded-lg"
+        >
+            Close
+        </button>
+    </div>
+
+    <!-- Contenedor principal con menú lateral y contenido -->
+    <div class="flex flex-1 overflow-hidden">
+        <!-- Menú lateral compartido -->
+        <app-production-menu 
+            [activeItemId]="'addons'"
+            [productionId]="productionId"
+        ></app-production-menu>
+
+        <!-- Contenido principal -->
+        <div class="flex-1 overflow-y-auto bg-gray-50 p-6">
+            <div class="max-w-5xl mx-auto">
+                <!-- Alert -->
+                @if (showAlert) {
+                    <fuse-alert
+                        class="mb-6"
+                        [appearance]="'outline'"
+                        [showIcon]="false"
+                        [type]="alert.type"
+                        [@shake]="alert.type === 'error'"
+                    >
+                        {{ alert.message }}
+                    </fuse-alert>
+                }
+
+                @if (isLoading) {
+                    <!-- Loading state -->
+                    <div class="flex flex-col items-center justify-center py-16">
+                        <mat-progress-spinner
+                            [diameter]="48"
+                            [mode]="'indeterminate'"
+                        ></mat-progress-spinner>
+                        <p class="text-gray-500 mt-4">Loading addons...</p>
+                    </div>
+                } @else {
+                    <!-- Título -->
+                    <div class="mb-4">
+                        <h2 class="text-xl font-bold text-gray-900">Add-Ons</h2>
+                        <p class="text-gray-600 text-sm">
+                            Catalog items from Master Items
+                        </p>
+                    </div>
+                    
+                    <!-- Search Bar - Estilo completamente personalizado (igual que referencia) -->
+                    <div class="mb-6 w-full">
+                        <div class="relative w-full group">
+                            <mat-icon class="absolute left-0 top-1/2 -translate-y-1/2 text-gray-400 text-xl">search</mat-icon>
+                            <input 
+                                type="text"
+                                [(ngModel)]="searchTerm"
+                                placeholder="Search"
+                                class="w-full pl-8 pr-10 py-3 text-gray-900 bg-transparent border-0 border-b-2 border-gray-200 focus:border-blue-500 focus:ring-0 outline-none transition-all duration-200 text-base placeholder-gray-400"
+                            >
+                            @if (searchTerm) {
+                                <button
+                                    class="absolute right-0 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+                                    (click)="searchTerm = ''"
+                                >
+                                    <mat-icon class="text-xl">close</mat-icon>
+                                </button>
+                            }
+                            
+                            <!-- Línea de animación al hacer focus -->
+                            <div class="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-500 transition-all duration-300 group-focus-within:w-full"></div>
+                        </div>
+                    </div>
+
+                    <!-- Lista de Addons (estilo tarjetas) -->
+                    <div class="space-y-1.5 mb-6">
+                        @for (addon of currentPageAddons; track addon.id) {
+                            <div class="bg-white rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-shadow py-1 px-3">
+                                <div class="flex items-center">
+                                    <!-- Primera columna: círculo de color según categoría -->
+                                    <div class="w-8 flex items-center justify-center">
+                                        <div class="w-4 h-4 rounded-full {{ getCategoryColor(addon.category) }}" 
+                                             [matTooltip]="addon.category"></div>
+                                    </div>
+
+                                    <!-- Segunda columna: Addon Name -->
+                                    <div class="w-2/5 truncate">
+                                        <span class="text-sm text-gray-900">{{ addon.name }}</span>
+                                    </div>
+
+                                    <!-- Tercera columna: Category -->
+                                    <div class="w-1/6">
+                                        <span class="text-sm text-gray-500">{{ addon.category }}</span>
+                                    </div>
+
+                                    <!-- Cuarta columna: Price -->
+                                    <div class="w-1/6">
+                                        <span class="text-sm text-gray-600">{{ formatPrice(addon.price) }}</span>
+                                    </div>
+
+                                    <!-- Quinta columna: Status (toggle) -->
+                                    <div class="w-1/12 flex justify-center">
+                                        <mat-slide-toggle
+                                            [checked]="addon.enabled !== false"
+                                            (toggleChange)="toggleAddon(addon)"
+                                            color="primary"
+                                            class="scale-75"
+                                        ></mat-slide-toggle>
+                                    </div>
+
+                                    <!-- Sexta columna: Actions -->
+                                    <div class="w-1/12 flex justify-end">
+                                        <div class="flex items-center gap-1.5">
+                                            <!-- Edit icon -->
+                                            <button
+                                                mat-icon-button
+                                                class="w-5 h-5 text-blue-500 hover:text-blue-700 hover:bg-blue-50 rounded-full transition-colors flex items-center justify-center"
+                                                (click)="editAddon(addon)"
+                                                matTooltip="Edit addon"
+                                                matTooltipPosition="above"
+                                                type="button"
+                                            >
+                                                <mat-icon class="text-base">edit</mat-icon>
+                                            </button>
+
+                                            <!-- Delete icon -->
+                                            <button
+                                                mat-icon-button
+                                                class="w-5 h-5 text-red-500 hover:text-red-700 hover:bg-red-50 rounded-full transition-colors flex items-center justify-center"
+                                                (click)="deleteAddon(addon)"
+                                                matTooltip="Delete addon"
+                                                matTooltipPosition="above"
+                                                type="button"
+                                            >
+                                                <mat-icon class="text-base">delete</mat-icon>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        } @empty {
+                            <div class="bg-white rounded-lg border border-gray-200 p-8 text-center">
+                                <div class="flex flex-col items-center justify-center">
+                                    <mat-icon class="text-5xl text-gray-300 mb-3">extension</mat-icon>
+                                    <h3 class="text-lg font-medium text-gray-900 mb-1">No addons found</h3>
+                                    <p class="text-gray-500 text-sm mb-4">Try adjusting your search or add a new addon</p>
+                                    <button
+                                        class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors text-sm"
+                                        mat-flat-button
+                                        (click)="addNewAddon()"
+                                    >
+                                        Add your first addon
+                                    </button>
+                                </div>
+                            </div>
+                        }
+                    </div>
+
+                    <!-- Fila con Add New a la izquierda y Paginación a la derecha -->
+                    <div class="flex items-center justify-between mb-6">
+                        <!-- Botón Add New con icono plus - Izquierda -->
+                        <button
+                            type="button"
+                            mat-stroked-button
+                            (click)="addNewAddon()"
+                            class="px-3 py-1.5 rounded-lg flex items-center gap-1 text-sm"
+                        >
+                            <mat-icon class="text-base">add</mat-icon>
+                            Add new
+                        </button>
+
+                        <!-- Paginación usando app-pagination - Derecha (con ajuste vertical) -->
+                        @if (totalItems > 0) {
+                            <div class="flex items-center -mt-6">
+                                <app-pagination
+                                    [totalItems]="totalItems"
+                                    [pageSize]="pageSize"
+                                    [pageIndex]="pageIndex"
+                                    (pageChange)="onPageChange($event)"
+                                ></app-pagination>
+                            </div>
+                        }
+                    </div>
+
+                    <!-- Botón Save Change alineado a la izquierda -->
+                    <div class="flex justify-start pt-4 border-t border-gray-200">
+                        <button
+                            type="button"
+                            mat-flat-button
+                            color="primary"
+                            (click)="saveChanges()"
+                            [disabled]="isSaving"
+                            class="px-4 py-1.5 min-w-[100px] bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors disabled:opacity-50 text-sm"
+                        >
+                            @if (isSaving) {
+                                <mat-spinner [diameter]="16" class="inline-block mr-2"></mat-spinner>
+                            }
+                            Save Change
+                        </button>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
