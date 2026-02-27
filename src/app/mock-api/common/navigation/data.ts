@@ -125,10 +125,10 @@ export const defaultNavigation: FuseNavigationItem[] = [
             },
             {
                 id: 'vendors',
-                title: 'Vendors',
+                title: 'Other Vendors',
                 type: 'basic',
                 icon: 'sho_sidebar:store-01',
-                link: ''
+                link: '/vendors'
             }
         ]
     }
