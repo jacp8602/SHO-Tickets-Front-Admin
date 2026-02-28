@@ -452,7 +452,7 @@ fuse-vertical-navigation-collapsable-item,
 fuse-vertical-navigation-group-item {
     .fuse-vertical-navigation-item-wrapper {
         .fuse-vertical-navigation-item {
-            color: currentColor;
+            color: #000000;
 
             .fuse-vertical-navigation-item-icon {
                 @apply text-current opacity-60;
@@ -481,7 +481,8 @@ fuse-vertical-navigation-collapsable-item {
             &:not(.fuse-vertical-navigation-item-disabled) {
                 &.fuse-vertical-navigation-item-active,
                 &.fuse-vertical-navigation-item-active-forced {
-                    @apply bg-gray-800 bg-opacity-5 dark:bg-white dark:bg-opacity-12;
+                    @apply bg-gray-900 bg-opacity-5 dark:bg-white dark:bg-opacity-12;
+                    background-color: #1565FF;
 
                     .fuse-vertical-navigation-item-icon {
                         @apply opacity-100;
@@ -551,7 +552,7 @@ fuse-vertical-navigation-group-item {
         .fuse-vertical-navigation-item {
             .fuse-vertical-navigation-item-title-wrapper {
                 .fuse-vertical-navigation-item-title {
-                    @apply text-primary-600 opacity-100 dark:text-primary-400;
+                    @apply text-primary-900 opacity-100 dark:text-primary-900;
                 }
             }
         }
