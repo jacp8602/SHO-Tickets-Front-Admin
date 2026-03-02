@@ -4,12 +4,12 @@ import { Router, RouterModule } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { Subject, takeUntil } from 'rxjs';
 
-import { MenuService } from '../../../core/menu/menu.service';
-import { MenuItem } from '../../../core/menu/menu.types';
+import { ShowMenuService } from '../../../core/show-menu/show-menu.service';
+import { ShowMenuItem, ShowMenuItemId } from '../../../core/show-menu/show-menu.types';
 
 @Component({
-    selector: 'app-production-menu',
-    templateUrl: './production-menu.component.html',
+    selector: 'app-show-menu',
+    templateUrl: './show-menu.component.html',
     encapsulation: ViewEncapsulation.None,
     standalone: true,
     imports: [
@@ -18,21 +18,21 @@ import { MenuItem } from '../../../core/menu/menu.types';
         MatIconModule,
     ],
 })
-export class ProductionMenuComponent implements OnInit, OnDestroy {
-    @Input() productionId: string | null = null;
-    @Input() activeItemId: string = 'basic';
+export class ShowMenuComponent implements OnInit, OnDestroy {
+    @Input() showId: string | null = null;
+    @Input() activeItemId: ShowMenuItemId = ShowMenuItemId.BASIC;
     
-    menuItems: MenuItem[] = [];
+    showmenuItems: ShowMenuItem[] = [];
     
     private _unsubscribeAll: Subject<void> = new Subject<void>();
 
     constructor(
-        private _menuService: MenuService,
+        private _showmenuService: ShowMenuService,
         private _router: Router
     ) {}
 
     ngOnInit(): void {
-        this.loadMenuItems();
+        this.loadShowMenuItems();
         
         // Escuchar cambios en la URL para actualizar el menú
         this._router.events
@@ -50,9 +50,9 @@ export class ProductionMenuComponent implements OnInit, OnDestroy {
     /**
      * Cargar los items del menú
      */
-    private loadMenuItems(): void {
-        this.menuItems = this._menuService.getProductionMenuItems({
-            productionId: this.productionId,
+    private loadShowMenuItems(): void {
+        this.showmenuItems = this._showmenuService.getShowMenuItems({
+            showId: this.showId,
             activeItemId: this.activeItemId
         });
     }
@@ -61,15 +61,16 @@ export class ProductionMenuComponent implements OnInit, OnDestroy {
      * Actualizar el item activo basado en la URL
      */
     private updateActiveItemFromUrl(): void {
-        const activeId = this._menuService.getActiveItemIdFromUrl(this._router.url);
-        this.menuItems.forEach(item => item.active = item.id === activeId);
+        const activeId = this._showmenuService.getActiveItemIdFromUrl(this._router.url);
+        this.showmenuItems.forEach(item => item.active = item.id === activeId);
     }
 
     /**
      * Navegar a la ruta del menú
      */
-    navigateTo(item: MenuItem): void {
-        this.menuItems.forEach(i => i.active = i.id === item.id);
+    navigateTo(item: ShowMenuItem): void {
+        console.log('Navegando a:', item.route);
+        this.showmenuItems.forEach(i => i.active = i.id === item.id);
         this._router.navigate(item.route);
     }
 }
