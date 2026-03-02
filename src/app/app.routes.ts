@@ -84,6 +84,10 @@ export const appRoutes: Route[] = [
             {path: 'layouts', loadChildren: () => import('app/modules/admin/layout-management/layout-management.routes')},
             {path: 'tickets', loadChildren: () => import('app/modules/admin/tickets/tickets.routes')},
             {path: 'addons', loadChildren: () => import('app/modules/admin/addons/addons.routes')},
+            {path: 'shows', loadChildren: () => import('app/modules/admin/shows/shows.routes')},
+            {path: 'shows/:id', loadChildren: () => import('app/modules/admin/show-detail/show-detail.routes')},
+            {path: 'shows/tickets/:id', loadChildren: () => import('app/modules/admin/show-tickets/show-tickets.routes')},
+            {path: 'shows/addons/:id', loadChildren: () => import('app/modules/admin/show-addons/show-addons.routes')},
             {path: 'vendors', loadChildren: () => import('app/modules/admin/vendor-table/vendor-table.routes')},
         ]
     }

@@ -1,0 +1,16 @@
+<div class="w-64 bg-white border-r border-gray-200 p-4">
+    <div class="space-y-1">
+        @for (item of showmenuItems; track item.id) {
+            <button 
+                class="w-full text-left px-4 py-3 text-sm font-medium rounded-lg transition-colors cursor-pointer"
+                [class.text-blue-600]="item.active"
+                [class.bg-blue-50]="item.active"
+                [class.text-gray-600]="!item.active"
+                [class.hover:bg-gray-50]="!item.active"
+                (click)="navigateTo(item)"
+            >
+                {{ item.label }}
+            </button>
+        }
+    </div>
+</div>
