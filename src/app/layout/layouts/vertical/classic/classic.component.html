@@ -3,7 +3,7 @@
 
 <!-- Navigation -->
 <fuse-vertical-navigation
-    class="dark bg-gray-900 print:hidden"
+    class="light bg-white print:hidden"
     [mode]="isScreenSmall ? 'over' : 'side'"
     [name]="'mainNavigation'"
     [navigation]="navigation.default"
@@ -12,25 +12,14 @@
     <!-- Navigation header hook -->
     <ng-container fuseVerticalNavigationContentHeader>
         <!-- Logo -->
-        <div class="flex h-20 items-center p-6 pb-0 gap-3">
-            <!-- Light version -->
-            <!-- <img
-                class="w-30 dark:hidden"
-                src="images/logo/logo-text.svg"
-                alt="Logo image"
-            /> -->
-            <!-- Dark version -->
-            <!-- <img
-                class="hidden w-30 dark:flex"
-                src="images/logo/logo-text-on-dark.svg"
-                alt="Logo image"
-            /> -->
-            <div class="w-15 h-15 rounded-full bg-[#1565FF] flex items-center justify-center">  <!-- ← AQUÍ VA EL CÓDIGO DEL LOGO -->
-                <img src="images/logo/ticket-02.svg" alt="Logo image" class="w-12 h-12">
+        <div class="flex h-20 items-center p-6 pb-0 gap-3">            
+            <div class="w-14 h-14 rounded-full bg-[#1565FF] flex items-center justify-center">  <!-- ← AQUÍ VA EL CÓDIGO DEL LOGO -->
+                <img src="images/logo/ticket-02.svg" alt="Logo image" class="w-9 h-9">
             </div>
             <h1 class="text-3xl font-bold text-black">SHOhub</h1>
         </div>
     </ng-container>
+    
 </fuse-vertical-navigation>
 
 <!-- Wrapper -->
@@ -43,15 +32,16 @@
         <button mat-icon-button (click)="toggleNavigation('mainNavigation')">
             <mat-icon [svgIcon]="'heroicons_outline:bars-3'"></mat-icon>
         </button>
+
         <!-- Components -->
         <div class="ml-auto flex items-center space-x-0.5 pl-2 sm:space-x-2">
-            <languages></languages>
-            <fuse-fullscreen class="hidden md:block"></fuse-fullscreen>
-            <search [appearance]="'bar'"></search>
-            <shortcuts></shortcuts>
-            <messages></messages>
+            <!-- <languages></languages> -->
+            <!-- <fuse-fullscreen class="hidden md:block"></fuse-fullscreen> -->
+            <!-- <search [appearance]="'bar'"></search> -->
+            <!-- <shortcuts></shortcuts> -->
+            <!-- <messages></messages> -->
             <notifications></notifications>
-            <button
+            <!-- <button
                 class="lg:hidden"
                 mat-icon-button
                 (click)="quickChat.toggle()"
@@ -59,7 +49,7 @@
                 <mat-icon
                     [svgIcon]="'heroicons_outline:chat-bubble-left-right'"
                 ></mat-icon>
-            </button>
+            </button> -->
             <user></user>
         </div>
     </div>
@@ -74,14 +64,14 @@
     </div>
 
     <!-- Footer -->
-    <div
+    <!-- <div
         class="bg-card relative z-49 flex h-14 w-full flex-0 items-center justify-start border-t px-4 dark:bg-transparent md:px-6 print:hidden"
     >
         <span class="text-secondary font-medium"
             >Fuse &copy; {{ currentYear }}</span
         >
-    </div>
+    </div> -->
 </div>
 
 <!-- Quick chat -->
-<quick-chat #quickChat="quickChat"></quick-chat>
+<!-- <quick-chat #quickChat="quickChat"></quick-chat> -->
