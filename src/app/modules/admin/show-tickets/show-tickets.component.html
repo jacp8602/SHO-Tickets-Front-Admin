@@ -1,0 +1,205 @@
+<div class="flex min-w-0 flex-auto flex-col h-full">
+    <!-- Header con breadcrumb y botón close -->
+    <div class="flex items-center justify-between px-6 py-4 border-b border-gray-200 bg-white">
+        <div class="flex items-center gap-2 text-sm">
+            <span class="text-gray-900 font-medium">Shows</span>
+            <mat-icon class="text-lg text-gray-400">chevron_right</mat-icon>
+            <span class="text-gray-500">Settings</span>
+        </div>
+        <button
+            type="button"
+            mat-stroked-button
+            (click)="onClose()"
+            class="px-6 py-2 min-w-[100px] rounded-lg"
+        >
+            Close
+        </button>
+    </div>
+
+    <!-- Contenedor principal con menú lateral y contenido -->
+    <div class="flex flex-1 overflow-hidden">
+        <!-- Menú lateral -->
+        <app-show-menu 
+            [showId]="showId"
+            [activeItemId]="'tickets'"
+        ></app-show-menu>
+
+        <!-- Contenido principal -->
+        <div class="flex-1 overflow-y-auto bg-gray-50 p-6">
+            <div class="max-w-5xl mx-auto">
+                <!-- Alert -->
+                @if (showAlert) {
+                    <fuse-alert
+                        class="mb-6"
+                        [appearance]="'outline'"
+                        [showIcon]="false"
+                        [type]="alert.type"
+                        [@shake]="alert.type === 'error'"
+                    >
+                        {{ alert.message }}
+                    </fuse-alert>
+                }
+
+                @if (isLoading) {
+                    <!-- Loading state -->
+                    <div class="flex flex-col items-center justify-center py-16">
+                        <mat-progress-spinner
+                            [diameter]="48"
+                            [mode]="'indeterminate'"
+                        ></mat-progress-spinner>
+                        <p class="text-gray-500 mt-4">Loading tickets...</p>
+                    </div>
+                } @else {
+                    <!-- Título -->
+                    <div class="mb-4">
+                        <h2 class="text-xl font-bold text-gray-900">Tickets</h2>
+                        <p class="text-gray-600 text-sm">
+                            Manage tickets for this show
+                        </p>
+                    </div>
+
+                    <!-- Lista de Tickets (estilo tarjetas) -->
+                    <div class="space-y-1.5 mb-6">
+                        @for (ticket of currentPageTickets; track ticket.id) {
+                            <div class="bg-white rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-shadow py-1 px-3">
+                                <div class="flex items-center">
+                                    <!-- Primera columna: círculo de color -->
+                                    <div class="w-8 flex items-center justify-center">
+                                        @switch (ticket.type) {
+                                            @case ('general') {
+                                                <div class="w-4 h-4 rounded-full bg-blue-500" [matTooltip]="'General Admission'"></div>
+                                            }
+                                            @case ('reserved') {
+                                                <div class="w-4 h-4 rounded-full bg-green-500" [matTooltip]="'Reserved Seating'"></div>
+                                            }
+                                            @case ('vip') {
+                                                <div class="w-4 h-4 rounded-full bg-purple-500" [matTooltip]="'VIP'"></div>
+                                            }
+                                            @case ('bo') {
+                                                <div class="w-4 h-4 rounded-full bg-orange-500" [matTooltip]="'Box Office'"></div>
+                                            }
+                                            @case ('addon') {
+                                                <div class="w-4 h-4 rounded-full bg-gray-400" [matTooltip]="'Add-On'"></div>
+                                            }
+                                            @default {
+                                                <div class="w-4 h-4 rounded-full bg-gray-300" [matTooltip]="'Other'"></div>
+                                            }
+                                        }
+                                    </div>
+
+                                    <!-- Segunda columna: Ticket Name -->
+                                    <div class="w-2/5 truncate">
+                                        <span class="text-sm text-gray-900">{{ ticket.name }}</span>
+                                    </div>
+
+                                    <!-- Tercera columna: Quantity -->
+                                    <div class="w-1/6">
+                                        <span class="text-sm text-gray-600">{{ formatQuantity(ticket.quantity) }}</span>
+                                    </div>
+
+                                    <!-- Cuarta columna: Description -->
+                                    <div class="w-2/5 truncate">
+                                        <span class="text-sm text-gray-900">{{ ticket.description }}</span>
+                                    </div>
+
+                                    <!-- Quinta columna: Price -->
+                                    <div class="w-1/6">
+                                        <span class="text-sm text-gray-600">{{ formatPrice(ticket.price) }}</span>
+                                    </div>
+
+                                    <!-- Sexta columna: Status (toggle) -->
+                                    <div class="w-1/12 flex justify-center">
+                                        <mat-slide-toggle
+                                            [checked]="ticket.enabled !== false"
+                                            (toggleChange)="toggleTicket(ticket)"
+                                            color="primary"
+                                            class="scale-75"
+                                        ></mat-slide-toggle>
+                                    </div>
+
+                                    <!-- Séptima columna: Actions -->
+                                    <div class="w-1/12 flex justify-end">
+                                        <div class="flex items-center gap-1.5">
+                                            <button
+                                                mat-icon-button
+                                                class="w-5 h-5 text-blue-500 hover:text-blue-700 hover:bg-blue-50 rounded-full transition-colors flex items-center justify-center"
+                                                (click)="editTicket(ticket)"
+                                                matTooltip="Edit ticket"
+                                                matTooltipPosition="above"
+                                                type="button"
+                                            >
+                                                <mat-icon class="text-base">edit</mat-icon>
+                                            </button>
+
+                                            <button
+                                                mat-icon-button
+                                                class="w-5 h-5 text-red-500 hover:text-red-700 hover:bg-red-50 rounded-full transition-colors flex items-center justify-center"
+                                                (click)="deleteTicket(ticket)"
+                                                matTooltip="Delete ticket"
+                                                matTooltipPosition="above"
+                                                type="button"
+                                            >
+                                                <mat-icon class="text-base">delete</mat-icon>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        } @empty {
+                            <div class="bg-white rounded-lg border border-gray-200 p-8 text-center">
+                                <div class="flex flex-col items-center justify-center">
+                                    <mat-icon class="text-5xl text-gray-300 mb-3">confirmation_number</mat-icon>
+                                    <h3 class="text-lg font-medium text-gray-900 mb-1">No tickets found</h3>
+                                    <p class="text-gray-500 text-sm mb-4">Click the button below to add your first ticket</p>
+                                </div>
+                            </div>
+                        }
+                    </div>
+
+                    <!-- Fila con Add New a la izquierda y Paginación a la derecha -->
+                    <div class="flex items-center justify-between mb-6">
+                        <!-- Botón Add New con icono plus - Izquierda -->
+                        <button
+                            type="button"
+                            mat-stroked-button
+                            (click)="addNewTicket()"
+                            class="px-3 py-1.5 rounded-lg flex items-center gap-1 text-sm"
+                        >
+                            <mat-icon class="text-base">add</mat-icon>
+                            Add new
+                        </button>
+
+                        <!-- Paginación - Derecha con ajuste vertical -->
+                        @if (totalItems > 0) {
+                            <div class="flex items-center -mt-6"> <!-- Margen negativo de 24px -->
+                                <app-pagination
+                                    [totalItems]="totalItems"
+                                    [pageSize]="pageSize"
+                                    [pageIndex]="pageIndex"
+                                    (pageChange)="onPageChange($event)"
+                                ></app-pagination>
+                            </div>
+                        }
+                    </div>
+
+                    <!-- Botón Save Change alineado a la izquierda -->
+                    <div class="flex justify-start pt-4 border-t border-gray-200">
+                        <button
+                            type="button"
+                            mat-flat-button
+                            color="primary"
+                            (click)="saveChanges()"
+                            [disabled]="isSaving"
+                            class="px-4 py-1.5 min-w-[100px] bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors disabled:opacity-50 text-sm"
+                        >
+                            @if (isSaving) {
+                                <mat-spinner [diameter]="16" class="inline-block mr-2"></mat-spinner>
+                            }
+                            Save Change
+                        </button>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
