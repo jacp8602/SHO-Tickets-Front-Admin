@@ -108,32 +108,24 @@ export class VendorTableComponent implements OnInit, OnDestroy {
      * On init
      */
     ngOnInit(): void {
-        // Create search form with Production, Show and City filters
+        // Create search form
         this.searchForm = this._formBuilder.group({
-            production: ['all'],
-            show: ['all'],
-            city: ['all']
+            keyword: ['']
         });
 
         // Load users
-        // this._loadUsers();
         this.loadTestVendors();
 
-        // Subscribe to filter changes with debounce
-        this.searchForm.valueChanges
+        // Subscribe to search changes
+        this.searchForm.get('keyword')?.valueChanges
             .pipe(
                 takeUntil(this._unsubscribeAll),
-                debounceTime(300),
-                distinctUntilChanged((prev, curr) => 
-                    prev.production === curr.production && 
-                    prev.show === curr.show && 
-                    prev.city === curr.city
-                )
+                debounceTime(300)
             )
             .subscribe(() => {
-                this.pageIndex = 1; // Reset to first page when filters change
-                this._loadVendors();
-            });
+                this.pageIndex = 1;
+                this.loadTestVendors();
+            });       
     }
 
     /**
@@ -204,7 +196,8 @@ export class VendorTableComponent implements OnInit, OnDestroy {
      */
     onPageChange(page: number): void {
         this.pageIndex = page;
-        this._loadVendors();
+        // this._loadVendors();
+        this.loadTestVendors();
     }
 
     /**
@@ -375,7 +368,8 @@ export class VendorTableComponent implements OnInit, OnDestroy {
      * Refresh table
      */
     refreshTable(): void {
-        this._loadVendors();
+        // this._loadVendors();
+        this.loadTestVendors();
     }
 
     /**
