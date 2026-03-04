@@ -94,7 +94,7 @@ export class AddonsComponent implements OnInit, OnDestroy {
      */
     private getProductionIdFromUrl(): void {
         const urlSegments = this._router.url.split('/');
-        const productionsIndex = urlSegments.indexOf('productions');
+        const productionsIndex = urlSegments.indexOf('productions/addons');
         if (productionsIndex !== -1 && productionsIndex + 1 < urlSegments.length) {
             this.productionId = urlSegments[productionsIndex + 1];
         }
