@@ -77,7 +77,8 @@ export const appRoutes: Route[] = [
         children: [
             {path: 'example', loadChildren: () => import('app/modules/admin/example/example.routes')},
             // Financial Reports
-            {path: 'gross_sales', loadChildren: () => import('app/modules/admin/sales-report/sales-report.routes')},            
+            {path: 'gross_sales', loadChildren: () => import('app/modules/admin/sales-report/sales-report.routes')},
+            {path: 'administrative', loadChildren: () => import('app/modules/admin/administrator-summary/administrator-summary.routes')},           
             // Settings
             {path: 'users', loadChildren: () => import('app/modules/admin/users-table/users-table.routes')},
             {path: 'fees_taxes', loadChildren: () => import('app/modules/admin/fees_taxes/fees-taxes.routes')},
@@ -91,7 +92,7 @@ export const appRoutes: Route[] = [
             {path: 'shows/:id', loadChildren: () => import('app/modules/admin/show-detail/show-detail.routes')},
             {path: 'shows/tickets/:id', loadChildren: () => import('app/modules/admin/show-tickets/show-tickets.routes')},
             {path: 'shows/addons/:id', loadChildren: () => import('app/modules/admin/show-addons/show-addons.routes')},
-            {path: 'vendors', loadChildren: () => import('app/modules/admin/vendor-table/vendor-table.routes')},
+            {path: 'vendors', loadChildren: () => import('app/modules/admin/vendor-table/vendor-table.routes')},            
         ]
     }
 ];
