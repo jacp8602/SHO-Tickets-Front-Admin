@@ -1,0 +1,180 @@
+<div class="flex min-w-0 flex-auto flex-col">
+    <!-- Main -->
+    <div class="flex-auto p-6 sm:p-10">
+        <!-- Header con botones -->
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
+            <h1 class="text-2xl font-bold text-gray-900"></h1>
+            
+            <div class="flex items-center gap-2 mt-4 sm:mt-0">
+                <!-- Botón Refresh -->
+                <button
+                    type="button"
+                    mat-stroked-button
+                    (click)="refreshReport()"
+                    class="px-4 py-2 rounded-lg flex items-center gap-2 bg-white hover:bg-gray-50 text-black"
+                    matTooltip="Refresh report"
+                >
+                    <mat-icon>refresh</mat-icon>
+                    Refresh
+                </button>
+
+                <!-- Botón Export -->
+                <button
+                    type="button"
+                    mat-flat-button
+                    color="primary"
+                    (click)="exportReport()"
+                    class="px-4 py-2 rounded-lg flex items-center gap-2 bg-white hover:bg-gray-50 text-black"
+                >
+                    <mat-icon>download</mat-icon>
+                    Export
+                </button>
+            </div>
+        </div>
+
+        <!-- Alert -->
+        @if (showAlert) {
+            <fuse-alert
+                class="mb-6"
+                [appearance]="'outline'"
+                [showIcon]="false"
+                [type]="alert.type"
+                [@shake]="alert.type === 'error'"
+            >
+                {{ alert.message }}
+            </fuse-alert>
+        }
+
+        <!-- Loading indicator -->
+        @if (isLoading) {
+            <div class="flex flex-col items-center justify-center py-16">
+                <mat-progress-spinner
+                    [diameter]="48"
+                    [mode]="'indeterminate'"
+                ></mat-progress-spinner>
+                <p class="text-gray-500 mt-4">Loading administrator summary...</p>
+            </div>
+        } @else {
+            <!-- Tabla de Administradores -->
+            <div class="bg-white rounded-lg border border-gray-200 overflow-hidden shadow-sm mb-6">
+                <!-- Título con margen superior y alineado con el resto -->
+                <div class="px-4 pt-4">
+                    <h2 class="text-base font-bold text-gray-900">Administrator Summary 2.0 (Box Office)</h2>
+                </div>
+
+                <!-- FILTROS -->
+                <div class="bg-gray-50 border border-gray-200 overflow-hidden shadow-sm mt-4">
+                    <div class="grid grid-cols-1 sm:grid-cols-5 gap-4 p-4">
+                        <!-- Order Date -->
+                        <div>
+                            <div class="text-xs font-medium text-gray-500 tracking-wider mb-1">Order Date:</div>
+                            <mat-form-field class="w-full">
+                                <input matInput [matDatepicker]="picker" placeholder="Select date"
+                                    [formControl]="filterForm.get('orderDate')">
+                                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                                <mat-datepicker #picker></mat-datepicker>
+                            </mat-form-field>
+                        </div>
+
+                        <!-- Admin User -->
+                        <div>
+                            <div class="text-xs font-medium text-gray-500 tracking-wider mb-1">Admin User:</div>
+                            <mat-form-field class="w-full">
+                                <mat-select [formControl]="filterForm.get('adminUser')">
+                                    @for (option of adminUserOptions; track option.value) {
+                                    <mat-option [value]="option.value">{{ option.label }}</mat-option>
+                                    }
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+
+                        <!-- Event -->
+                        <div>
+                            <div class="text-xs font-medium text-gray-500 tracking-wider mb-1">Event:</div>
+                            <mat-form-field class="w-full">
+                                <mat-select [formControl]="filterForm.get('event')">
+                                    @for (option of eventOptions; track option.value) {
+                                    <mat-option [value]="option.value">{{ option.label }}</mat-option>
+                                    }
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+
+                        <!-- Order Status -->
+                        <div>
+                            <div class="text-xs font-medium text-gray-500 tracking-wider mb-1">Order Status:</div>
+                            <mat-form-field class="w-full">
+                                <mat-select [formControl]="filterForm.get('orderStatus')">
+                                    @for (option of orderStatusOptions; track option.value) {
+                                    <mat-option [value]="option.value">{{ option.label }}</mat-option>
+                                    }
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+
+                        <!-- Payment Method -->
+                        <div>
+                            <div class="text-xs font-medium text-gray-500 tracking-wider mb-1">Payment Method:</div>
+                            <mat-form-field class="w-full">
+                                <mat-select [formControl]="filterForm.get('paymentMethod')">
+                                    @for (option of paymentMethodOptions; track option.value) {
+                                    <mat-option [value]="option.value">{{ option.label }}</mat-option>
+                                    }
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead class="bg-white border-b border-gray-200">
+                            <tr>
+                                <th class="text-left text-xs font-bold text-gray-600 tracking-wider px-4 py-3">Administrator
+                                </th>
+                                <th class="text-right text-xs font-bold text-gray-600 tracking-wider px-4 py-3">Tickets</th>
+                                <th class="text-right text-xs font-bold text-gray-600 tracking-wider px-4 py-3">Face Value
+                                </th>
+                                <th class="text-right text-xs font-bold text-gray-600 tracking-wider px-4 py-3">Fees</th>
+                                <th class="text-right text-xs font-bold text-gray-600 tracking-wider px-4 py-3">Sub Total
+                                </th>
+                                <th class="text-right text-xs font-bold text-gray-600 tracking-wider px-4 py-3">Promo Discount
+                                </th>
+                                <th class="text-right text-xs font-bold text-gray-600 tracking-wider px-4 py-3">Total</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-200">
+                            @for (item of currentPageItems; track item.id) {
+                            <tr class="hover:bg-gray-50 transition-colors">
+                                <td class="px-4 py-3 text-sm text-gray-900">{{ item.administrator }}</td>
+                                <td class="px-4 py-3 text-sm text-gray-600 text-right">{{ formatNumber(item.tickets) }}</td>
+                                <td class="px-4 py-3 text-sm text-gray-600 text-right">{{ formatCurrency(item.faceValue) }}</td>
+                                <td class="px-4 py-3 text-sm text-gray-600 text-right">{{ formatCurrency(item.fees) }}</td>
+                                <td class="px-4 py-3 text-sm text-gray-600 text-right">{{ formatCurrency(item.subTotal) }}</td>
+                                <td class="px-4 py-3 text-sm text-gray-600 text-right">{{ formatCurrency(item.promoDiscount) }}</td>
+                                <td class="px-4 py-3 text-sm text-gray-600 text-right font-medium">{{ formatCurrency(item.total) }}</td>
+                            </tr>
+                            } @empty {
+                            <tr>
+                                <td colspan="7" class="px-4 py-12 text-center text-gray-500">
+                                    No administrator data found
+                                </td>
+                            </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            @if (totalItems > 0) {
+                <!-- Paginación -->
+                <app-pagination
+                    [totalItems]="totalItems"
+                    [pageSize]="pageSize"
+                    [pageIndex]="pageIndex"
+                    (pageChange)="onPageChange($event)"
+                ></app-pagination>
+            }
+        }
+    </div>
+</div>
