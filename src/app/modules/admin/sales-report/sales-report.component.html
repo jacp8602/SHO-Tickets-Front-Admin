@@ -1,0 +1,205 @@
+<div class="flex min-w-0 flex-auto flex-col">
+    <!-- Main -->
+    <div class="flex-auto p-6 sm:p-10">
+        <!-- Header con título y botones -->
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
+            <h1 class="text-2xl font-bold text-gray-900">Event Gross Sales Report</h1>
+            
+            <div class="flex items-center gap-2 mt-4 sm:mt-0">
+                <!-- Botón Refresh -->
+                <button
+                    type="button"
+                    mat-stroked-button
+                    (click)="refreshReport()"
+                    class="px-4 py-2 rounded-lg flex items-center gap-2 bg-white hover:bg-gray-50 text-black"
+                    matTooltip="Refresh report"
+                >
+                    <mat-icon>refresh</mat-icon>
+                    Refresh
+                </button>
+
+                <!-- Botón Export -->
+                <button
+                    type="button"
+                    mat-flat-button
+                    color="primary"
+                    (click)="exportReport()"
+                    class="px-4 py-2 rounded-lg flex items-center gap-2 bg-white hover:bg-gray-50 text-black"
+                >
+                    <mat-icon>download</mat-icon>
+                    Export
+                </button>
+            </div>
+        </div>
+
+        <!-- Filtros -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 mb-6">
+            <!-- Order Date -->
+            <mat-form-field class="w-full">
+                <mat-label>Order Date</mat-label>
+                <input matInput [matDatepicker]="picker" placeholder="Select date" [formControl]="filterForm.get('orderDate')">
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
+
+            <!-- Admin User -->
+            <mat-form-field class="w-full">
+                <mat-label>Admin User</mat-label>
+                <mat-select [formControl]="filterForm.get('adminUser')">
+                    @for (option of adminUserOptions; track option.value) {
+                        <mat-option [value]="option.value">{{ option.label }}</mat-option>
+                    }
+                </mat-select>
+            </mat-form-field>
+
+            <!-- Event -->
+            <mat-form-field class="w-full">
+                <mat-label>Event</mat-label>                
+                <mat-select [formControl]="filterForm.get('event')">
+                    @for (option of eventOptions; track option.value) {
+                        <mat-option [value]="option.value">{{ option.label }}</mat-option>
+                    }
+                </mat-select>
+            </mat-form-field>
+
+            <!-- Order Status -->
+            <mat-form-field class="w-full">
+                <mat-label>Order Status</mat-label>                
+                <mat-select [formControl]="filterForm.get('orderStatus')">
+                    @for (option of orderStatusOptions; track option.value) {
+                        <mat-option [value]="option.value">{{ option.label }}</mat-option>
+                    }
+                </mat-select>
+            </mat-form-field>
+
+            <!-- Payment Method -->
+            <mat-form-field class="w-full">
+                <mat-label>Payment Method</mat-label>                
+                <mat-select [formControl]="filterForm.get('paymentMethod')">
+                    @for (option of paymentMethodOptions; track option.value) {
+                        <mat-option [value]="option.value">{{ option.label }}</mat-option>
+                    }
+                </mat-select>
+            </mat-form-field>
+        </div>
+
+        <!-- Alert -->
+        @if (showAlert) {
+            <fuse-alert
+                class="mb-6"
+                [appearance]="'outline'"
+                [showIcon]="false"
+                [type]="alert.type"
+                [@shake]="alert.type === 'error'"
+            >
+                {{ alert.message }}
+            </fuse-alert>
+        }
+
+        <!-- Loading indicator -->
+        @if (isLoading) {
+            <div class="flex flex-col items-center justify-center py-16">
+                <mat-progress-spinner
+                    [diameter]="48"
+                    [mode]="'indeterminate'"
+                ></mat-progress-spinner>
+                <p class="text-gray-500 mt-4">Loading sales report...</p>
+            </div>
+        } @else {
+            <!-- Tabla de Reporte de Ventas -->
+            <div class="bg-white rounded-lg border border-gray-200 overflow-hidden shadow-sm mb-6">
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead class="bg-gray-50 border-b border-gray-200">
+                            <tr>
+                                <th class="text-left text-xs font-bold text-gray-600 tracking-wider px-4 py-3 w-12"></th>
+                                <th class="text-left text-xs font-bold text-gray-600 tracking-wider px-4 py-3">Venue</th>
+                                <th class="text-left text-xs font-bold text-gray-600 tracking-wider px-4 py-3">Event</th>
+                                <th class="text-right text-xs font-bold text-gray-600 tracking-wider px-4 py-3">Orders</th>
+                                <th class="text-right text-xs font-bold text-gray-600 tracking-wider px-4 py-3">All Tickets (incl Add Ons)</th>
+                                <th class="text-right text-xs font-bold text-gray-600 tracking-wider px-4 py-3">Tickets</th>
+                                <th class="text-right text-xs font-bold text-gray-600 tracking-wider px-4 py-3">Add Ons</th>
+                                <th class="text-right text-xs font-bold text-gray-600 tracking-wider px-4 py-3">Total Fees</th>
+                                <th class="text-right text-xs font-bold text-gray-600 tracking-wider px-4 py-3">Total Taxes</th>
+                                <th class="text-right text-xs font-bold text-gray-600 tracking-wider px-4 py-3">Amount Paid</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-200">
+                            <!-- Grand Summary (siempre primera fila) -->
+                            @if (grandSummary) {
+                                <tr class="bg-blue-50 font-bold">
+                                    <td class="px-4 py-3 text-sm text-gray-900"></td>
+                                    <td class="px-4 py-3 text-sm text-gray-900" colspan="2">Grand Summary:</td>
+                                    <td class="px-4 py-3 text-sm text-gray-900 text-right">{{ formatNumber(grandSummary.orders) }}</td>
+                                    <td class="px-4 py-3 text-sm text-gray-900 text-right">{{ formatNumber(grandSummary.allTickets) }}</td>
+                                    <td class="px-4 py-3 text-sm text-gray-900 text-right">{{ formatNumber(grandSummary.tickets) }}</td>
+                                    <td class="px-4 py-3 text-sm text-gray-900 text-right">{{ formatNumber(grandSummary.addOns) }}</td>
+                                    <td class="px-4 py-3 text-sm text-gray-900 text-right">{{ formatCurrency(grandSummary.totalFees) }}</td>
+                                    <td class="px-4 py-3 text-sm text-gray-900 text-right">{{ formatCurrency(grandSummary.totalTaxes) }}</td>
+                                    <td class="px-4 py-3 text-sm text-blue-600 text-right">{{ formatCurrency(grandSummary.amountPaid) }}</td>
+                                </tr>
+                            }
+
+                            <!-- Items agrupados por venue (paginados) -->
+                            @for (group of paginatedGroups; track group.venue; let groupIndex = $index) {
+                                <!-- Items individuales del venue -->
+                                @for (item of group.items; track item.id; let itemIndex = $index) {
+                                    <tr class="hover:bg-gray-50 transition-colors">
+                                        <td class="px-4 py-3 text-sm text-gray-500">{{ getItemIndex(groupIndex, itemIndex) }}</td>
+                                        <td class="px-4 py-3 text-sm text-gray-900"></td>
+                                        <td class="px-4 py-3 text-sm text-gray-600">{{ item.venue + ' ' + item.event }}</td>
+                                        <td class="px-4 py-3 text-sm text-gray-600 text-right">{{ formatNumber(item.orders) }}</td>
+                                        <td class="px-4 py-3 text-sm text-gray-600 text-right">{{ formatNumber(item.allTickets) }}</td>
+                                        <td class="px-4 py-3 text-sm text-gray-600 text-right">{{ formatNumber(item.tickets) }}</td>
+                                        <td class="px-4 py-3 text-sm text-gray-600 text-right">{{ formatNumber(item.addOns) }}</td>
+                                        <td class="px-4 py-3 text-sm text-gray-600 text-right">{{ formatCurrency(item.totalFees) }}</td>
+                                        <td class="px-4 py-3 text-sm text-gray-600 text-right">{{ formatCurrency(item.totalTaxes) }}</td>
+                                        <td class="px-4 py-3 text-sm text-gray-600 text-right">{{ formatCurrency(item.amountPaid) }}</td>
+                                    </tr>
+                                }
+
+                                <!-- Fila de resumen del venue (destacada) -->
+                                <tr class="bg-gray-50 font-medium border-t-2 border-gray-300">
+                                    <td class="px-4 py-3 text-sm text-gray-800"></td>
+                                    <td class="px-4 py-3 text-sm text-gray-800" colspan="2">{{ group.venue }} Summary:</td>
+                                    <td class="px-4 py-3 text-sm text-gray-800 text-right">{{ formatNumber(group.summary.orders) }}</td>
+                                    <td class="px-4 py-3 text-sm text-gray-800 text-right">{{ formatNumber(group.summary.allTickets) }}</td>
+                                    <td class="px-4 py-3 text-sm text-gray-800 text-right">{{ formatNumber(group.summary.tickets) }}</td>
+                                    <td class="px-4 py-3 text-sm text-gray-800 text-right">{{ formatNumber(group.summary.addOns) }}</td>
+                                    <td class="px-4 py-3 text-sm text-gray-800 text-right">{{ formatCurrency(group.summary.totalFees) }}</td>
+                                    <td class="px-4 py-3 text-sm text-gray-800 text-right">{{ formatCurrency(group.summary.totalTaxes) }}</td>
+                                    <td class="px-4 py-3 text-sm text-blue-600 text-right">{{ formatCurrency(group.summary.amountPaid) }}</td>
+                                </tr>
+                            } @empty {
+                                <tr>
+                                    <td colspan="10" class="px-4 py-12 text-center text-gray-500">
+                                        No sales data found
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Paginación -->
+            @if (totalGroups > 0) {
+                <div  class="flex items-center justify-between mb-6">
+                    <div class="text-sm text-gray-600">
+                        Showing venues {{ ((pageIndex - 1) * pageSize) + 1 }} to 
+                        {{ Math.min(pageIndex * pageSize, totalGroups) }} of {{ totalGroups }}
+                    </div>
+                    
+                    <div class="flex items-center -mt-6"> <!-- Margen negativo de 24px -->
+                        <app-pagination
+                            [totalItems]="totalGroups"
+                            [pageSize]="pageSize"
+                            [pageIndex]="pageIndex"
+                            (pageChange)="onPageChange($event)"
+                        ></app-pagination>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+</div>

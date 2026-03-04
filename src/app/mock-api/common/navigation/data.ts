@@ -71,7 +71,7 @@ export const defaultNavigation: FuseNavigationItem[] = [
                 title: 'Gross Sales',
                 type: 'basic',
                 icon: 'sho_sidebar:gross_sales',
-                link: ''
+                link: '/gross_sales'
             },
             {
                 id: 'administrative',
