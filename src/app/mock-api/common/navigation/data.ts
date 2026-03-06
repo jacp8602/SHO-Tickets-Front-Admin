@@ -78,7 +78,7 @@ export const defaultNavigation: FuseNavigationItem[] = [
                 title: 'Administrative',
                 type: 'basic',
                 icon: 'sho_sidebar:administrative',
-                link: ''
+                link: '/administrative'
             }
         ]
     },
