@@ -1,0 +1,61 @@
+<fuse-card class="flex flex-col p-3 rounded-xl bg-card h-full">
+    <div class="flex items-center justify-between mb-4">
+        <div class="flex items-center">
+            <!-- <mat-icon class="text-primary-600 icon-size-6 mr-2" [svgIcon]="'heroicons_solid:user'"></mat-icon> -->
+            <h3 class="text-lg font-semibold text-gray-900">Purchaser Information</h3>
+        </div>
+                
+    </div>
+
+    <div class="space-y-4">
+        <!-- Name and Contact -->
+        <div class="grid grid-cols-2 gap-4">
+            <div>
+                <p class="text-sm text-gray-500">First Name</p>
+                <p class="font-medium text-gray-900">{{ purchaserInfo.firstName }}</p>
+            </div>
+            <div>
+                <p class="text-sm text-gray-500">Last Name</p>
+                <p class="font-medium text-gray-900">{{ purchaserInfo.lastName }}</p>
+            </div>
+        </div>
+
+        <!-- Email -->
+        <div>
+            <p class="text-sm text-gray-500">Email</p>
+            <p class="font-medium text-gray-900">{{ purchaserInfo.email }}</p>
+        </div>
+
+        <!-- Phone -->
+        <div>
+            <p class="text-sm text-gray-500">Phone</p>
+            <p class="font-medium text-gray-900">{{ purchaserInfo.phone }}</p>
+        </div>
+
+        <!-- Full Address -->
+        <div>
+            <p class="text-sm text-gray-500">Address</p>
+            <p class="font-medium text-gray-900">{{ fullAddress }}</p>
+        </div>
+
+        <!-- Compact Address Grid -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-2 border-t border-gray-100">
+            <div>
+                <p class="text-xs text-gray-500">Country</p>
+                <p class="text-sm font-medium">{{ purchaserInfo.country }}</p>
+            </div>
+            <div>
+                <p class="text-xs text-gray-500">City</p>
+                <p class="text-sm font-medium">{{ purchaserInfo.city }}</p>
+            </div>
+            <div>
+                <p class="text-xs text-gray-500">State</p>
+                <p class="text-sm font-medium">{{ purchaserInfo.state }}</p>
+            </div>
+            <div>
+                <p class="text-xs text-gray-500">ZIP Code</p>
+                <p class="text-sm font-medium">{{ purchaserInfo.zipCode }}</p>
+            </div>
+        </div>
+    </div>
+</fuse-card>

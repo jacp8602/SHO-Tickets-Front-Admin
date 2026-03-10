@@ -1,0 +1,61 @@
+<fuse-card class="flex flex-col p-3 rounded-xl bg-card h-full">
+    <div class="flex items-center mb-4">
+        <!-- <mat-icon class="text-primary-600 icon-size-6 mr-2" [svgIcon]="'heroicons_solid:shopping-cart'"></mat-icon> -->
+        <h3 class="text-lg font-semibold text-gray-900">Order Information</h3>
+    </div>
+
+    <div class="space-y-3">
+        <!-- Amount -->
+        <div class="flex justify-between items-center py-2 border-b border-gray-100">
+            <span class="text-gray-600">Amount</span>
+            <span class="font-semibold text-gray-900">{{ formatCurrency.emit(orderInfo.amount) }}</span>
+        </div>
+
+        <!-- Date -->
+        <div class="flex justify-between items-center py-2 border-b border-gray-100">
+            <span class="text-gray-600">Date</span>
+            <span class="text-gray-900">{{ orderInfo.date }}</span>
+        </div>
+
+        <!-- Transaction Method -->
+        <div class="flex justify-between items-center py-2 border-b border-gray-100">
+            <span class="text-gray-600">Transaction Method</span>
+            <span class="text-gray-900">{{ orderInfo.transactionMethod }}</span>
+        </div>
+
+        <!-- Transaction Status -->
+        <div class="flex justify-between items-center py-2 border-b border-gray-100">
+            <span class="text-gray-600">Transaction Status</span>
+            <span class="px-3 py-1 rounded-full text-sm font-medium border {{ getStatusClass(orderInfo.transactionStatus) }}">
+                {{ orderInfo.transactionStatus }}
+            </span>
+        </div>
+
+        <!-- Processor -->
+        <div class="flex justify-between items-center py-2 border-b border-gray-100">
+            <span class="text-gray-600">Processor</span>
+            <span class="text-gray-900">{{ orderInfo.processor }}</span>
+        </div>
+
+        <!-- Source -->
+        <div class="flex justify-between items-center py-2 border-b border-gray-100">
+            <span class="text-gray-600">Source</span>
+            <span class="text-gray-900">{{ orderInfo.source }}</span>
+        </div>
+
+        <!-- Placed By -->
+        <div class="flex justify-between items-center py-2">
+            <span class="text-gray-600">Placed By</span>
+            <span class="text-gray-900 font-medium">{{ orderInfo.placedBy }}</span>
+        </div>
+
+        <app-barcode 
+            value="5236256"
+            width="2.5"
+            height="100"          
+            [downloadButton]="false"
+            [copyButton]="false"
+            [printButton]="false">
+        </app-barcode>
+    </div>
+</fuse-card>

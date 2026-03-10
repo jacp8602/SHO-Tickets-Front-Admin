@@ -42,7 +42,7 @@ export const defaultNavigation: FuseNavigationItem[] = [
                 title: 'Orders',
                 type: 'basic',
                 icon: 'sho_sidebar:order',
-                link: ''
+                link: '/order'
             }
         ]
     },

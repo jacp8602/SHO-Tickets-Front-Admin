@@ -149,5 +149,33 @@ export class IconsService {
                 'icons/sidebar/money-receive-circle.svg'
             )
         );
+        matIconRegistry.addSvgIconInNamespace(
+            'sho_sidebar',
+            'layout_conf_view',
+            domSanitizer.bypassSecurityTrustResourceUrl(
+                'icons/layout_orders/view.svg'
+            )
+        );
+         matIconRegistry.addSvgIconInNamespace(
+            'sho_sidebar',
+            'layout_conf_credit-card-change',
+            domSanitizer.bypassSecurityTrustResourceUrl(
+                'icons/layout_orders/credit-card-change.svg'
+            )
+        );
+        matIconRegistry.addSvgIconInNamespace(
+            'sho_sidebar',
+            'layout_conf_mail-reply',
+            domSanitizer.bypassSecurityTrustResourceUrl(
+                'icons/layout_orders/mail-reply-02.svg'
+            )
+        );
+         matIconRegistry.addSvgIconInNamespace(
+            'sho_sidebar',
+            'layout_conf_download-05',
+            domSanitizer.bypassSecurityTrustResourceUrl(
+                'icons/layout_orders/download-05.svg'
+            )
+        );
     }
 }

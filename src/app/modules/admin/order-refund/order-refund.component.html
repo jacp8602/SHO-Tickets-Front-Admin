@@ -1,0 +1,184 @@
+<div class="order-refund-container flex flex-col pt-3 sm:p-1 max-w-4xl mx-auto">
+    <!-- Header con navegación -->
+    <!-- <div class="flex items-center justify-between mb-6">
+        <div class="flex items-center gap-2">
+            <button mat-icon-button (click)="cancelRefund()" matTooltip="Go back">
+                <mat-icon [svgIcon]="'heroicons_solid:arrow-left'"></mat-icon>
+            </button>
+            <h1 class="text-2xl font-bold text-gray-900">Process Refund</h1>
+            <span class="text-sm text-gray-500">Order #{{ orderData.orderNumber}}</span>
+        </div>
+        <span class="text-sm text-primary-600 bg-primary-50 px-3 py-1 rounded-full">
+            {{ orderData.eventInfo }}
+        </span>
+    </div> -->
+    <div class="grid grid-cols-1 lg:grid-cols-1 gap-1">
+        <div class="space-y-3">
+            <!-- Order Header Component -->
+            <app-order-header 
+                [orderNumber]="orderData.orderNumber"
+                [eventInfo]="orderData.eventInfo">
+            </app-order-header>
+        </div>
+    </div>
+
+    <!-- Grid principal -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-1 pt-3">
+        <!-- Columna izquierda - Formulario (2/3) -->
+        <div class="lg:col-span-3 space-y-6">
+            <!-- BCC Email y Refund Amount -->
+            <div class="grid grid-cols-1 md:grid-cols-6 gap-3">
+                <!-- BCC Email -->
+                 <div class="lg:col-span-2">
+                    <mat-form-field appearance="outline" class="w-full text-sm">
+                        <!-- <mat-label>BCC Email Address</mat-label> -->
+                        <input matInput [formControl]="refundForm.get('bccEmail')" placeholder="Enter email">
+                        <!-- <mat-icon matPrefix class="text-gray-400" [svgIcon]="'heroicons_solid:envelope'"></mat-icon> -->
+                        @if (refundForm.get('bccEmail').hasError('required') && refundForm.get('bccEmail').touched) {
+                            <mat-error>Email is required</mat-error>
+                        }
+                        @if (refundForm.get('bccEmail').hasError('email') && refundForm.get('bccEmail').touched) {
+                            <mat-error>Invalid email format</mat-error>
+                        }
+                    </mat-form-field>
+                 </div>
+                
+                <!-- Refund Amount -->
+                 <div class="lg:col-span-1">
+                    <mat-form-field appearance="outline" class="w-full text-sm">
+                        <!-- <mat-label>Refund Amount</mat-label> -->
+                        <span matTextPrefix class="text-gray-500 mr-1">$</span>
+                        <input matInput type="number" [formControl]="refundForm.get('refundAmount')" step="0.01" min="0">
+                        @if (refundForm.get('refundAmount').hasError('required') && refundForm.get('refundAmount').touched) {
+                            <mat-error>Amount is required</mat-error>
+                        }
+                        @if (refundForm.get('refundAmount').hasError('max')) {
+                            <mat-error>Amount exceeds maximum refundable</mat-error>
+                        }
+                    </mat-form-field>
+                 </div>
+                
+                <!-- Internal Note -->
+                 <div class="lg:col-span-3">
+                    <mat-form-field appearance="outline" class="w-full text-sm">
+                        <!-- <mat-label>Internal Note</mat-label> -->
+                        <textarea matInput [formControl]="refundForm.get('internalNote')" rows="1" 
+                                placeholder="Add internal note about this refund..."></textarea>
+                    </mat-form-field>
+                 </div>                 
+            </div>
+
+            
+            <!-- Tabla de Items -->
+            <div class="bg-card rounded-xl border border-gray-200 overflow-hidden">
+                <app-refund-items-table 
+                    [items]="orderData.items"
+                    [pagination]="orderData.pagination"
+                    (itemsSelected)="onItemsSelected($event)"
+                    (selectAllChanged)="onSelectAll($event)"
+                    (pageChange)="onPageChange($event)">
+                </app-refund-items-table>
+            </div>
+
+            <!-- Action buttons -->
+                <div class="flex flex-row justify-end gap-1">                                     
+                    <button mat-stroked-button 
+                            class="w-30"
+                            (click)="cancelRefund()"
+                            [disabled]="isProcessing">
+                        Cancel
+                    </button>
+
+                    <button mat-flat-button 
+                            color="primary" 
+                            class="w-45"
+                            (click)="processRefund()">
+                        @if (isProcessing) {
+                            <mat-spinner diameter="24" class="mr-2"></mat-spinner>
+                            Processing...
+                        } @else {
+                            Refund Order
+                        }
+                    </button>
+                </div>
+        </div>
+
+        <!-- Columna derecha - Resumen (1/3) -->
+        <!-- <div class="lg:col-span-1">
+            <fuse-card class="p-6 sticky top-6">
+                <h3 class="text-lg font-semibold text-gray-900 mb-4">Refund Summary</h3>
+                
+                <div class="space-y-3">
+                    <div class="flex justify-between text-sm">
+                        <span class="text-gray-600">Items selected</span>
+                        <span class="font-medium">{{ selectedItems.length }}</span>
+                    </div>
+                    
+                    <div class="flex justify-between text-sm">
+                        <span class="text-gray-600">Subtotal</span>
+                        <span class="font-medium">Revisar esto</span> -->
+                        <!-- <span class="font-medium">{{ formatCurrency(selectedItems.reduce((sum, item) => sum + item.price, 0)) }}</span> -->
+                    <!-- </div> -->
+                    
+                    <!-- Revisar esto @if (refundForm.get('refundAmount').value !== selectedItems.reduce((sum, item) => sum + item.price, 0)) { -->
+                    <!-- @if (true) {
+                        <div class="flex justify-between text-sm text-amber-600">
+                            <span>Partial refund</span>
+                            <span>Revisar esto</span> -->
+                            <!-- <span>{{ formatCurrency(selectedItems.reduce((sum, item) => sum + item.price, 0) - refundForm.get('refundAmount').value) }}</span> -->
+                        <!-- </div>
+                    }
+                    
+                    <mat-divider></mat-divider>
+                    
+                    <div class="flex justify-between font-semibold">
+                        <span>Total to refund</span>
+                        <span class="text-primary-600">Revisar esto</span> -->
+                        <!-- <span class="text-primary-600">{{ formatCurrency(refundForm.get('refundAmount').value || 0) }}</span> -->
+                    <!-- </div>
+                </div> -->
+
+                <!-- Notification options -->
+                <!-- <div class="mt-6 space-y-3">
+                    <mat-checkbox [formControl]="refundForm.get('notifyCustomer')" color="primary">
+                        Notify customer
+                    </mat-checkbox>
+                    
+                    <mat-checkbox [formControl]="refundForm.get('sendCopy')" color="primary">
+                        Send me a copy
+                    </mat-checkbox>
+                </div> -->
+
+                <!-- Action buttons -->
+                <!-- <div class="mt-6 space-y-2">
+                    <button mat-flat-button 
+                            color="primary" 
+                            class="w-full py-6 text-lg"
+                            [disabled]="refundForm.invalid || selectedItems.length === 0 || isProcessing"
+                            (click)="processRefund()">
+                        @if (isProcessing) {
+                            <mat-spinner diameter="24" class="mr-2"></mat-spinner>
+                            Processing...
+                        } @else {
+                            Refund Order
+                        }
+                    </button>
+                    
+                    <button mat-stroked-button 
+                            class="w-full"
+                            (click)="cancelRefund()"
+                            [disabled]="isProcessing">
+                        Cancel
+                    </button>
+                </div> -->
+
+                <!-- Warning message -->
+                <!-- @if (selectedItems.length > 0 && refundForm.get('refundAmount').value > getMaxRefundAmount()) {
+                    <div class="mt-4 p-3 bg-red-50 text-red-700 rounded-lg text-sm">
+                        Refund amount cannot exceed selected items total
+                    </div>
+                } -->
+            <!-- </fuse-card> -->
+        <!-- </div> -->
+    </div>
+</div>

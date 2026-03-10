@@ -1,0 +1,54 @@
+<div class="order-details-container flex flex-col pt-3 sm:p-1 max-w-4xl mx-auto">
+    <!-- Header con título y acciones -->
+    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6">
+        <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 mb-4 sm:mb-0">
+            Order Details
+        </h1>
+        
+        <div class="flex items-center space-x-2">
+            <button mat-stroked-button color="primary" class="close-button">
+                <span class="ml-2 hidden sm:inline">Close</span>
+            </button>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-1 gap-1">
+        <div class="space-y-3">
+            <!-- Order Header Component -->
+            <app-order-header 
+                [orderNumber]="orderDetails.orderNumber"
+                [eventInfo]="orderDetails.eventInfo">
+            </app-order-header>
+        </div>
+    </div>
+
+    <!-- Grid de 3 columnas para la información -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-1 pt-3">
+        <!-- Columna izquierda -->
+        <div class="lg:col-span-1">            
+            <!-- Order Info Component -->
+            <app-order-info 
+                [orderInfo]="orderDetails.orderInfo"
+                (formatCurrency)="formatCurrency($event)">
+            </app-order-info>
+
+        </div>
+
+        <!-- Columna centro -->
+        <div class="lg:col-span-1">
+            <!-- Purchaser Info Component -->
+            <app-purchaser-info 
+                [purchaserInfo]="orderDetails.purchaserInfo">
+            </app-purchaser-info>
+        </div>
+
+        <!-- Columna derecha -->
+        <div class="lg:col-span-1">
+            <!-- Order Receipt Component -->
+            <app-order-receipt 
+                [receipt]="orderDetails.receipt"
+                (formatCurrency)="formatCurrency($event)">
+            </app-order-receipt>
+        </div>
+    </div>
+</div>

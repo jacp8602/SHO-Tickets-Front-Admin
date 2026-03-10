@@ -76,6 +76,9 @@ export const appRoutes: Route[] = [
         },
         children: [
             {path: 'example', loadChildren: () => import('app/modules/admin/example/example.routes')},
+            {path: 'order', loadChildren: () => import('app/modules/admin/orders/orders.routes')},
+            {path: 'order-details/:id', loadChildren: () => import('app/modules/admin/order-details/order-details.routes')},
+            {path: 'order-refund/:id', loadChildren: () => import('app/modules/admin/order-refund/order-refund.routes')},
             // Financial Reports
             {path: 'gross_sales', loadChildren: () => import('app/modules/admin/sales-report/sales-report.routes')},
             {path: 'administrative', loadChildren: () => import('app/modules/admin/administrator-summary/administrator-summary.routes')},           
