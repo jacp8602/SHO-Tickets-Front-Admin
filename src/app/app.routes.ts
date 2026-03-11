@@ -80,6 +80,8 @@ export const appRoutes: Route[] = [
             {path: 'order-details/:id', loadChildren: () => import('app/modules/admin/order-details/order-details.routes')},
             {path: 'order-refund/:id', loadChildren: () => import('app/modules/admin/order-refund/order-refund.routes')},
             // Financial Reports
+            {path: 'current-future', loadChildren: () => import('app/modules/admin/current-future-sales/current-future-sales.routes')},
+            {path: 'current-future/purchase-items', loadChildren: () => import('app/modules/admin/purchase-items/purchase-items.routes')},
             {path: 'gross_sales', loadChildren: () => import('app/modules/admin/sales-report/sales-report.routes')},
             {path: 'administrative', loadChildren: () => import('app/modules/admin/administrator-summary/administrator-summary.routes')},           
             // Settings
