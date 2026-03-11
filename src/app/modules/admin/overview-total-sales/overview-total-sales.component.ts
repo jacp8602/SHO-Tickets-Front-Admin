@@ -147,7 +147,7 @@ export class OverviewTotalSalesComponent implements OnInit, OnDestroy {
                     this.isLoading = false;
                 },
                 error: (error) => {
-                    console.error('Error loading data:', error);
+                    console.error('Error loading ', error);
                     this.alert = {
                         type: 'error',
                         message: 'Failed to load overview. Please try again.',
@@ -186,6 +186,53 @@ export class OverviewTotalSalesComponent implements OnInit, OnDestroy {
     }
 
     /**
+     * Calcular el total de valores
+     */
+    private calculateTotal(data: { value: number }[]): number {
+        return data.reduce((sum, item) => sum + item.value, 0);
+    }
+
+    /**
+     * Calcular path para gráfico de pastel (pie chart)
+     * Retorna el atributo 'd' para un SVG path
+     */
+    calculatePieSlicePath(
+        value: number,
+        index: number,
+        data: { value: number }[],
+        radius: number = 80,
+        centerX: number = 100,
+        centerY: number = 100
+    ): string {
+        const total = this.calculateTotal(data);
+        const percentage = value / total;
+        const angle = percentage * 360;
+        
+        // Calcular ángulo de inicio y fin
+        let startAngle = 0;
+        for (let i = 0; i < index; i++) {
+            startAngle += (data[i].value / total) * 360;
+        }
+        const endAngle = startAngle + angle;
+        
+        // Convertir a radianes (restar 90 grados para empezar desde arriba)
+        const startRad = (startAngle - 90) * (Math.PI / 180);
+        const endRad = (endAngle - 90) * (Math.PI / 180);
+        
+        // Calcular coordenadas
+        const x1 = centerX + radius * Math.cos(startRad);
+        const y1 = centerY + radius * Math.sin(startRad);
+        const x2 = centerX + radius * Math.cos(endRad);
+        const y2 = centerY + radius * Math.sin(endRad);
+        
+        // Determinar si el arco es mayor a 180 grados
+        const largeArcFlag = angle > 180 ? 1 : 0;
+        
+        // Crear path SVG
+        return `M ${centerX} ${centerY} L ${x1} ${y1} A ${radius} ${radius} 0 ${largeArcFlag} 1 ${x2} ${y2} Z`;
+    }
+
+    /**
      * Refrescar el reporte
      */
     refreshReport(): void {
@@ -202,36 +249,5 @@ export class OverviewTotalSalesComponent implements OnInit, OnDestroy {
         this._snackBar.open('Exporting report...', 'Close', {
             duration: 2000,
         });
-    }
-
-    /**
-     * Calcular el total de valores
-     */
-    private calculateTotal(data: { value: number }[]): number {
-        return data.reduce((sum, item) => sum + item.value, 0);
-    }
-
-    /**
-     * Calcular stroke-dasharray para gráficos circulares
-     */
-    calculateDashArray(value: number, data: { value: number }[]): string {
-        const total = this.calculateTotal(data);
-        const percentage = value / total;
-        const circumference = 2 * Math.PI * 40; // r = 40
-        const dashLength = circumference * percentage;
-        return `${dashLength} ${circumference - dashLength}`;
-    }
-
-    /**
-     * Calcular stroke-dashoffset para gráficos circulares
-     */
-    calculateDashOffset(index: number, data: { value: number }[]): string {
-        const circumference = 2 * Math.PI * 40;
-        let offset = 0;
-        for (let i = 0; i < index; i++) {
-            const percentage = data[i].value / this.calculateTotal(data);
-            offset += circumference * percentage;
-        }
-        return offset.toString();
     }
 }
