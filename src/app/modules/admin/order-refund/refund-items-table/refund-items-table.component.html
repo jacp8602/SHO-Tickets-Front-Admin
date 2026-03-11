@@ -1,0 +1,71 @@
+<div class="overflow-x-auto">
+    <table class="w-full">
+        <thead class="bg-gray-50 border-y border-gray-200">
+            <tr>
+                <th class="w-12 px-4 py-3">
+                    <mat-checkbox [checked]="selectAll" 
+                                 [indeterminate]="selectedItems.size > 0 && !selectAll"
+                                 (change)="toggleSelectAll()"
+                                 color="primary">
+                    </mat-checkbox>
+                </th>
+                <th class="text-left text-xs font-bold text-gray-600 tracking-wider px-4 py-3">Items</th>
+                <th class="text-left text-xs font-bold text-gray-600 tracking-wider px-4 py-3">Seats</th>
+                <th class="text-left text-xs font-bold text-gray-600 tracking-wider px-4 py-3">Ticket Number</th>
+                <th class="text-left text-xs font-bold text-gray-600 tracking-wider px-4 py-3">Price</th>
+                <th class="text-left text-xs font-bold text-gray-600 tracking-wider px-4 py-3">Status</th>
+            </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-200">
+            @for (item of items; track item.id) {
+                <tr class="hover:bg-gray-50 transition-colors">
+                    <!-- [class.opacity-50]="!item.isRefundable"
+                    [class.bg-gray-50]="item.status === 'Refunded'"> -->
+                                        
+                    <td class="px-4 py-3">
+                        <mat-checkbox [checked]="isSelected(item)"
+                                     [disabled]="!item.isRefundable" 
+                                     (change)="toggleItem(item)"
+                                     color="primary">
+                        </mat-checkbox>
+                    </td>
+                    
+                    <td class="px-4 py-3">
+                        <span class="text-sm text-gray-900">{{ item.name }}</span>
+                    </td>
+                    
+                    <td class="px-4 py-3">
+                        <span class="text-sm text-gray-600">{{ formatSeat(item) }}</span>
+                    </td>
+                    
+                    <td class="px-4 py-3">
+                        <code class="text-xs font-mono bg-gray-100 px-2 py-1 rounded">
+                            {{ item.ticketNumber }}
+                        </code>
+                    </td>
+                    
+                    <td class="px-4 py-3">
+                        <span class="text-sm font-medium text-gray-900">
+                            {{ formatCurrency(item.price) }}
+                        </span>
+                    </td>
+                    
+                    <td class="px-4 py-3">
+                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {{ getStatusClass(item.status) }}">
+                            {{ item.status }}
+                        </span>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<!-- Pagination controls (simplified) -->
+<div class="flex items-center justify-end border-gray-200 bg-gray-50/50 px-3">
+    <app-pagination
+        [totalItems]=items.length
+        [pageSize]=3
+        [pageIndex]=pagination.currentPage               
+    ></app-pagination>
+</div>

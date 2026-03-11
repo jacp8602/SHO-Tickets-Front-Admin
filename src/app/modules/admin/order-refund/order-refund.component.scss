@@ -1,0 +1,106 @@
+app-order-refund {
+    display: block;
+    background-color: #f9fafc;
+    min-height: 100vh;
+
+    .order-refund-container {
+        max-width: 1600px;
+        margin: 0 auto;
+    }
+
+    // Estilos para los campos de formulario
+    .mat-mdc-form-field {
+        &.mat-form-field-appearance-outline {
+            .mat-mdc-text-field-wrapper {
+                background-color: white;
+            }
+        }
+    }
+
+    // Estilos para la tabla
+    .refund-items-table {
+        .mat-mdc-checkbox {
+            .mdc-checkbox {
+                .mdc-checkbox__native-control:enabled:checked ~ .mdc-checkbox__background {
+                    background-color: #1d6ad4 !important;
+                    border-color: #1d6ad4 !important;
+                }
+            }
+        }
+    }
+
+    // Estilos para los badges de estado
+    .rounded-full {
+        transition: all 0.2s ease;
+    }
+
+    // Estilos para el código de ticket
+    code {
+        font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', monospace;
+        font-size: 0.75rem;
+    }
+
+    // Animación para el botón de procesar
+    .mat-flat-button[color="primary"] {
+        transition: all 0.3s ease;
+        
+        &:not([disabled]) {
+            background: linear-gradient(135deg, #1d6ad4 0%, #1e4b8c 100%);
+            
+            &:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 10px 20px -5px rgba(29, 106, 212, 0.4);
+            }
+        }
+    }
+
+    // Responsive
+    @media (max-width: 1024px) {
+        .sticky {
+            position: relative;
+            top: 0;
+        }
+    }
+
+    @media (max-width: 640px) {
+        .p-6 {
+            padding: 1rem;
+        }
+        
+        .grid {
+            gap: 1rem;
+        }
+        
+        table {
+            font-size: 0.875rem;
+        }
+    }
+}
+
+// Snackbar personalizados
+.success-snackbar {
+    background: #10b981;
+    color: white;
+    
+    .mat-simple-snackbar-action {
+        color: white;
+    }
+}
+
+.error-snackbar {
+    background: #ef4444;
+    color: white;
+    
+    .mat-simple-snackbar-action {
+        color: white;
+    }
+}
+
+.warning-snackbar {
+    background: #f59e0b;
+    color: white;
+    
+    .mat-simple-snackbar-action {
+        color: white;
+    }
+}

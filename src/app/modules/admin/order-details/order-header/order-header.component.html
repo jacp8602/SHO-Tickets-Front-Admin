@@ -1,0 +1,39 @@
+<div class="rounded-xl p-6 shadow-sm bg-card">
+    <!-- Fila principal con dos columnas -->
+    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <!-- Columna izquierda: Navegación y título -->
+        <div class="flex items-center gap-2 flex-wrap">
+            <!-- Chevron izquierdo -->
+            <button mat-stroked-button class="text-primary-600">
+                <mat-icon [svgIcon]="'heroicons_solid:chevron-left'"></mat-icon>
+            </button>
+            
+            <!-- Calendario -->
+            <button mat-icon-button class="text-primary-600">
+                <mat-icon [svgIcon]="'heroicons_solid:calendar'"></mat-icon>
+            </button>
+            
+            <!-- Título principal -->
+            <h4 class="text-l font-semibold text-gray-900 leading-tight whitespace-nowrap">
+                {{ formattedHeader }}
+            </h4>
+            
+            <!-- Chevron derecho -->
+            <button mat-stroked-button class="text-primary-600">
+                <mat-icon [svgIcon]="'heroicons_solid:chevron-right'"></mat-icon>
+            </button>
+        </div>
+
+        <!-- Columna derecha: Búsqueda -->
+        <div class="w-full sm:w-auto min-w-[300px]">
+            <!-- <mat-form-field appearance="outline" class="w-full">
+                <mat-label>Search by Order Number</mat-label>
+                <input matInput type="text" placeholder="e.g., #5236256">
+                <button mat-icon-button matSuffix>
+                    <mat-icon [svgIcon]="'heroicons_solid:magnifying-glass'"></mat-icon>
+                </button>
+            </mat-form-field> -->
+            <search></search>
+        </div>
+    </div>
+</div>

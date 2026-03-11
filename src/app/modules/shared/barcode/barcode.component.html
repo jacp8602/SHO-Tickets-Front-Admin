@@ -1,0 +1,93 @@
+<div class="barcode-container flex flex-col p-6 bg-card rounded-xl shadow-sm">
+    <!-- Header con controles -->
+    @if (showControls) {
+        <div class="flex items-center justify-between mb-4">
+            <!-- <div class="flex items-center gap-2">
+                <mat-icon class="text-primary-600" [svgIcon]="'heroicons_solid:qr-code'"></mat-icon>
+                <span class="text-sm font-medium text-gray-600">Barcode Generator</span>
+            </div> -->
+            
+            <!-- Menú de formato -->
+            @if (!format) {
+                <button mat-icon-button [matMenuTriggerFor]="formatMenu" matTooltip="Change format">
+                    <mat-icon [svgIcon]="'heroicons_solid:cog-6-tooth'"></mat-icon>
+                </button>
+                
+                <mat-menu #formatMenu="matMenu">
+                    @for (fmt of availableFormats; track fmt.value) {
+                        <button mat-menu-item (click)="changeFormat(fmt.value)">
+                            <span>{{ fmt.label }}</span>
+                        </button>
+                    }
+                </mat-menu>
+            }
+        </div>
+    }
+
+    <!-- Contenedor del código de barras -->
+    <div class="barcode-display flex justify-center items-center min-h-[150px] bg-gray-50 rounded-lg p-4">
+        @if (isLoading) {
+            <div class="flex flex-col items-center gap-2">
+                <mat-spinner diameter="40"></mat-spinner>
+                <span class="text-sm text-gray-500">Generating barcode...</span>
+            </div>
+        } @else if (errorMessage) {
+            <div class="text-center text-red-600">
+                <mat-icon class="icon-size-12" [svgIcon]="'heroicons_solid:exclamation-circle'"></mat-icon>
+                <p class="text-sm mt-2">{{ errorMessage }}</p>
+            </div>
+        } @else {
+            <!-- Canvas para PNG -->
+            @if (!svgOutput) {
+                <canvas #barcodeCanvas></canvas>
+            }
+            
+            <!-- SVG para vector -->
+            @if (svgOutput) {
+                <div #barcodeSvg class="barcode-svg"></div>
+            }
+        }
+    </div>
+
+    <!-- Valor del código -->
+    <!-- @if (displayValue && barcodeGenerated) {
+        <div class="text-center mt-3">
+            <span class="text-sm font-mono bg-primary-50 text-primary-700 px-3 py-1 rounded-full">
+                {{ value }}
+            </span>
+        </div>
+    } -->
+
+    <!-- Botones de acción -->
+    @if (showControls && barcodeGenerated) {
+        <div class="flex justify-center gap-2 mt-4 pt-3 border-t border-gray-100">
+            @if (downloadButton) {
+                <button mat-stroked-button (click)="downloadBarcode('png')" matTooltip="Download as PNG">
+                    <mat-icon [svgIcon]="'heroicons_solid:arrow-down-tray'"></mat-icon>
+                    <span class="ml-2 hidden sm:inline">PNG</span>
+                </button>
+                
+                @if (svgOutput) {
+                    <button mat-stroked-button (click)="downloadBarcode('svg')" matTooltip="Download as SVG">
+                        <mat-icon [svgIcon]="'heroicons_solid:arrow-down-tray'"></mat-icon>
+                        <span class="ml-2 hidden sm:inline">SVG</span>
+                    </button>
+                }
+            }
+            
+            @if (copyButton) {
+                <button mat-stroked-button (click)="copyBarcode()" matTooltip="Copy to clipboard">
+                    <mat-icon [svgIcon]="'heroicons_solid:clipboard'"></mat-icon>
+                    <span class="ml-2 hidden sm:inline">Copy</span>
+                </button>
+            }
+            
+            @if (printButton) {
+                <button mat-stroked-button (click)="printBarcode()" matTooltip="Print">
+                    <mat-icon [svgIcon]="'heroicons_solid:printer'"></mat-icon>
+                    <span class="ml-2 hidden sm:inline">Print</span>
+                </button>
+            }
+        </div>
+    }
+</div>

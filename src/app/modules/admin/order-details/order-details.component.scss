@@ -1,0 +1,60 @@
+app-order-details {
+    display: block;
+    background-color: #f9fafc;
+    min-height: 100vh;
+    
+    .order-details-container {
+        max-width: 1480px;
+        margin: 0 auto;
+    }
+    
+    // Estilos para las cards de Fuse
+    .fuse-card {
+        transition: all 0.2s ease;
+        
+        &:hover {
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.02);
+        }
+    }
+    
+    // Estilos para los botones de acción
+    .close-button, .export-button {
+        min-width: 100px;
+        
+        @media (max-width: 640px) {
+            min-width: 40px;
+            padding: 0 12px;
+            
+            .mat-icon {
+                margin-right: 0;
+            }
+        }
+    }
+    
+    // Animaciones para los badges de estado
+    .rounded-full {
+        transition: all 0.2s ease;
+    }
+    
+    // Responsive adjustments
+    @media (max-width: 1024px) {
+        .grid-cols-2 {
+            gap: 1rem;
+        }
+    }
+    
+    @media (max-width: 640px) {
+        .p-6 {
+            padding: 1rem;
+        }
+        
+        h1 {
+            font-size: 1.75rem;
+        }
+    }
+
+    .max-w-4xl
+    {
+        max-width: 60rem !important;
+    }
+}

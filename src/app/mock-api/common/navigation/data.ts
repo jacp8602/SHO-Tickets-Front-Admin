@@ -42,7 +42,7 @@ export const defaultNavigation: FuseNavigationItem[] = [
                 title: 'Orders',
                 type: 'basic',
                 icon: 'sho_sidebar:order',
-                link: ''
+                link: '/order'
             }
         ]
     },
@@ -64,7 +64,7 @@ export const defaultNavigation: FuseNavigationItem[] = [
                 title: 'Current and Future Sales',
                 type: 'basic',
                 icon: 'sho_sidebar:current_future_sales',
-                link: ''
+                link: '/current-future'
             },
             {
                 id: 'gross_sales',

@@ -30,6 +30,7 @@
         "crypto-js": "4.2.0",
         "firebase": "^11.10.0",
         "highlight.js": "11.11.1",
+        "jsbarcode": "^3.12.3",
         "lodash-es": "4.17.21",
         "luxon": "3.5.0",
         "ng-apexcharts": "1.15.0",
