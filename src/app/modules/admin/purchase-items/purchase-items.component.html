@@ -1,0 +1,183 @@
+<div class="flex min-w-0 flex-auto flex-col">
+    <!-- Main -->
+    <div class="flex-auto p-6 sm:p-10">
+        <!-- Contenedor Principal: Header + Filtros (con fondo blanco y separador) - ANCHO COMPLETO -->
+        <div class="bg-white rounded-lg border border-gray-200 overflow-hidden shadow-sm mb-6">
+            
+            <!-- Header con título y botones -->
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between p-4 sm:p-6">
+                <div class="flex items-center gap-2">
+                    <button 
+                        mat-icon-button 
+                        (click)="goBack()"
+                        matTooltip="Go back"
+                    >
+                        <mat-icon>arrow_back</mat-icon>
+                    </button>
+                    <h1 class="text-xl sm:text-2xl font-bold text-gray-900">
+                        {{ eventContext.venue || 'West Palm Beach, FL-South Florida Fairgrounds' }} — Mozilla Firefox
+                    </h1>
+                </div>
+                
+                <div class="flex items-center gap-2 mt-4 sm:mt-0">
+                    <!-- Botón Refresh -->
+                    <button
+                        type="button"
+                        mat-stroked-button
+                        (click)="refreshReport()"
+                        class="px-4 py-2 rounded-lg flex items-center gap-2"
+                        matTooltip="Refresh report"
+                    >
+                        <mat-icon>refresh</mat-icon>
+                        Refresh
+                    </button>
+
+                    <!-- Botón Export -->
+                    <button
+                        type="button"
+                        mat-stroked-button
+                        color="primary"
+                        (click)="exportReport()"
+                        class="px-4 py-2 rounded-lg flex items-center gap-2 bg-white hover:bg-gray-50 text-black"
+                    >
+                        <mat-icon>download</mat-icon>
+                        Export
+                    </button>
+                </div>
+            </div>
+
+            <!-- Línea separadora -->
+            <mat-divider></mat-divider>
+
+            <!-- Filtros -->
+            <div class="bg-gray-50 p-4 sm:p-6">
+                <div class="flex items-center justify-end gap-4">
+                    <!-- View data from -->
+                    <div class="flex items-center gap-2">
+                        <label class="text-xs font-medium text-gray-500 tracking-wider whitespace-nowrap">View data from:</label>
+                        <mat-form-field 
+                            class="w-48"
+                            appearance="outline" 
+                            subscriptSizing="dynamic"
+                            style="--mdc-outlined-text-field-container-height: 32px;">
+                            <mat-select [formControl]="filterForm.get('viewDataFrom')">
+                                @for (option of viewDataFromOptions; track option.value) {
+                                    <mat-option [value]="option.value" class="text-sm">{{ option.label }}</mat-option>
+                                }
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+
+                    <!-- Botón Search -->                    
+                    <button
+                        type="button"
+                        mat-stroked-button
+                        (click)="search()"
+                        class="h-8 px-6 min-w-[100px] rounded-lg bg-blue-100 hover:bg-blue-200 text-blue-700 font-medium text-sm border border-blue-300 transition-colors flex items-center justify-center"
+                    >
+                        Search
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Alert -->
+        @if (showAlert) {
+            <fuse-alert
+                class="mb-6"
+                [appearance]="'outline'"
+                [showIcon]="false"
+                [type]="alert.type"
+                [@shake]="alert.type === 'error'"
+            >
+                {{ alert.message }}
+            </fuse-alert>
+        }
+
+        <!-- Loading indicator -->
+        @if (isLoading) {
+            <div class="flex flex-col items-center justify-center py-16">
+                <mat-progress-spinner
+                    [diameter]="48"
+                    [mode]="'indeterminate'"
+                ></mat-progress-spinner>
+                <p class="text-gray-500 mt-4">Loading purchase items...</p>
+            </div>
+        } @else {
+            <!-- Tabla de Purchase Items - ANCHO REDUCIDO EN TODAS LAS RESOLUCIONES -->            
+            <div class="bg-white rounded-lg border border-gray-200 overflow-hidden shadow-sm mb-6 w-11/12 mx-auto">
+                <!-- Título con margen superior y alineado con el resto -->                
+                <div class="flex items-center justify-between mb-4 px-4 pt-4">
+                    <h2 class="text-base font-bold text-gray-900">Purchase Items - Event Details</h2>
+                    <div class="text-sm text-gray-600">
+                        <span class="font-medium">{{ totalItems }}</span> results
+                    </div>
+                </div>
+
+                <!-- Línea separadora -->
+                <mat-divider></mat-divider>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead class="bg-white border-b border-gray-200">
+                            <tr>
+                                <th class="text-left text-xs font-bold text-gray-600 tracking-wider px-4 py-3">_id (Purchase_items)</th>
+                                <th class="text-left text-xs font-bold text-gray-600 tracking-wider px-4 py-3">items.addOn_id</th>
+                                <th class="text-left text-xs font-bold text-gray-600 tracking-wider px-4 py-3">items.addOn.name</th>
+                                <th class="text-left text-xs font-bold text-gray-600 tracking-wider px-4 py-3">items.seat.label</th>
+                                <th class="text-left text-xs font-bold text-gray-600 tracking-wider px-4 py-3">items.status</th>
+                                <th class="text-left text-xs font-bold text-gray-600 tracking-wider px-4 py-3">items.ticket_id</th>
+                                <th class="text-left text-xs font-bold text-gray-600 tracking-wider px-4 py-3">items.ticket.name</th>
+                                <th class="text-right text-xs font-bold text-gray-600 tracking-wider px-4 py-3">items.ticket.price</th>
+                                <th class="text-right text-xs font-bold text-gray-600 tracking-wider px-4 py-3">All items FV*</th>
+                                <th class="text-left text-xs font-bold text-gray-600 tracking-wider px-4 py-3">_id (Purchase)</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-200">
+                            @for (item of currentPageItems; track item._id) {
+                                <tr class="hover:bg-gray-50 transition-colors">
+                                    <td class="px-4 py-3 text-sm text-gray-900 font-mono">{{ item._id }}</td>
+                                    <td class="px-4 py-3 text-sm text-gray-500">{{ item.items.addOn_id || '-' }}</td>
+                                    <td class="px-4 py-3 text-sm text-gray-600">{{ item.items.addOn?.name || '-' }}</td>
+                                    <td class="px-4 py-3 text-sm text-gray-900">{{ item.items.seat?.label || '-' }}</td>
+                                    <td class="px-4 py-3 text-sm">
+                                        <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium"
+                                              [class.bg-green-100]="item.items.status === 'Active'"
+                                              [class.text-green-800]="item.items.status === 'Active'"
+                                              [class.bg-gray-100]="item.items.status !== 'Active'"
+                                              [class.text-gray-800]="item.items.status !== 'Active'">
+                                            {{ item.items.status || '-' }}
+                                        </span>
+                                    </td>
+                                    <td class="px-4 py-3 text-sm text-gray-500 font-mono">{{ item.items.ticket_id || '-' }}</td>
+                                    <td class="px-4 py-3 text-sm text-gray-900">{{ item.items.ticket?.name || '-' }}</td>
+                                    <td class="px-4 py-3 text-sm text-gray-900 text-right">{{ formatCurrency(item.items.ticket?.price || 0) }}</td>
+                                    <td class="px-4 py-3 text-sm text-gray-900 text-right font-medium">{{ item.allItemsFV || '-' }}</td>
+                                    <td class="px-4 py-3 text-sm text-gray-500 font-mono">{{ item.purchase_id || '-' }}</td>
+                                </tr>
+                            } @empty {
+                                <tr>
+                                    <td colspan="10" class="px-4 py-12 text-center text-gray-500">
+                                        No purchase items found
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Paginación con componente reutilizable - CENTRADA Y MISMO ANCHO QUE LA TABLA -->
+            @if (totalItems > 0) {
+                <div class="w-11/12 mx-auto">
+                    <app-pagination
+                        [totalItems]="totalItems"
+                        [pageSize]="pageSize"
+                        [pageIndex]="pageIndex"
+                        (pageChange)="onPageChange($event)"
+                    ></app-pagination>
+                </div>
+            }
+        }
+    </div>
+</div>
