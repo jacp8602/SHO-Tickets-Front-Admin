@@ -57,7 +57,7 @@ export const defaultNavigation: FuseNavigationItem[] = [
                 title: 'Overview Total Sales Info',
                 type: 'basic',
                 icon: 'sho_sidebar:total_sales_info',
-                link: ''
+                link: '/overview-totals'
             },
             {
                 id: 'current_future_sales',

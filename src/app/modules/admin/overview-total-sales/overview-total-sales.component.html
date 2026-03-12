@@ -1,0 +1,243 @@
+<div class="flex min-w-0 flex-auto flex-col">
+    <!-- Header -->
+    <div class="flex items-center justify-between p-6 bg-gray-50 border-b">
+        <!-- Filtros -->
+        <div class="grid grid-cols-1 sm:grid-cols-5 gap-4">
+            <!-- Order Date -->
+            <div>
+                <label class="block text-xs font-medium text-gray-500 tracking-wider mb-1">Order Date:</label>
+                <mat-form-field class="w-full" appearance="outline">
+                    <input matInput [matDatepicker]="picker" placeholder="Select date" [formControl]="filterForm.get('orderDate')">
+                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-datepicker #picker></mat-datepicker>
+                </mat-form-field>
+            </div>
+
+            <!-- Admin User -->
+            <div>
+                <label class="block text-xs font-medium text-gray-500 tracking-wider mb-1">Admin User:</label>
+                <mat-form-field class="w-full" appearance="outline">
+                    <mat-select [formControl]="filterForm.get('adminUser')">
+                        @for (option of adminUserOptions; track option.value) {
+                            <mat-option [value]="option.value">{{ option.label }}</mat-option>
+                        }
+                    </mat-select>
+                </mat-form-field>
+            </div>
+
+            <!-- Event -->
+            <div>
+                <label class="block text-xs font-medium text-gray-500 tracking-wider mb-1">Event:</label>
+                <mat-form-field class="w-full" appearance="outline">
+                    <mat-select [formControl]="filterForm.get('event')">
+                        @for (option of eventOptions; track option.value) {
+                            <mat-option [value]="option.value">{{ option.label }}</mat-option>
+                        }
+                    </mat-select>
+                </mat-form-field>
+            </div>
+
+            <!-- Order Status -->
+            <div>
+                <label class="block text-xs font-medium text-gray-500 tracking-wider mb-1">Order Status:</label>
+                <mat-form-field class="w-full" appearance="outline">
+                    <mat-select [formControl]="filterForm.get('orderStatus')">
+                        @for (option of orderStatusOptions; track option.value) {
+                            <mat-option [value]="option.value">{{ option.label }}</mat-option>
+                        }
+                    </mat-select>
+                </mat-form-field>
+            </div>
+
+            <!-- Payment Method -->
+            <div>
+                <label class="block text-xs font-medium text-gray-500 tracking-wider mb-1">Payment Method:</label>
+                <mat-form-field class="w-full" appearance="outline">
+                    <mat-select [formControl]="filterForm.get('paymentMethod')">
+                        @for (option of paymentMethodOptions; track option.value) {
+                            <mat-option [value]="option.value">{{ option.label }}</mat-option>
+                        }
+                    </mat-select>
+                </mat-form-field>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main -->
+    <div class="flex-auto p-6 sm:p-10">
+        <!-- Alert -->
+        @if (showAlert) {
+            <fuse-alert
+                class="mb-6"
+                [appearance]="'outline'"
+                [showIcon]="false"
+                [type]="alert.type"
+                [@shake]="alert.type === 'error'"
+            >
+                {{ alert.message }}
+            </fuse-alert>
+        }
+
+        <!-- Loading indicator -->
+        @if (isLoading) {
+            <div class="flex flex-col items-center justify-center py-16">
+                <mat-progress-spinner
+                    [diameter]="48"
+                    [mode]="'indeterminate'"
+                ></mat-progress-spinner>
+                <p class="text-gray-500 mt-4">Loading overview...</p>
+            </div>
+        } @else {
+            <!-- Overview Section -->
+            <div class="mb-8">
+                <h2 class="text-lg font-bold text-gray-900 mb-4">Overview</h2>
+                
+                <!-- Metrics Grid - 3 rows x 5 columns -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+                    <!-- Row 1 -->
+                    <div class="bg-white rounded-lg border border-gray-200 p-4 text-center">
+                        <div class="text-xs font-medium text-gray-500 tracking-wider mb-1">Total Sales</div>
+                        <div class="text-xl font-bold text-gray-900">{{ formatCurrency(metrics?.totalSales || 0) }}</div>
+                    </div>
+
+                    <div class="bg-white rounded-lg border border-gray-200 p-4 text-center">
+                        <div class="text-xs font-medium text-gray-500 tracking-wider mb-1">Total Fees</div>
+                        <div class="text-xl font-bold text-gray-900">{{ formatCurrency(metrics?.totalFees || 0) }}</div>
+                    </div>
+
+                    <div class="bg-white rounded-lg border border-gray-200 p-4 text-center">
+                        <div class="text-xs font-medium text-gray-500 tracking-wider mb-1">Total Taxes</div>
+                        <div class="text-xl font-bold text-gray-900">{{ formatCurrency(metrics?.totalTaxes || 0) }}</div>
+                    </div>
+
+                    <div class="bg-white rounded-lg border border-gray-200 p-4 text-center">
+                        <div class="text-xs font-medium text-gray-500 tracking-wider mb-1">Total Promo</div>
+                        <div class="text-xl font-bold text-gray-900">{{ formatCurrency(metrics?.totalPromo || 0) }}</div>
+                    </div>
+
+                    <div class="bg-white rounded-lg border border-gray-200 p-4 text-center">
+                        <div class="text-xs font-medium text-gray-500 tracking-wider mb-1">Revenue</div>
+                        <div class="text-xl font-bold text-blue-600">{{ formatCurrency(metrics?.revenue || 0) }}</div>
+                    </div>
+
+                    <!-- Row 2 -->
+                    <div class="bg-white rounded-lg border border-gray-200 p-4 text-center">
+                        <div class="text-xs font-medium text-gray-500 tracking-wider mb-1">Avg Order Value</div>
+                        <div class="text-xl font-bold text-gray-900">{{ formatCurrency(metrics?.avgOrderValue || 0) }}</div>
+                    </div>
+
+                    <div class="bg-white rounded-lg border border-gray-200 p-4 text-center">
+                        <div class="text-xs font-medium text-gray-500 tracking-wider mb-1">Avg. Ticket Price</div>
+                        <div class="text-xl font-bold text-gray-900">{{ formatCurrency(metrics?.avgTicketPrice || 0) }}</div>
+                    </div>
+
+                    <div class="bg-white rounded-lg border border-gray-200 p-4 text-center">
+                        <div class="text-xs font-medium text-gray-500 tracking-wider mb-1">Add On Revenue</div>
+                        <div class="text-xl font-bold text-gray-900">{{ formatCurrency(metrics?.addOnRevenue || 0) }}</div>
+                    </div>
+
+                    <div class="bg-white rounded-lg border border-gray-200 p-4 text-center">
+                        <div class="text-xs font-medium text-gray-500 tracking-wider mb-1">Add Ons Sold</div>
+                        <div class="text-xl font-bold text-gray-900">{{ formatNumber(metrics?.addOnsSold || 0) }}</div>
+                    </div>
+
+                    <div class="bg-white rounded-lg border border-gray-200 p-4 text-center">
+                        <div class="text-xs font-medium text-gray-500 tracking-wider mb-1">Active Promo Codes</div>
+                        <div class="text-xl font-bold text-gray-900">{{ formatNumber(metrics?.activePromoCodes || 0) }}</div>
+                    </div>
+
+                    <!-- Row 3 -->
+                    <div class="bg-white rounded-lg border border-gray-200 p-4 text-center">
+                        <div class="text-xs font-medium text-gray-500 tracking-wider mb-1">Total Orders</div>
+                        <div class="text-xl font-bold text-gray-900">{{ formatNumber(metrics?.totalOrders || 0) }}</div>
+                    </div>
+
+                    <div class="bg-white rounded-lg border border-gray-200 p-4 text-center">
+                        <div class="text-xs font-medium text-gray-500 tracking-wider mb-1">Total Tickets</div>
+                        <div class="text-xl font-bold text-gray-900">{{ formatNumber(metrics?.totalTickets || 0) }}</div>
+                    </div>
+
+                    <div class="bg-white rounded-lg border border-gray-200 p-4 text-center">
+                        <div class="text-xs font-medium text-gray-500 tracking-wider mb-1">Total Paid Tickets</div>
+                        <div class="text-xl font-bold text-gray-900">{{ formatNumber(metrics?.totalPaidTickets || 0) }}</div>
+                    </div>
+
+                    <div class="bg-white rounded-lg border border-gray-200 p-4 text-center">
+                        <div class="text-xs font-medium text-gray-500 tracking-wider mb-1">Comps Issued</div>
+                        <div class="text-xl font-bold text-gray-900">{{ formatNumber(metrics?.compsIssued || 0) }}</div>
+                    </div>
+
+                    <div class="bg-white rounded-lg border border-gray-200 p-4 text-center">
+                        <div class="text-xs font-medium text-gray-500 tracking-wider mb-1">Upcoming Events</div>
+                        <div class="text-xl font-bold text-gray-900">{{ formatNumber(metrics?.upcomingEvents || 0) }}</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts Section -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- Tickets Sold by Type -->
+                <div class="bg-white rounded-lg border border-gray-200 p-6">
+                    <h3 class="text-base font-bold text-gray-900 mb-4">Tickets Sold by Type</h3>
+                    <div class="flex flex-col sm:flex-row items-center gap-6">
+                        <!-- Pie Chart SVG -->
+                        <div class="w-64 h-64 flex-shrink-0">
+                            <svg viewBox="0 0 200 200" class="w-full h-full">
+                                @for (item of ticketsByType; track item.label; let i = $index) {
+                                    <path
+                                        [attr.d]="calculatePieSlicePath(item.value, i, ticketsByType)"
+                                        [attr.fill]="item.color"
+                                        stroke="white"
+                                        stroke-width="1"
+                                        [matTooltip]="item.label + ': ' + formatNumber(item.value)"
+                                    ></path>
+                                }
+                            </svg>
+                        </div>
+                        
+                        <!-- Legend - LISTA VERTICAL -->
+                        <div class="flex-1 flex flex-col gap-2 overflow-y-auto max-h-64 w-full">
+                            @for (item of ticketsByType; track item.label) {
+                                <div class="flex items-center gap-2">
+                                    <div class="w-3 h-3 rounded-full flex-shrink-0" [style.backgroundColor]="item.color"></div>
+                                    <span class="text-xs text-gray-600">{{ item.label }}</span>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Promo Code Performance -->
+                <div class="bg-white rounded-lg border border-gray-200 p-6">
+                    <h3 class="text-base font-bold text-gray-900 mb-4">Promo Code Performance</h3>
+                    <div class="flex flex-col sm:flex-row items-center gap-6">
+                        <!-- Pie Chart SVG -->
+                        <div class="w-64 h-64 flex-shrink-0">
+                            <svg viewBox="0 0 200 200" class="w-full h-full">
+                                @for (item of promoCodePerformance; track item.code; let i = $index) {
+                                    <path
+                                        [attr.d]="calculatePieSlicePath(item.value, i, promoCodePerformance)"
+                                        [attr.fill]="item.color"
+                                        stroke="white"
+                                        stroke-width="1"
+                                        [matTooltip]="item.code + ': ' + formatNumber(item.value)"
+                                    ></path>
+                                }
+                            </svg>
+                        </div>
+                        
+                        <!-- Legend - LISTA VERTICAL -->
+                        <div class="flex-1 flex flex-col gap-2 overflow-y-auto max-h-64 w-full">
+                            @for (item of promoCodePerformance; track item.code) {
+                                <div class="flex items-center gap-2">
+                                    <div class="w-3 h-3 rounded-full flex-shrink-0" [style.backgroundColor]="item.color"></div>
+                                    <span class="text-xs text-gray-600">{{ item.code }}</span>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
