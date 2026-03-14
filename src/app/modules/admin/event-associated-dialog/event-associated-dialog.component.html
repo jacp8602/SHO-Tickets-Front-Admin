@@ -1,0 +1,86 @@
+<div class="p-0 max-w-6xl">
+    <!-- Header con título y botón close (con padding) -->
+    <div class="flex items-center justify-between px-6 pt-6 pb-2">
+        <h1 class="text-2xl font-bold text-gray-900">Event List Associated</h1>
+        <button 
+            mat-icon-button 
+            (click)="closeDialog()"
+            class="text-gray-400 hover:text-gray-600"
+            aria-label="Close dialog"
+        >
+            <mat-icon>close</mat-icon>
+        </button>
+    </div>
+
+    <!-- Primer divisor - OCUPA TODO EL ANCHO -->
+    <mat-divider class="!w-full"></mat-divider>
+
+    <!-- Contenido con padding -->
+    <div class="px-6 py-4">
+        <!-- Loading indicator -->
+        @if (isLoading) {
+            <div class="flex justify-center py-8">
+                <mat-progress-spinner [diameter]="40" [mode]="'indeterminate'"></mat-progress-spinner>
+            </div>
+        } @else {
+            <!-- Tabla de eventos -->
+            <div class="bg-white overflow-hidden shadow-sm">
+                <div class="overflow-x-auto max-h-[60vh] overflow-y-auto">
+                    <table class="w-full">
+                        <thead class="bg-white border-b border-gray-200 sticky top-0">
+                            <tr>
+                                <th class="text-left text-xs font-bold text-gray-600 tracking-wider px-4 py-3">City</th>
+                                <th class="text-left text-xs font-bold text-gray-600 tracking-wider px-4 py-3">Address</th>
+                                <th class="text-left text-xs font-bold text-gray-600 tracking-wider px-4 py-3">Date</th>
+                                <th class="text-left text-xs font-bold text-gray-600 tracking-wider px-4 py-3">Place Name</th>
+                                <th class="text-left text-xs font-bold text-gray-600 tracking-wider px-4 py-3">Show</th>
+                                <th class="text-right text-xs font-bold text-gray-600 tracking-wider px-4 py-3">Seats</th>
+                                <th class="text-left text-xs font-bold text-gray-600 tracking-wider px-4 py-3">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-200">
+                            @for (event of events; track event.id) {
+                                <tr class="hover:bg-gray-50 transition-colors">
+                                    <td class="px-4 py-3 text-sm text-gray-900">{{ event.city }}</td>
+                                    <td class="px-4 py-3 text-sm text-gray-600" [innerHTML]="event.address"></td>
+                                    <td class="px-4 py-3 text-sm text-gray-600">{{ event.date }}</td>
+                                    <td class="px-4 py-3 text-sm text-gray-600" [innerHTML]="event.placeName"></td>
+                                    <td class="px-4 py-3 text-sm text-gray-600">{{ event.show }}</td>
+                                    <td class="px-4 py-3 text-sm text-gray-600 text-right">{{ event.seats | number }}</td>
+                                    <td class="px-4 py-3">                                        
+                                        <!-- Edit -->
+                                        <button mat-icon-button class="w-7 h-7 text-blue-500 hover:text-blue-700 hover:bg-blue-50 rounded-full"
+                                            (click)="editEvent(layout)" matTooltip="Edit layout" type="button">
+                                            <mat-icon class="text-base">edit</mat-icon>
+                                        </button>
+                                    </td>
+                                </tr>
+                            } @empty {
+                                <tr>
+                                    <td colspan="7" class="px-4 py-8 text-center text-gray-500">
+                                        No events found for this layout
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        }
+    </div>
+
+    <!-- Segundo divisor - OCUPA TODO EL ANCHO (fuera del contenedor con padding) -->
+    <mat-divider class="!w-full"></mat-divider>
+
+    <!-- Botón Close con padding -->
+    <div class="flex justify-left px-6 py-4">
+        <button
+            type="button"
+            mat-flat-button
+            (click)="closeDialog()"
+            class="px-6 py-2 rounded-lg bg-gray-200 text-gray-700 hover:bg-gray-300 hover:text-gray-800 transition-colors"
+        >
+            Close
+        </button>
+    </div>
+</div>

@@ -1,0 +1,149 @@
+<div class="flex min-w-0 flex-auto flex-col">
+    <div class="flex-auto p-6 sm:p-10">
+        <!-- Título principal y botón New Layout a la derecha -->
+        <div class="flex items-center justify-between mb-6">
+            <h1 class="text-xl font-bold text-gray-900">Manage event types, shows, venues, event dates, seat types and layout assignments</h1>
+            <button
+                type="button"
+                mat-flat-button
+                color="primary"
+                (click)="newLayout()"
+                class="bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg px-4 py-2 flex items-center gap-2"
+            >
+                <mat-icon>add</mat-icon>
+                New Layout
+            </button>
+        </div>
+
+        <!-- Alert -->
+        @if (showAlert) {
+            <fuse-alert class="mb-6" [appearance]="'outline'" [showIcon]="false" [type]="alert.type" [@shake]="alert.type === 'error'">
+                {{ alert.message }}
+            </fuse-alert>
+        }
+
+        <!-- Loading indicator -->
+        @if (isLoading) {
+            <div class="flex flex-col items-center justify-center py-16">
+                <mat-progress-spinner [diameter]="48" [mode]="'indeterminate'"></mat-progress-spinner>
+                <p class="text-gray-500 mt-4">Loading layouts...</p>
+            </div>
+        } @else {
+            <!-- Tabla con filtros incluidos -->
+            <div class="bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm mb-6">
+                <!-- Filtros dentro del contenedor de la tabla -->
+                <div class="bg-white border-y border-gray-200 px-4 py-3">
+                    <div class="flex gap-4">
+                        <!-- Production -->
+                        <mat-form-field class="w-64">
+                            <mat-label>Production</mat-label>
+                            <mat-select [formControl]="filterForm.get('production')">
+                                @for (option of productionOptions; track option.value) {
+                                    <mat-option [value]="option.value">{{ option.label }}</mat-option>
+                                }
+                            </mat-select>
+                        </mat-form-field>
+
+                        <!-- Status -->
+                        <mat-form-field class="w-64">
+                            <mat-label>Status</mat-label>
+                            <mat-select [formControl]="filterForm.get('status')">
+                                @for (option of statusOptions; track option.value) {
+                                    <mat-option [value]="option.value">{{ option.label }}</mat-option>
+                                }
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                </div>
+
+                <!-- Tabla -->
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead class="bg-white border-b border-gray-200">
+                            <tr>
+                                <th class="text-left text-xs font-bold text-gray-600 tracking-wider px-4 py-3">Name</th>
+                                <th class="text-left text-xs font-bold text-gray-600 tracking-wider px-4 py-3">Description</th>
+                                <th class="text-right text-xs font-bold text-gray-600 tracking-wider px-4 py-3">Seats</th>
+                                <th class="text-left text-xs font-bold text-gray-600 tracking-wider px-4 py-3">Create Date</th>
+                                <th class="text-right text-xs font-bold text-gray-600 tracking-wider px-4 py-3">Events</th>
+                                <th class="text-left text-xs font-bold text-gray-600 tracking-wider px-4 py-3">Status</th>
+                                <th class="text-left text-xs font-bold text-gray-600 tracking-wider px-4 py-3">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-200">
+                            @for (layout of currentPageLayouts; track layout.id) {
+                                <tr class="hover:bg-gray-50 transition-colors">
+                                    <td class="px-4 py-3 text-sm text-gray-900">{{ layout.name }}</td>
+                                    <td class="px-4 py-3 text-sm text-gray-600">{{ layout.description }}</td>
+                                    <td class="px-4 py-3 text-sm text-gray-600 text-right">{{ layout.seats | number }}</td>
+                                    <td class="px-4 py-3 text-sm text-gray-600">{{ layout.createDate }}</td>
+                                    <!-- <td class="px-4 py-3 text-sm text-gray-600 text-right">{{ layout.events }}</td> -->
+                                    <td class="px-4 py-3 text-sm text-gray-600 text-right">
+                                        <button 
+                                            class="text-blue-600 hover:text-blue-800 hover:underline font-medium cursor-pointer"
+                                            (click)="openEventDialog(layout)"
+                                            matTooltip="View associated events"
+                                        >
+                                            {{ layout.events }}
+                                        </button>
+                                    </td>
+                                    <td class="px-4 py-3">
+                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium"
+                                              [class.bg-green-100]="layout.status === 'Published'"
+                                              [class.text-green-800]="layout.status === 'Published'"
+                                              [class.bg-gray-100]="layout.status === 'Draft'"
+                                              [class.text-gray-800]="layout.status === 'Draft'">
+                                            {{ layout.status }}
+                                        </span>
+                                    </td>
+                                    <td class="px-4 py-3">
+                                        <div class="flex items-center gap-1">
+                                            <!-- Edit -->
+                                            <button mat-icon-button class="w-7 h-7 text-blue-500 hover:text-blue-700 hover:bg-blue-50 rounded-full"
+                                                (click)="editLayout(layout)" matTooltip="Edit layout" type="button">
+                                                <mat-icon class="text-base">edit</mat-icon>
+                                            </button>
+                                            <!-- Copy -->
+                                            <button mat-icon-button class="w-7 h-7 text-green-500 hover:text-green-700 hover:bg-green-50 rounded-full"
+                                                (click)="copyLayout(layout)" matTooltip="Copy layout" type="button">
+                                                <mat-icon class="text-base">content_copy</mat-icon>
+                                            </button>
+                                            <!-- Delete -->
+                                            <button mat-icon-button class="w-7 h-7 text-red-500 hover:text-red-700 hover:bg-red-50 rounded-full"
+                                                (click)="deleteLayout(layout)" matTooltip="Delete layout" type="button">
+                                                <mat-icon class="text-base">delete</mat-icon>
+                                            </button>
+                                            <!-- View (Transform layout) -->
+                                            <button mat-icon-button class="w-7 h-7 text-purple-500 hover:text-purple-700 hover:bg-purple-50 rounded-full"
+                                                (click)="viewLayout(layout)" matTooltip="Transform layout" type="button">
+                                                <mat-icon class="text-base">auto_awesome</mat-icon>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            } @empty {
+                                <tr>
+                                    <td colspan="7" class="px-4 py-12 text-center">
+                                        <mat-icon class="text-5xl text-gray-300 mb-3">dashboard</mat-icon>
+                                        <h3 class="text-lg font-medium text-gray-900 mb-1">No layouts found</h3>
+                                        <p class="text-gray-500 text-sm mb-4">Try adjusting your filters</p>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Paginación -->
+            @if (totalItems > 0) {
+                <app-pagination
+                    [totalItems]="totalItems"
+                    [pageSize]="pageSize"
+                    [pageIndex]="pageIndex"
+                    (pageChange)="onPageChange($event)"
+                ></app-pagination>
+            }
+        }
+    </div>
+</div>

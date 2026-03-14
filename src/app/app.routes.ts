@@ -76,9 +76,11 @@ export const appRoutes: Route[] = [
         },
         children: [
             {path: 'example', loadChildren: () => import('app/modules/admin/example/example.routes')},
+            // Layout Configuration
             {path: 'order', loadChildren: () => import('app/modules/admin/orders/orders.routes')},
             {path: 'order-details/:id', loadChildren: () => import('app/modules/admin/order-details/order-details.routes')},
             {path: 'order-refund/:id', loadChildren: () => import('app/modules/admin/order-refund/order-refund.routes')},
+            {path: 'venue-layouts', loadChildren: () => import('app/modules/admin/venue-layouts/venue-layouts.routes')},
             // Financial Reports
             {path: 'overview-totals', loadChildren: () => import('app/modules/admin/overview-total-sales/overview-total-sales.routes')},
             {path: 'current-future', loadChildren: () => import('app/modules/admin/current-future-sales/current-future-sales.routes')},
