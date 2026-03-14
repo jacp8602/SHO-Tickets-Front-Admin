@@ -35,7 +35,7 @@ export const defaultNavigation: FuseNavigationItem[] = [
                 title: 'Layout Management',
                 type: 'basic',
                 icon: 'sho_sidebar:layout_mgmt',
-                link: ''
+                link: '/venue-layouts'
             },
             {
                 id: 'order',
