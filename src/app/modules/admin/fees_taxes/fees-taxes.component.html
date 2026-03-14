@@ -76,18 +76,24 @@
                                     </div>
                                     
                                     <!-- Actions -->
-                                    <div class="sm:col-span-2 flex items-center justify-end space-x-2">
-                                        <button 
-                                            mat-icon-button 
+                                    <div class="sm:col-span-2 flex items-center justify-end space-x-1">
+                                        <button
+                                            mat-icon-button
+                                            class="w-7 h-7 text-blue-500 hover:text-blue-700 hover:bg-blue-50 rounded-full transition-colors flex items-center justify-center"
+                                            (click)="editItem(item, section)"
                                             [matTooltip]="'Edit ' + item.name"
-                                            (click)="editItem(item, section)">
-                                            <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:pencil'"></mat-icon>
+                                            matTooltipPosition="above"
+                                        >
+                                            <mat-icon class="text-base">edit</mat-icon>
                                         </button>
-                                        <button 
-                                            mat-icon-button 
+                                        <button
+                                            mat-icon-button
+                                            class="w-7 h-7 text-red-500 hover:text-red-700 hover:bg-red-50 rounded-full transition-colors flex items-center justify-center"
+                                            (click)="deleteItem(item)"
                                             [matTooltip]="'Delete ' + item.name"
-                                            (click)="deleteItem(item)">
-                                            <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:trash'"></mat-icon>
+                                            matTooltipPosition="above"
+                                        >
+                                            <mat-icon class="text-base">delete</mat-icon>
                                         </button>
                                     </div>
                                 </div>
