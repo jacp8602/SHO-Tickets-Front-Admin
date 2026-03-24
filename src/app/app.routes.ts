@@ -75,7 +75,10 @@ export const appRoutes: Route[] = [
             initialData: initialDataResolver
         },
         children: [
+            // Main
             {path: 'example', loadChildren: () => import('app/modules/admin/example/example.routes')},
+            {path: 'venue-management', loadChildren: () => import('app/modules/admin/venue-management/venue-management.routes')},
+            {path: 'venue-details/:id', loadChildren: () => import('app/modules/admin/venue-details/venue-details.routes')},
             // Layout Configuration
             {path: 'order', loadChildren: () => import('app/modules/admin/orders/orders.routes')},
             {path: 'order-details/:id', loadChildren: () => import('app/modules/admin/order-details/order-details.routes')},

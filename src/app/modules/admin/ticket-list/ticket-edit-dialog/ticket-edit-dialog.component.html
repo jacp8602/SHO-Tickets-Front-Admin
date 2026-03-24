@@ -1,0 +1,139 @@
+<div class="ticket-edit-dialog flex flex-col max-w-lg mx-auto bg-white rounded-2xl overflow-hidden">
+    <!-- Header ticket-edit-dialog -->
+    <div class="flex items-center justify-between px-6 py-4 border-b">
+        <div class="flex items-center gap-2">
+            <h2 class="text-2xl font-bold text-gray-900">{{ getTitle() }}</h2>
+        </div>
+        <button 
+            mat-icon-button 
+            (click)="cancel()" 
+            class="text-gray-500 hover:text-gray-700"
+            [disabled]="isLoading"
+        >
+            <mat-icon [svgIcon]="'heroicons_solid:x-mark'"></mat-icon>
+        </button>
+    </div>
+
+    <!-- Tabs -->
+    <!-- <mat-tab-group [(selectedIndex)]="activeTab" class="ticket-tabs" animationDuration="0ms"> -->
+    <form [formGroup]="ticketForm" class="flex flex-col p-6 space-y-5">
+        <div class="grid grid-cols-3 gap-4">
+            <!-- Ticket Name -->
+            <div class="space-y-1">
+                <label class="block text-sm font-medium text-gray-700">
+                    Display Name <span class="text-red-500">*</span>
+                </label>
+                <mat-form-field appearance="outline" class="w-full">
+                    <input 
+                        matInput 
+                        formControlName="name" 
+                        placeholder="Enter ticket name"
+                        class="text-base">
+                    @if (ticketForm.get('name')?.hasError('required') && ticketForm.get('name')?.touched) {
+                        <mat-error>Ticket name is required</mat-error>
+                    }
+                    @if (ticketForm.get('name')?.hasError('maxlength')) {
+                        <mat-error>Maximum 100 characters</mat-error>
+                    }
+                </mat-form-field>
+            </div>
+            <!-- Ticket Pricing -->
+            <div class="space-y-1">
+                <label class="block text-sm font-medium text-gray-700">
+                    Pricing <span class="text-red-500">*</span>
+                </label>
+                <mat-form-field appearance="outline" class="w-full">
+                    <span matTextPrefix class="text-gray-500 mr-1">$</span>
+                    <input 
+                        matInput 
+                        type="number" 
+                        formControlName="price"
+                        placeholder="0.00"
+                        step="0.01"
+                        min="0"
+                        class="text-base">
+                </mat-form-field>
+            </div>
+            <!-- Ticket Inventory -->
+            <div class="space-y-1">
+                <label class="block text-sm font-medium text-gray-700">
+                    Inventory<span class="text-red-500">*</span>
+                </label>
+                <mat-form-field appearance="outline" class="w-full">
+                    <input 
+                        matInput 
+                        type="number" 
+                        formControlName="quantity"
+                        placeholder="Enter available quantity"
+                        min="0">
+                </mat-form-field>
+            </div>
+        </div>
+        <!-- Divider -->
+        <mat-divider class="!my-2"></mat-divider>
+
+        <div class="grid grid-cols-2 gap-4">
+            <div class="space-y-1">
+                <div class="flex items-center justify-start py-2">
+                    <mat-slide-toggle 
+                        formControlName="enableBoxOffice"
+                        color="primary">
+                    </mat-slide-toggle>
+                    <span class="text-sm font-medium text-gray-700">Enable for Box Office</span>            
+                </div>
+            </div>
+
+            <div class="space-y-1">
+                <div class="flex items-center justify-start py-2">
+                    <mat-slide-toggle 
+                        formControlName="enableStoreFront"
+                        color="primary">
+                    </mat-slide-toggle>
+                    <span class="text-sm font-medium text-gray-700">Enable for StoreFront</span>            
+                </div>
+                
+            </div>
+            
+        </div>
+
+        <!-- Divider -->
+        <div class="space-y-1.5">
+            <h3 class="text-2xl font-bold text-gray-900">Time Setting</h3>
+        </div>
+
+        <div class="space-y-1.5">
+            <div class="flex items-center justify-start py-2">
+                <mat-slide-toggle 
+                    formControlName="useDifferentTime"
+                    color="primary">
+                </mat-slide-toggle>
+                <span class="text-sm font-medium text-gray-700">Use a different Sale time than the Event</span>            
+            </div>
+        </div>
+
+    </form>
+     
+    <!-- Footer con botones de acción -->
+    <div class="flex justify-end gap-3 px-6 py-4 border-t border-gray-200 bg-gray-50">
+        <button 
+            mat-stroked-button 
+            type="button"
+            (click)="cancel()"
+            [disabled]="isLoading"
+            class="px-6 min-w-[100px]">
+            Cancel
+        </button>
+        <button 
+            mat-flat-button 
+            color="primary"
+            type="button"
+            (click)="save()"
+            [disabled]="ticketForm.invalid || isLoading"
+            class="px-6 min-w-[120px] bg-primary-600 hover:bg-primary-700 text-white">
+            @if (isLoading) {
+                <mat-spinner diameter="20" class="inline-block mr-2"></mat-spinner>
+            }
+            {{ getSubmitButtonText() }}
+        </button>
+    </div>
+</div>

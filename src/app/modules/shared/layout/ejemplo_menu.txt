@@ -1,0 +1,44 @@
+menuItems: SidebarMenuItem[] = [
+        {
+            id: 'dashboard',
+            label: 'Dashboard',
+            icon: 'heroicons_solid:home',
+            type: 'item',
+            action: () => console.log('Dashboard clicked')
+        },
+        {
+            id: 'messages',
+            label: 'Messages',
+            icon: 'heroicons_solid:envelope',
+            type: 'item',
+            badge: '3',
+            badgeColor: 'primary',
+            action: () => console.log('Messages clicked')
+        },
+        { id: 'divider1', type: 'divider', label: '' },
+        {
+            id: 'settings-header',
+            label: 'Settings',
+            type: 'header'
+        },
+        {
+            id: 'preferences',
+            label: 'Preferences',
+            icon: 'heroicons_solid:cog-6-tooth',
+            type: 'item',
+            children: [
+                {
+                    id: 'profile',
+                    label: 'Profile',
+                    icon: 'heroicons_solid:user',
+                    type: 'item'
+                },
+                {
+                    id: 'notifications',
+                    label: 'Notifications',
+                    icon: 'heroicons_solid:bell',
+                    type: 'item'
+                }
+            ]
+        }
+    ];

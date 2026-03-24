@@ -1,0 +1,154 @@
+app-sidebar {
+    display: block;
+    height: 100%;
+    width: 100%;
+    
+    .sidebar-container {
+        height: 100%;
+        width: 100%;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        transition: width 0.3s ease-in-out;
+        
+        &.collapsed {
+            .menu-item {
+                padding-left: 0;
+                padding-right: 0;
+                justify-content: center;
+                
+                .mat-icon {
+                    margin-right: 0;
+                }
+            }
+            
+            .sidebar-header {
+                justify-content: center;
+                
+                h3 {
+                    display: none;
+                }
+            }
+        }
+    }
+    
+    .sidebar-header {
+        flex-shrink: 0;
+        background-color: inherit;
+        
+        .toggle-button {
+            transition: transform 0.2s ease;
+            
+            &:hover {
+                transform: scale(1.05);
+            }
+        }
+    }
+    
+    .sidebar-menu {
+        flex: 1;
+        overflow-y: auto;
+        overflow-x: hidden;
+        scrollbar-width: thin;
+        
+        /* Scrollbar styling */
+        &::-webkit-scrollbar {
+            width: 4px;
+        }
+        
+        &::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 4px;
+        }
+        
+        &::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 4px;
+            
+            &:hover {
+                background: #a1a1a1;
+            }
+        }
+    }
+    
+    .menu-item {
+        transition: all 0.2s ease;
+        position: relative;
+        
+        /* Asegurar que el texto se trunque correctamente */
+        span {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        
+        &.active {
+            background-color: rgba(29, 106, 212, 0.08);
+            color: #1d6ad4;
+            border-left: 3px solid #1d6ad4;
+            
+            .mat-icon {
+                color: #1d6ad4;
+            }
+        }
+        
+        &:hover:not(.disabled):not(.active) {
+            background-color: rgba(0, 0, 0, 0.04);
+            
+            .mat-icon {
+                color: #1d6ad4;
+            }
+        }
+        
+        &.disabled {
+            pointer-events: none;
+            cursor: not-allowed;
+        }
+    }
+    
+    .submenu-item {
+        transition: all 0.2s ease;
+        cursor: pointer;
+        
+        span {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        
+        &:hover {
+            background-color: rgba(0, 0, 0, 0.04);
+            color: #1d6ad4;
+            
+            .mat-icon {
+                color: #1d6ad4;
+            }
+        }
+    }
+    
+    .sidebar-footer {
+        flex-shrink: 0;
+    }
+    
+    /* Tooltip personalizado para items colapsados */
+    .mat-tooltip {
+        font-size: 12px;
+        background-color: #1f2937;
+        margin-left: 8px;
+    }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    app-sidebar {
+        .sidebar-container {
+            &.collapsed {
+                .menu-item {
+                    .mat-icon {
+                        margin: 0 auto;
+                    }
+                }
+            }
+        }
+    }
+}

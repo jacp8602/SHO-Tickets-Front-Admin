@@ -1,0 +1,79 @@
+app-ticket-list {
+    display: block;
+    width: 100%;
+    
+    .ticket-list-container {
+        width: 100%;
+    }
+    
+    // Estilos para las tarjetas de tickets
+    .bg-white {
+        transition: all 0.2s ease;
+        
+        &:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+    }
+    
+    // Estilos para los botones de acción
+    .mat-mdc-icon-button {
+        width: 28px;
+        height: 28px;
+        line-height: 28px;
+        
+        .mat-icon {
+            font-size: 16px;
+            width: 16px;
+            height: 16px;
+            line-height: 16px;
+        }
+    }
+    
+    // Estilos para el toggle
+    .mat-mdc-slide-toggle {
+        &.scale-75 {
+            transform: scale(0.75);
+        }
+        
+        .mdc-switch {
+            .mdc-switch__track {
+                border-radius: 20px;
+            }
+        }
+    }
+    
+    // Estilos para el estado vacío
+    .empty-state {
+        .mat-icon {
+            font-size: 48px;
+            width: 48px;
+            height: 48px;
+        }
+    }
+    
+    // Estilos para el contenedor de paginación
+    app-pagination {
+        display: inline-flex;
+    }
+    
+    // Responsive
+    @media (max-width: 768px) {
+        .bg-white {
+            .flex {
+                flex-wrap: wrap;
+                gap: 8px;
+                padding: 12px 0;
+            }
+            
+            // .w-8, .w-1/6, .w-1/12, .w-2/5 {
+            //     width: auto;
+            //     flex: 1;
+            // }
+            
+            // .w-1/12 {
+            //     justify-content: flex-end;
+            // }
+        }
+    }
+}

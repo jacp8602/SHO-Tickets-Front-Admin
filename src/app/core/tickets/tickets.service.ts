@@ -4,11 +4,12 @@ import { Observable, of, throwError } from 'rxjs';
 import { map, delay, catchError } from 'rxjs/operators';
 import { 
     TicketsConfiguration, 
-    TicketsResponse, 
+    TicketsResponse,
+    SingleTicketResponse,
     TicketItem,
     TicketFilters 
 } from './tickets.types';
-import { MOCK_TICKETS_CONFIG } from './tickets.mock';
+import { MOCK_TICKETS, MOCK_TICKETS_CONFIG } from './tickets.mock';
 
 @Injectable({
     providedIn: 'root'
@@ -16,8 +17,42 @@ import { MOCK_TICKETS_CONFIG } from './tickets.mock';
 export class TicketsService {
     
     private mockConfigs: Map<string, TicketItem[]> = new Map(Object.entries(MOCK_TICKETS_CONFIG));
+    private tickets: TicketItem[] = [...MOCK_TICKETS];
+    private readonly SIMULATED_DELAY = 500; // ms
 
     constructor(private _httpClient: HttpClient) {}
+
+    /**
+     * Obtener todos los tickets
+     */
+    getAllTickets(): Observable<TicketsResponse> {
+        return of({
+            success: true,
+            data: {
+                tickets: [...this.tickets],
+                total: this.tickets.length
+            }
+        }).pipe(delay(this.SIMULATED_DELAY));
+    }
+
+    /**
+     * Obtener un ticket por ID
+     */
+    getTicketById(ticketId: string): Observable<SingleTicketResponse> {
+        const ticket = this.tickets.find(t => t.id === ticketId);
+        
+        if (!ticket) {
+            return throwError(() => new Error('Ticket not found')).pipe(
+                delay(this.SIMULATED_DELAY)
+            );
+        }
+        
+        return of({
+            success: true,
+            data: ticket
+        }).pipe(delay(this.SIMULATED_DELAY));
+    }
+
 
     /**
      * Obtener tickets para una producción
