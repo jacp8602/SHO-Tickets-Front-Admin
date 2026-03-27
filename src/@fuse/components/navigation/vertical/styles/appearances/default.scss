@@ -452,7 +452,7 @@ fuse-vertical-navigation-collapsable-item,
 fuse-vertical-navigation-group-item {
     .fuse-vertical-navigation-item-wrapper {
         .fuse-vertical-navigation-item {
-            color: #000000;
+            color: #ffffff;
 
             .fuse-vertical-navigation-item-icon {
                 @apply text-current opacity-60;
@@ -552,7 +552,7 @@ fuse-vertical-navigation-group-item {
         .fuse-vertical-navigation-item {
             .fuse-vertical-navigation-item-title-wrapper {
                 .fuse-vertical-navigation-item-title {
-                    @apply text-primary-900 opacity-100 dark:text-primary-900;
+                    @apply text-primary-100 opacity-100 dark:text-primary-100;
                 }
             }
         }
