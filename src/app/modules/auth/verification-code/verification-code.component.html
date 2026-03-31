@@ -8,28 +8,39 @@
         <div
             class="relative z-10 w-full max-w-2xl flex flex-col items-center justify-center text-center"
         >
-            <!-- Logo + SHOhub -->
-            <div class="flex items-center gap-4 mb-6">
-                <div class="w-20 h-20 rounded-full bg-[#1565FF] flex items-center justify-center">
-                    <img src="images/logo/ticket-02.svg" alt="Logo" class="w-12 h-12">
+            
+            <div class="inline-flex justify-start items-center gap-3">
+                <img src="images/logo/logo-evinra-login.svg" alt="Logo" class="w-14 h-20">
+                <div class="w-52 inline-flex flex-col justify-start items-start gap-2">
+                    <div class="w-52 h-14">
+                        <img src="images/logo/evinra.svg" alt="Logo">
+                    </div>
+                    <div class="self-stretch text-center justify-start text-slate-500 text-base font-normal font-['cBrand'] tracking-[3.68px]">TICKETING SYSTEMS</div>
                 </div>
-                <h1 class="text-8xl font-bold text-black">SHOhub</h1>
             </div>
 
+<<<<<<< HEAD
             <!-- Subtítulo -->
             <h2 class="text-2xl font-bold text-gray-900">Welcome to SHOhub</h2>
+=======
+            <div class="self-stretch flex flex-col justify-start items-center gap-1 pt-6">
+                <!-- Subtítulo -->            
+                <h2 class="text-2xl font-bold text-gray-900">Welcome to Evinra</h2>
+>>>>>>> feature_theme_evinra
 
-            <!-- Descripción -->
-            <p class="text-gray-600">
-                With our tool, you can find a variety of features to improve productivity and data efficiency.
-            </p>
+                <!-- Descripción -->
+                <p class="text-black text-sm font-normal font-['Inter'] leading-5">
+                    Evinra Suite is an integrated platform designed to manage every aspect of event production, venue operations, and sales from a single system.
+                </p>
 
-            <!-- Indicador de progreso -->
-            <div class="mt-8 flex space-x-2">
-                <div class="w-2 h-2 rounded-full bg-[#1d6ad4]"></div>
-                <div class="w-2 h-2 rounded-full bg-gray-400"></div>
-                <div class="w-2 h-2 rounded-full bg-gray-400"></div>
-                <div class="w-2 h-2 rounded-full bg-gray-400"></div>
+                <!-- Indicador de progreso (EN ESTE PUNTO VAN LOS PUNTOS CON EL COLOR ESPECÍFICO) -->
+                <div class="mt-8 flex space-x-2">
+                    <div class="w-2 h-2 rounded-full bg-teal-500"></div>  <!-- ← AQUÍ VA EL CÓDIGO DEL PUNTO ACTIVO -->
+                    <div class="w-2 h-2 rounded-full bg-gray-400"></div>
+                    <div class="w-2 h-2 rounded-full bg-gray-400"></div>
+                    <div class="w-2 h-2 rounded-full bg-gray-400"></div>
+                </div>
+                
             </div>
         </div>
     </div>
@@ -115,6 +126,7 @@
                     <!-- Campo de código (oculto pero usado para validación) -->
                     <input type="hidden" formControlName="code">
 
+<<<<<<< HEAD
                     <!-- Inputs del código de verificación -->
                     <div class="flex justify-center gap-2 mb-6">
                         @for (input of codeInputs; track input.id; let i = $index) {
@@ -140,6 +152,30 @@
                             </div>
                         }
                     </div>
+=======
+                <!-- Botones (dinámicos según el paso) -->
+                <div class="flex space-x-4 mt-8 py-3">
+                    <button
+                        class="flex-1 py-3 px-4 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors"
+                        mat-stroked-button
+                        type="button"
+                        (click)="goBack()"
+                    >
+                        Go back
+                    </button>
+                    
+                    <button
+                        class="flex-1 py-3 px-4 bg-teal-700 hover:bg-teal-500 text-white font-medium rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                        mat-flat-button
+                        [color]="'primary'"
+                        [disabled]="verificationForm.get('code')?.invalid"
+                        (click)="verifyCode()"
+                        type="button"
+                    >
+                        Verify
+                    </button>
+                </div>
+>>>>>>> feature_theme_evinra
 
                     <!-- reCAPTCHA container (invisible) -->
                     <div #recaptchaContainer id="recaptcha-container" class="hidden"></div>
