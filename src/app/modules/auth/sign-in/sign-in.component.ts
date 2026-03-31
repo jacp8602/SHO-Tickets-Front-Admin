@@ -17,16 +17,10 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { fuseAnimations } from '@fuse/animations';
 import { FuseAlertComponent, FuseAlertType } from '@fuse/components/alert';
 import { AuthService } from 'app/core/auth/auth.service';
-import { 
-    slideInTop, 
-    slideInBottom, 
-    slideInLeft, 
+import { FirebaseService } from 'app/core/auth/firebase/firebase.service';
+import {
     slideInRight,
-    slideOutTop,
-    slideOutBottom,
-    slideOutLeft,
-    slideOutRight 
-} from '@fuse/animations/slide'; // Ajusta la ruta según tu estructura
+} from '@fuse/animations/slide';
 
 @Component({
     selector: 'auth-sign-in',
@@ -35,7 +29,6 @@ import {
     animations: [fuseAnimations, slideInRight],
     imports: [
         RouterLink,
-        // FuseAlertComponent,
         FormsModule,
         ReactiveFormsModule,
         MatFormFieldModule,
@@ -44,6 +37,7 @@ import {
         MatIconModule,
         MatCheckboxModule,
         MatProgressSpinnerModule,
+        // FuseAlertComponent,
     ],
 })
 export class AuthSignInComponent implements OnInit {
@@ -55,6 +49,7 @@ export class AuthSignInComponent implements OnInit {
     };
     signInForm: UntypedFormGroup;
     showAlert: boolean = false;
+    isLoading: boolean = false;
 
     /**
      * Constructor
@@ -63,7 +58,8 @@ export class AuthSignInComponent implements OnInit {
         private _activatedRoute: ActivatedRoute,
         private _authService: AuthService,
         private _formBuilder: UntypedFormBuilder,
-        private _router: Router,        
+        private _router: Router,
+        private _firebaseService: FirebaseService
     ) {}
 
     // -----------------------------------------------------------------------------------------------------
@@ -77,12 +73,12 @@ export class AuthSignInComponent implements OnInit {
         // Create the form
         this.signInForm = this._formBuilder.group({
             email: [
-                'hughes.brian@company.com',
+                '',
                 [Validators.required, Validators.email],
             ],
-            password: ['admin', Validators.required],
+            password: ['', Validators.required],
             rememberMe: [''],
-        });        
+        });
     }
 
     // -----------------------------------------------------------------------------------------------------
@@ -90,7 +86,7 @@ export class AuthSignInComponent implements OnInit {
     // -----------------------------------------------------------------------------------------------------
 
     /**
-     * Sign in
+     * Sign in with Firebase + backend verification + 2FA flow
      */
     signIn(): void {
         // Return if the form is invalid
@@ -100,42 +96,80 @@ export class AuthSignInComponent implements OnInit {
 
         // Disable the form
         this.signInForm.disable();
+        this.isLoading = true;
 
         // Hide the alert
         this.showAlert = false;
 
-        // Sign in
-        this._authService.signIn(this.signInForm.value).subscribe(
-            () => {
-                // Set the redirect url.
-                // The '/signed-in-redirect' is a dummy url to catch the request and redirect the user
-                // to the correct page after a successful sign in. This way, that url can be set via
-                // routing file and we don't have to touch here.
-                const redirectURL =
-                    this._activatedRoute.snapshot.queryParamMap.get(
-                        'redirectURL'
-                    ) || '/signed-in-redirect';
+        // Sign in using Firebase authentication
+        console.log(this.signInForm);
+        try{
+            this._authService.signInAndSendToken(
+                this.signInForm.value.email,
+                this.signInForm.value.password
+            ).subscribe({
+                next: (response) => {
+                    console.log(response);
+                    // Navigate to verify-2fa page
+                    this._router.navigate(['/verification-code'], {
+                        state: {
+                            isEnrolling: false,
+                        },
+                    });
+                },
+                error: (error) => {
+                    // Handle Firebase MFA required error - redirect to 2FA page
+                    if (error?.code === 'auth/multi-factor-auth-required') {
+                        // Re-enable the form and hide loading before redirect
+                        this.signInForm.enable();
+                        this.isLoading = false;
 
-                // Navigate to the redirect url
-                this._router.navigateByUrl(redirectURL);
-            },
-            (response) => {
-                // Re-enable the form
-                this.signInForm.enable();
+                        this._router.navigate(['/verification-code'], {
+                            state: {
+                                firebaseError: error,
+                                isEnrolling: false,
+                            },
+                        });
+                        return;
+                    }
 
-                // Reset the form
-                this.signInNgForm.resetForm();
+                    // Re-enable the form for other errors
+                    this.signInForm.enable();
+                    this.isLoading = false;
 
-                // Set the alert
-                this.alert = {
-                    type: 'error',
-                    message: 'Wrong email or password',
-                };
+                    // Reset the form
+                    this.signInNgForm.resetForm();
 
-                // Show the alert
-                this.showAlert = true;
-            }
-        );
+                    // Handle email not verified
+                    if (error?.code === 'auth/email-not-verified') {
+                        this.alert = {
+                            type: 'info',
+                            message: error.message || 'Please verify your email before continuing.',
+                        };
+                        this.showAlert = true;
+                        return;
+                    }
+
+                    // Set the alert with Firebase error message
+                    this.alert = {
+                        type: 'error',
+                        message: this._firebaseService.getFirebaseErrorMessage(error) || 'Wrong email or password',
+                    };
+
+                    // Show the alert
+                    this.showAlert = true;
+                },
+            });
+        }catch (error){
+            // Set the alert with Firebase error message
+            this.alert = {
+                type: 'error',
+                message: this._firebaseService.getFirebaseErrorMessage(error) || 'Wrong email or password',
+            };
+
+            // Show the alert
+            this.showAlert = true;
+        }
     }
 
     togglePasswordVisibility(passwordField: HTMLInputElement) {

@@ -5,7 +5,7 @@
         class="relative hidden h-full w-3/5 flex-auto items-center justify-center overflow-hidden bg-blue-100 p-16 dark:border-l md:flex lg:px-28"
     >
         <!-- Content -->
-        <div 
+        <div
             class="relative z-10 w-full max-w-2xl flex flex-col items-center justify-center text-center"
         >
             <!-- Logo + SHOhub -->
@@ -16,7 +16,7 @@
                 <h1 class="text-8xl font-bold text-black">SHOhub</h1>
             </div>
 
-            <!-- Subtítulo -->            
+            <!-- Subtítulo -->
             <h2 class="text-2xl font-bold text-gray-900">Welcome to SHOhub</h2>
 
             <!-- Descripción -->
@@ -33,20 +33,26 @@
             </div>
         </div>
     </div>
-    
+
     <div
         class="flex items-center justify-center w-full px-4 py-8 sm:bg-card sm:w-auto sm:rounded-2xl sm:p-12 sm:shadow md:flex md:h-full md:w-1/2 md:items-center md:justify-center md:rounded-none md:p-16 md:shadow-none"
     >
         <div class="mx-auto w-full max-w-sm sm:w-96">
             <!-- Título dinámico según el paso -->
             <div class="text-center mb-2">
-                <h1 class="text-3xl font-bold text-gray-900">Enter the code</h1>
+                <h1 class="text-3xl font-bold text-gray-900">
+                    {{ isEnrolling ? 'Set up Two-Factor Authentication' : 'Enter the code' }}
+                </h1>
             </div>
 
             <!-- Subtítulo dinámico -->
             <p class="text-center text-gray-600 text-base mb-4">
-                We have sent a code to your email address<br>
-                <span class="font-medium">example&#64;email.com</span>
+                @if (isEnrolling) {
+                    {{ showPhoneInput ? 'Enter your phone number to receive a verification code' : 'We have sent a code to your phone' }}
+                } @else {
+                    We have sent a code to your phone<br>
+                    <span class="font-medium">{{ userData?.maskedPhoneNumber || 'your registered phone' }}</span>
+                }
             </p>
 
             <!-- Alert -->
@@ -62,81 +68,125 @@
                 </fuse-alert>
             }
 
-            <!-- Formulario -->
-            <form [formGroup]="verificationForm" #verificationCodeNgForm="ngForm" class="mt-8 space-y-1">
-                
-                <!-- PASO 1: Código de verificación -->
-                <!-- Campo de código (oculto pero usado para validación) -->
-                <input type="hidden" formControlName="code">
-                
-                <!-- Inputs del código de verificación -->
-                <div class="flex justify-center gap-2 mb-6">
-                    @for (input of codeInputs; track input.id; let i = $index) {
-                        <div class="relative w-12 h-16 mx-px">
-                            <!-- Guion de fondo cuando está vacío -->
-                            @if (!codeDigits[i]) {
-                                <div class="absolute inset-0 flex items-center justify-center text-3xl text-gray-400 pointer-events-none">
-                                    -
-                                </div>
-                            }
-                            <input
-                                [id]="input.id"
-                                type="text"
-                                inputmode="numeric"
-                                maxlength="1"
-                                class="w-12 h-16 text-center text-2xl font-semibold border border-gray-300 rounded-lg focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none"
-                                [class.border-blue-500]="verificationForm.get('code')?.value?.length === 6"
-                                [value]="codeDigits[i]"
-                                (input)="onCodeInput($event, i)"
-                                (keydown)="onCodeKeyDown($event, i)"
-                                (paste)="onCodePaste($event)"
-                            />
+            <!-- Loading indicator -->
+            @if (isLoading) {
+                <div class="flex justify-center items-center py-8">
+                    <mat-progress-spinner
+                        [color]="'primary'"
+                        [diameter]="40"
+                        [mode]="'indeterminate'">
+                    </mat-progress-spinner>
+                </div>
+            } @else {
+                <!-- Formulario -->
+                <form [formGroup]="verifyForm" #verificationCodeNgForm="ngForm" class="mt-8 space-y-1">
+                    
+                    <!-- Phone number input for enrollment -->
+                    @if (isEnrolling && showPhoneInput) {
+                        <div class="mb-6">
+                            <mat-form-field appearance="outline" class="w-full">
+                                <mat-label>Phone Number</mat-label>
+                                <input
+                                    matInput
+                                    type="tel"
+                                    formControlName="phoneNumber"
+                                    placeholder="+1 (555) 123-4567"
+                                    autocomplete="tel"
+                                />
+                                <mat-icon matPrefix>phone</mat-icon>
+                                @if (verifyForm.get('phoneNumber')?.hasError('required')) {
+                                    <mat-error>Phone number is required</mat-error>
+                                }
+                            </mat-form-field>
+                            
+                            <button
+                                class="w-full py-3 px-4 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                                mat-flat-button
+                                [color]="'primary'"
+                                [disabled]="verifyForm.get('phoneNumber')?.invalid"
+                                (click)="sendSmsForEnrollment()"
+                                type="button"
+                            >
+                                Send Code
+                            </button>
                         </div>
                     }
-                </div>
 
-                <!-- Temporizador -->
-                <p class="text-center text-gray-600 text-sm mb-4">
-                    Your link will expire in {{ timerDisplay }}
-                </p>
+                    <!-- Campo de código (oculto pero usado para validación) -->
+                    <input type="hidden" formControlName="code">
 
-                <!-- Botones (dinámicos según el paso) -->
-                <div class="flex space-x-4 mt-8 py-3">
-                    <button
-                        class="flex-1 py-3 px-4 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors"
-                        mat-stroked-button
-                        type="button"
-                        (click)="goBack()"
-                    >
-                        Go back
-                    </button>
-                    
-                    <button
-                        class="flex-1 py-3 px-4 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                        mat-flat-button
-                        [color]="'primary'"
-                        [disabled]="verificationForm.get('code')?.invalid"
-                        (click)="verifyCode()"
-                        type="button"
-                    >
-                        Verify
-                    </button>
-                </div>
+                    <!-- Inputs del código de verificación -->
+                    <div class="flex justify-center gap-2 mb-6">
+                        @for (input of codeInputs; track input.id; let i = $index) {
+                            <div class="relative w-12 h-16 mx-px">
+                                <!-- Guion de fondo cuando está vacío -->
+                                @if (!codeDigits[i]) {
+                                    <div class="absolute inset-0 flex items-center justify-center text-3xl text-gray-400 pointer-events-none">
+                                        -
+                                    </div>
+                                }
+                                <input
+                                    [id]="input.id"
+                                    type="text"
+                                    inputmode="numeric"
+                                    maxlength="1"
+                                    class="w-12 h-16 text-center text-2xl font-semibold border border-gray-300 rounded-lg focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none"
+                                    [class.border-blue-500]="verifyForm.get('code')?.value?.length === 6"
+                                    [value]="codeDigits[i]"
+                                    (input)="onCodeInput($event, i)"
+                                    (keydown)="onCodeKeyDown($event, i)"
+                                    (paste)="onCodePaste($event)"
+                                />
+                            </div>
+                        }
+                    </div>
 
-                <!-- Enlace para reenviar código (solo en paso de código) -->
-                <div class="text-center mt-4">
-                    <p class="text-gray-600">
-                        Did you not receive the code?
-                        <button 
-                            type="button"
-                            class="text-blue-600 hover:underline font-medium ml-1 bg-transparent border-none cursor-pointer"
-                            (click)="resendCode()"
-                        >
-                            Resend
-                        </button>
+                    <!-- reCAPTCHA container (invisible) -->
+                    <div #recaptchaContainer id="recaptcha-container" class="hidden"></div>
+
+                    <!-- Temporizador -->
+                    <p class="text-center text-gray-600 text-sm mb-4">
+                        Your code will expire in {{ timerDisplay }}
                     </p>
-                </div>
-            </form>
+
+                    <!-- Botones (dinámicos según el paso) -->
+                    <div class="flex space-x-4 mt-8 py-3">
+                        <button
+                            class="flex-1 py-3 px-4 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors"
+                            mat-stroked-button
+                            type="button"
+                            (click)="goBack()"
+                        >
+                            Go back
+                        </button>
+
+                        <button
+                            class="flex-1 py-3 px-4 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                            mat-flat-button
+                            [color]="'primary'"
+                            [disabled]="verifyForm.get('code')?.invalid"
+                            (click)="verifyCode()"
+                            type="button"
+                        >
+                            {{ isEnrolling ? 'Enroll' : 'Verify' }}
+                        </button>
+                    </div>
+
+                    <!-- Enlace para reenviar código -->
+                    <div class="text-center mt-4">
+                        <p class="text-gray-600">
+                            Did you not receive the code?
+                            <button
+                                type="button"
+                                class="text-blue-600 hover:underline font-medium ml-1 bg-transparent border-none cursor-pointer"
+                                (click)="resendCode()"
+                            >
+                                Resend
+                            </button>
+                        </p>
+                    </div>
+                </form>
+            }
         </div>
     </div>
 </div>
