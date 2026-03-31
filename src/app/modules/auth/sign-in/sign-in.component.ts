@@ -17,7 +17,7 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { fuseAnimations } from '@fuse/animations';
 import { FuseAlertComponent, FuseAlertType } from '@fuse/components/alert';
 import { AuthService } from 'app/core/auth/auth.service';
-import { FirebaseService } from 'app/core/auth/firebase/firebase.service';
+import { AuthErrorHandlerService } from 'app/core/auth/auth-error-handler.service';
 import {
     slideInRight,
 } from '@fuse/animations/slide';
@@ -37,7 +37,7 @@ import {
         MatIconModule,
         MatCheckboxModule,
         MatProgressSpinnerModule,
-        // FuseAlertComponent,
+        FuseAlertComponent,
     ],
 })
 export class AuthSignInComponent implements OnInit {
@@ -59,7 +59,7 @@ export class AuthSignInComponent implements OnInit {
         private _authService: AuthService,
         private _formBuilder: UntypedFormBuilder,
         private _router: Router,
-        private _firebaseService: FirebaseService
+        private _authErrorHandler: AuthErrorHandlerService
     ) {}
 
     // -----------------------------------------------------------------------------------------------------
@@ -142,18 +142,20 @@ export class AuthSignInComponent implements OnInit {
 
                     // Handle email not verified
                     if (error?.code === 'auth/email-not-verified') {
+                        const authError = this._authErrorHandler.handleAuthError(error);
                         this.alert = {
-                            type: 'info',
-                            message: error.message || 'Please verify your email before continuing.',
+                            type: authError.type,
+                            message: authError.message,
                         };
                         this.showAlert = true;
                         return;
                     }
 
-                    // Set the alert with Firebase error message
+                    // Get auth error with user-friendly message
+                    const authError = this._authErrorHandler.handleAuthError(error);
                     this.alert = {
-                        type: 'error',
-                        message: this._firebaseService.getFirebaseErrorMessage(error) || 'Wrong email or password',
+                        type: authError.type,
+                        message: authError.message || 'Wrong email or password',
                     };
 
                     // Show the alert
@@ -161,10 +163,11 @@ export class AuthSignInComponent implements OnInit {
                 },
             });
         }catch (error){
-            // Set the alert with Firebase error message
+            // Get auth error with user-friendly message
+            const authError = this._authErrorHandler.handleAuthError(error);
             this.alert = {
-                type: 'error',
-                message: this._firebaseService.getFirebaseErrorMessage(error) || 'Wrong email or password',
+                type: authError.type,
+                message: authError.message || 'Wrong email or password',
             };
 
             // Show the alert

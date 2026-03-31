@@ -5,7 +5,7 @@ import { UserService } from 'app/core/user/user.service';
 import { Firebase2FAService } from './firebase/firebase-2fa.service';
 import { FirebaseService } from './firebase/firebase.service';
 import { environment } from 'environments/environment.development';
-import { initializeApp } from 'firebase/app';
+import { initializeApp, FirebaseError } from 'firebase/app';
 import {
     MultiFactorError,
     createUserWithEmailAndPassword,
@@ -97,7 +97,7 @@ export class AuthService {
                 .pipe(take(1))
                 .subscribe({
                     next: async (cred: UserCredential) => {
-                        console.log(cred);
+                        console.log("CRED");
                         const idToken = await cred.user.getIdToken();
 
                         // Check email verification
@@ -124,7 +124,7 @@ export class AuthService {
                         });
                     },
                     error: (error: MultiFactorError) => {
-                        console.log(error);
+                        console.log(this._firebaseService.getFirebaseErrorMessage(error));
                         // User is already enrolled with MFA
                         if (error.code === 'auth/multi-factor-auth-required') {
                             this._authenticated = true;
@@ -133,7 +133,7 @@ export class AuthService {
                             });
                         }
                         observer.error(error);
-                    },
+                    }
                 });
         });
     }
