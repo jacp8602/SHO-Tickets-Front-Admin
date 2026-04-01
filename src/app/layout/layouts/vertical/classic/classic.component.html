@@ -1,9 +1,9 @@
 <!-- Loading bar -->
 <fuse-loading-bar></fuse-loading-bar>
 
-<!-- Navigation -->
+<!-- Navigation bg-white-->
 <fuse-vertical-navigation
-    class="light bg-white print:hidden"
+    class="light bg-[#353e5b] print:hidden"
     [mode]="isScreenSmall ? 'over' : 'side'"
     [name]="'mainNavigation'"
     [navigation]="navigation.default"
@@ -12,11 +12,11 @@
     <!-- Navigation header hook -->
     <ng-container fuseVerticalNavigationContentHeader>
         <!-- Logo -->
-        <div class="flex h-20 items-center p-6 pb-0 gap-3">            
-            <div class="w-14 h-14 rounded-full bg-[#1565FF] flex items-center justify-center">  <!-- ← AQUÍ VA EL CÓDIGO DEL LOGO -->
-                <img src="images/logo/ticket-02.svg" alt="Logo image" class="w-9 h-9">
-            </div>
-            <h1 class="text-3xl font-bold text-black">SHOhub</h1>
+        <div class="flex h-20 items-center justify-center p-6 pb-0 gap-3">            
+            <!-- <div class="w-14 h-14 rounded-full bg-[#353e5b] flex items-center justify-center">  <!-- ← AQUÍ VA EL CÓDIGO DEL LOGO -->
+                <img src="images/logo/logo-evinra-with-text.svg" alt="Logo image" class="w-30 h-15">
+            <!-- </div> -->
+            <!-- <h1 class="text-3xl font-bold text-black">SHOhub</h1> -->
         </div>
     </ng-container>
     
