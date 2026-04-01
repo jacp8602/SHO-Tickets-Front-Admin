@@ -18,12 +18,41 @@ export class UserService {
      * @param value
      */
     set user(value: User) {
-        // Store the value
+        // Store the value in localStorage
+        localStorage.setItem('logged_user', JSON.stringify(value));
+        // Store the value in the subject
         this._user.next(value);
+    }
+
+    get user(): User {
+        const userStr = localStorage.getItem('logged_user');
+        if (userStr) {
+            try {
+                return JSON.parse(userStr);
+            } catch (e) {
+                return null as any;
+            }
+        }
+        return null as any;
     }
 
     get user$(): Observable<User> {
         return this._user.asObservable();
+    }
+
+    /**
+     * Get current user from localStorage
+     */
+    get currentUser(): User | null {
+        const userStr = localStorage.getItem('logged_user');
+        if (userStr) {
+            try {
+                return JSON.parse(userStr);
+            } catch (e) {
+                return null;
+            }
+        }
+        return null;
     }
 
     // -----------------------------------------------------------------------------------------------------

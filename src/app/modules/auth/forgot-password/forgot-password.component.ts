@@ -15,6 +15,7 @@ import { RouterLink } from '@angular/router';
 import { fuseAnimations } from '@fuse/animations';
 import { FuseAlertComponent, FuseAlertType } from '@fuse/components/alert';
 import { AuthService } from 'app/core/auth/auth.service';
+import { AuthErrorHandlerService } from 'app/core/auth/auth-error-handler.service';
 import { finalize } from 'rxjs';
 
 @Component({
@@ -48,7 +49,8 @@ export class AuthForgotPasswordComponent implements OnInit {
      */
     constructor(
         private _authService: AuthService,
-        private _formBuilder: UntypedFormBuilder
+        private _formBuilder: UntypedFormBuilder,
+        private _authErrorHandler: AuthErrorHandlerService
     ) {}
 
     // -----------------------------------------------------------------------------------------------------
@@ -108,12 +110,12 @@ export class AuthForgotPasswordComponent implements OnInit {
                             "Password reset sent! You'll receive an email if you are registered on our system.",
                     };
                 },
-                (response) => {
-                    // Set the alert
+                (error) => {
+                    // Get auth error with user-friendly message
+                    const authError = this._authErrorHandler.handleAuthError(error);
                     this.alert = {
-                        type: 'error',
-                        message:
-                            'Email does not found! Are you sure you are already a member?',
+                        type: authError.type,
+                        message: authError.message,
                     };
                 }
             );

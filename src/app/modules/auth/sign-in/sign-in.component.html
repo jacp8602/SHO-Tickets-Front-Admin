@@ -48,8 +48,21 @@
     </div>
     <div
         class="flex items-center justify-center w-full px-4 py-8 sm:bg-card sm:w-auto sm:rounded-2xl sm:p-12 sm:shadow md:flex md:h-full md:w-1/2 md:items-center md:justify-center md:rounded-none md:p-16 md:shadow-none"
-    >    
+    >
         <div class="mx-auto w-full max-w-sm sm:w-96">
+            <!-- Alert -->
+            @if (showAlert) {
+                <fuse-alert
+                    class="mb-4"
+                    [appearance]="'outline'"
+                    [showIcon]="true"
+                    [type]="alert.type"
+                    [@shake]="alert.type === 'error'"
+                >
+                    {{ alert.message }}
+                </fuse-alert>
+            }
+
             <!-- Título centrado -->
             <div class="text-center mb-2">
                 <h1 class="text-3xl font-bold text-gray-900">Login</h1>
