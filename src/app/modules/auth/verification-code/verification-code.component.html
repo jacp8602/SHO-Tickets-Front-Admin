@@ -19,14 +19,9 @@
                 </div>
             </div>
 
-<<<<<<< HEAD
-            <!-- Subtítulo -->
-            <h2 class="text-2xl font-bold text-gray-900">Welcome to SHOhub</h2>
-=======
             <div class="self-stretch flex flex-col justify-start items-center gap-1 pt-6">
                 <!-- Subtítulo -->            
                 <h2 class="text-2xl font-bold text-gray-900">Welcome to Evinra</h2>
->>>>>>> feature_theme_evinra
 
                 <!-- Descripción -->
                 <p class="text-black text-sm font-normal font-['Inter'] leading-5">
@@ -93,7 +88,7 @@
                 <form [formGroup]="verifyForm" #verificationCodeNgForm="ngForm" class="mt-8 space-y-1">
                     
                     <!-- Phone number input for enrollment -->
-                    @if (isEnrolling && showPhoneInput) {
+                    <!-- @if (isEnrolling && showPhoneInput) {
                         <div class="mb-6">
                             <mat-form-field appearance="outline" class="w-full">
                                 <mat-label>Phone Number</mat-label>
@@ -121,12 +116,11 @@
                                 Send Code
                             </button>
                         </div>
-                    }
+                    } -->
 
                     <!-- Campo de código (oculto pero usado para validación) -->
                     <input type="hidden" formControlName="code">
 
-<<<<<<< HEAD
                     <!-- Inputs del código de verificación -->
                     <div class="flex justify-center gap-2 mb-6">
                         @for (input of codeInputs; track input.id; let i = $index) {
@@ -152,7 +146,12 @@
                             </div>
                         }
                     </div>
-=======
+                
+                <!-- Temporizador -->
+                <p class="text-center text-gray-600 text-sm mb-4">
+                    Your code will expire in {{ timerDisplay }}
+                </p>
+
                 <!-- Botones (dinámicos según el paso) -->
                 <div class="flex space-x-4 mt-8 py-3">
                     <button
@@ -168,45 +167,16 @@
                         class="flex-1 py-3 px-4 bg-teal-700 hover:bg-teal-500 text-white font-medium rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                         mat-flat-button
                         [color]="'primary'"
-                        [disabled]="verificationForm.get('code')?.invalid"
+                        [disabled]="verifyForm.get('code')?.invalid"
                         (click)="verifyCode()"
                         type="button"
                     >
                         Verify
                     </button>
                 </div>
->>>>>>> feature_theme_evinra
 
                     <!-- reCAPTCHA container (invisible) -->
                     <div #recaptchaContainer id="recaptcha-container" class="hidden"></div>
-
-                    <!-- Temporizador -->
-                    <p class="text-center text-gray-600 text-sm mb-4">
-                        Your code will expire in {{ timerDisplay }}
-                    </p>
-
-                    <!-- Botones (dinámicos según el paso) -->
-                    <div class="flex space-x-4 mt-8 py-3">
-                        <button
-                            class="flex-1 py-3 px-4 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors"
-                            mat-stroked-button
-                            type="button"
-                            (click)="goBack()"
-                        >
-                            Go back
-                        </button>
-
-                        <button
-                            class="flex-1 py-3 px-4 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                            mat-flat-button
-                            [color]="'primary'"
-                            [disabled]="verifyForm.get('code')?.invalid"
-                            (click)="verifyCode()"
-                            type="button"
-                        >
-                            {{ isEnrolling ? 'Enroll' : 'Verify' }}
-                        </button>
-                    </div>
 
                     <!-- Enlace para reenviar código -->
                     <div class="text-center mt-4">
