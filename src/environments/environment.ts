@@ -1,7 +1,6 @@
 export const environment = {
     production: true,
     apiUrl: 'https://ts-admin-api-dev.prodevsolution.dev/api',
-    //apiUrl: '',
     // TS Prod
     firebaseConfig: {
         apiKey: "AIzaSyANPJNtWUEeoZpPBBssBfuczJxso732KFA",
