@@ -20,7 +20,7 @@ export const defaultNavigation: FuseNavigationItem[] = [
                 title: 'Venue Management',
                 type: 'basic',
                 icon: 'sho_sidebar:venue_mgmt',
-                link: ''
+                link: '/venue-management'
             }
         ]
     },

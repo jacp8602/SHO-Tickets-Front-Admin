@@ -1,9 +1,9 @@
 import { Routes } from '@angular/router';
-import { AddonsComponent } from './event-associated-dialog.component';
+import { EventAssociatedDialogComponent } from './event-associated-dialog.component';
 
 export default [
     {
         path     : '',
-        component: AddonsComponent,
+        component: EventAssociatedDialogComponent,
     },
 ] as Routes;

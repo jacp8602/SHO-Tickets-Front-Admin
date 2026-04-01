@@ -1,0 +1,41 @@
+// Asegurar que el layout ocupe toda la pantalla
+// html, body {
+//     height: 100%;
+//     margin: 0;
+//     padding: 0;
+// }
+
+// Estilos para el layout
+app-layout-with-sidebar,
+.layout-with-sidebar {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+// Asegurar que los wrappers mantengan las proporciones
+.sidebar-wrapper,
+.main-content-wrapper {
+    height: 100%;
+    overflow: auto;
+}
+
+// Estilos para el contenedor de componentes dinámicos
+.dynamic-component-container {
+    width: 100%;
+    height: 100%;
+    
+    > * {
+        width: 100%;
+        height: 100%;
+        display: block;
+    }
+}
+
+// Para pantallas pequeñas, si es necesario ajustar
+@media (max-width: 768px) {
+    .sidebar-wrapper {
+        min-width: 200px !important;
+    }
+}

@@ -1,0 +1,56 @@
+app-venue-info {
+    display: block;
+    min-height: 100vh;
+    background-color: #f9fafc;
+    
+    .venue-info-container {
+        // min-width: 1280px;
+        width:auto;
+    }
+    
+    // Estilos para el área de upload
+    .border-dashed {
+        transition: all 0.2s ease;
+        cursor: pointer;
+        
+        &:hover {
+            border-color: #1d6ad4;
+            background-color: rgba(29, 106, 212, 0.02);
+        }
+    }
+    
+    // Estilos para el select de layout
+    .mat-mdc-select-panel {
+        .mat-mdc-option {
+            .flex {
+                width: 100%;
+            }
+        }
+    }
+    
+    // Estilos para campos deshabilitados
+    input[readonly] {
+        background-color: #f9fafb;
+        cursor: not-allowed;
+    }
+    
+    // Estilos para el progress bar
+    .mat-mdc-progress-bar {
+        border-radius: 4px;
+        
+        .mdc-linear-progress__bar-inner {
+            background-color: #1d6ad4;
+        }
+    }
+    
+    // Responsive
+    @media (max-width: 768px) {
+        .venue-info-container {
+            padding: 1rem;
+        }
+        
+        .grid-cols-2 {
+            gap: 1rem;
+        }
+    }
+}

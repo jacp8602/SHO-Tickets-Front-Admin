@@ -1,0 +1,47 @@
+<div class="main-content-wrapper h-full w-full overflow-auto" [class]="customClass">
+    <div class="main-content-container h-full w-full relative">
+        <!-- Loader -->
+        @if (isLoading && showLoader) {
+            <div class="absolute inset-0 flex items-center justify-center bg-white/80 backdrop-blur-sm z-10">
+                <div class="flex flex-col items-center gap-3">
+                    <mat-spinner diameter="40" color="primary"></mat-spinner>
+                    <span class="text-sm text-gray-500">Loading content...</span>
+                </div>
+            </div>
+        }
+        
+        <!-- Error State -->
+        @if (hasError) {
+            <div class="flex items-center justify-center h-full">
+                <div class="text-center max-w-md p-8">
+                    <mat-icon class="text-red-500 icon-size-16 mb-4" [svgIcon]="'heroicons_solid:exclamation-triangle'"></mat-icon>
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">Error Loading Content</h3>
+                    <p class="text-sm text-gray-600 mb-4">{{ errorMessage }}</p>
+                    <button mat-flat-button color="primary" (click)="reload()">
+                        <mat-icon [svgIcon]="'heroicons_solid:arrow-path'"></mat-icon>
+                        Try Again
+                    </button>
+                </div>
+            </div>
+        }
+        
+        <!-- Empty State -->
+        @if (!component && !isLoading && !hasError) {
+            <div class="flex items-center justify-center h-full">
+                <div class="text-center max-w-md p-8">
+                    <mat-icon class="text-gray-300 icon-size-16 mb-4" [svgIcon]="emptyStateIcon"></mat-icon>
+                    <h3 class="text-lg font-medium text-gray-500 mb-2">No Content Selected</h3>
+                    <p class="text-sm text-gray-400">{{ emptyStateMessage }}</p>
+                </div>
+            </div>
+        }
+        
+        <!-- Component Container -->
+        <div class="component-container h-full w-full"
+             [class.opacity-0]="isLoading"
+             [class.invisible]="isLoading">
+            <ng-content></ng-content>
+            <!-- Aquí se renderizará el componente dinámico -->
+        </div>
+    </div>
+</div>
