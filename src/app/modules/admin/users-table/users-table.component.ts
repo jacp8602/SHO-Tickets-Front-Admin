@@ -246,21 +246,21 @@ export class UsersTableComponent implements OnInit, OnDestroy {
             data: { user: user }
         });
 
-        dialogRef.afterClosed().subscribe((updatedUser: UserListItem) => {
-            if (updatedUser) {
-                console.log('Usuario actualizado:', updatedUser);
-                this.userEdited.emit(updatedUser);
-                
+        dialogRef.afterClosed().subscribe((result) => {
+            if (result) {
+                console.log('[UsersTable] User updated successfully:', result);
+                this.userEdited.emit(result);
+
+                // Recargar la lista de usuarios desde la API
+                this._loadUsers();
+
                 // Mostrar mensaje de éxito
                 this.alert = {
                     type: 'success',
                     message: 'User updated successfully.',
                 };
                 this.showAlert = true;
-                
-                // Recargar usuarios si es necesario
-                this._loadUsers();
-                
+
                 // Ocultar alerta después de 3 segundos
                 setTimeout(() => {
                     this.showAlert = false;
