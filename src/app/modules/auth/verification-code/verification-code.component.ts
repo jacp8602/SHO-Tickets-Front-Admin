@@ -25,6 +25,7 @@ import {
     UserCredential,
 } from 'firebase/auth';
 import { finalize } from 'rxjs';
+import { environment } from 'environments/environment';
 
 @Component({
     selector: 'auth-verification-code',
@@ -126,22 +127,27 @@ export class AuthVerificationCodeComponent implements OnInit, AfterViewInit {
         this.startTimer();
 
         this.isLoading = false;
+        console.log(this.userData);
     }
 
     /**
      * After view init - Initialize reCAPTCHA and start 2FA flow if needed
      */
     ngAfterViewInit(): void {
+        console.log('[VerificationCode] ngAfterViewInit called');
+        
         // Initialize reCAPTCHA verifier first
         this.initializeRecaptcha();
 
         // If we have a firebaseError (user with existing MFA), start the 2FA flow
         // after reCAPTCHA is initialized
         if (this.firebaseError && !this.isEnrolling) {
-            // Small delay to ensure reCAPTCHA is ready time in seconds
+            // Wait for reCAPTCHA to be fully initialized
+            // reCAPTCHA needs time to load the script and render
             setTimeout(() => {
+                console.log('[VerificationCode] Attempting to start 2FA flow after delay');
                 this.start2faFlow();
-            }, 1);
+            }, 1000);
         }
     }
 
@@ -171,40 +177,111 @@ export class AuthVerificationCodeComponent implements OnInit, AfterViewInit {
             existingContainer.innerHTML = '';
         }
 
+        // Get reCAPTCHA site key from environment
+        // const recaptchaSiteKey = environment.recaptchaSiteKey;
+        
+        // if (!recaptchaSiteKey) {
+        //     console.error('[VerificationCode] reCAPTCHA site key not configured in environment');
+        //     this.alert = {
+        //         type: 'error',
+        //         message: 'reCAPTCHA is not configured. Please contact support.',
+        //     };
+        //     this.showAlert = true;
+        //     return;
+        // }
+
+        // console.log('[VerificationCode] Initializing reCAPTCHA with site key:', recaptchaSiteKey.substring(0, 8) + '...');
+
         this._firebase2FAService.recaptchaVerifier = new RecaptchaVerifier(
             auth,
             'recaptcha-container',
             {
                 size: 'invisible',
-                callback: () => {
-                    console.log('reCAPTCHA resolved');
+                // sitekey: recaptchaSiteKey,
+                callback: (response: any) => {
+                    console.log('[VerificationCode] reCAPTCHA resolved:', response);
                 },
                 'expired-callback': () => {
-                    console.log('reCAPTCHA expired');
+                    console.log('[VerificationCode] reCAPTCHA expired');
+                    this.alert = {
+                        type: 'warning',
+                        message: 'reCAPTCHA expired. Please try again.',
+                    };
+                    this.showAlert = true;
+                },
+                'error-callback': (error: any) => {
+                    console.error('[VerificationCode] reCAPTCHA error:', error);
+                    this.alert = {
+                        type: 'error',
+                        message: 'reCAPTCHA verification failed. Please try again.',
+                    };
+                    this.showAlert = true;
                 },
             }
         );
+        
+        console.log('[VerificationCode] reCAPTCHA verifier created');
     }
 
     /**
      * Start 2FA flow for existing MFA users
      */
     start2faFlow(): void {
-        if (this.firebaseError) {
-            this._firebase2FAService.start2fa(this.firebaseError).subscribe({
-                next: (challenge) => {
-                    console.log('2FA challenge started', challenge);
-                },
-                error: (error) => {
-                    console.error('Error starting 2FA flow:', error);
-                    this.alert = {
-                        type: 'error',
-                        message: this._firebaseService.getFirebaseErrorMessage(error),
-                    };
-                    this.showAlert = true;
-                },
-            });
+        if (!this.firebaseError) {
+            console.error('[VerificationCode] No firebaseError to start 2FA flow');
+            return;
         }
+
+        const recaptchaVerifier = this._firebase2FAService.getRecaptchaVerifier();
+        
+        if (!recaptchaVerifier) {
+            console.error('[VerificationCode] reCAPTCHA verifier not initialized, waiting...');
+            // Wait a bit and try again
+            setTimeout(() => {
+                this.start2faFlow();
+            }, 500);
+            return;
+        }
+
+        console.log('[VerificationCode] Starting 2FA flow...');
+        
+        this._firebase2FAService.start2fa(this.firebaseError).subscribe({
+            next: (challenge) => {
+                console.log('[VerificationCode] 2FA challenge started', challenge);
+                this.alert = {
+                    type: 'success',
+                    message: 'Verification code sent to your phone',
+                };
+                this.showAlert = true;
+                setTimeout(() => {
+                    this.showAlert = false;
+                }, 4000);
+            },
+            error: (error) => {
+                console.error('[VerificationCode] Error starting 2FA flow:', error);
+                console.error('[VerificationCode] Error code:', error?.code);
+                console.error('[VerificationCode] Error message:', error?.message);
+                
+                let errorMessage = 'Failed to send verification code. Please try again.';
+                
+                // Handle specific Firebase error codes
+                if (error?.code === 'auth/captcha-check-failed') {
+                    errorMessage = 'reCAPTCHA verification failed. Please refresh and try again.';
+                } else if (error?.code === 'auth/too-many-requests') {
+                    errorMessage = 'Too many attempts. Please wait a few minutes and try again.';
+                } else if (error?.code === 'auth/invalid-verification-code') {
+                    errorMessage = 'Invalid verification code. Please try again.';
+                } else if (error?.message) {
+                    errorMessage = this._firebaseService.getFirebaseErrorMessage(error);
+                }
+                
+                this.alert = {
+                    type: 'error',
+                    message: errorMessage,
+                };
+                this.showAlert = true;
+            },
+        });
     }
 
     /**
@@ -318,6 +395,20 @@ export class AuthVerificationCodeComponent implements OnInit, AfterViewInit {
             return;
         }
 
+        // Format phone number to E.164 format
+        const formattedPhoneNumber = this.formatPhoneNumber(this.phoneNumber);
+        
+        if (!formattedPhoneNumber) {
+            this.alert = {
+                type: 'error',
+                message: 'Invalid phone number format. Please include country code (e.g., +1 for USA)',
+            };
+            this.showAlert = true;
+            return;
+        }
+
+        console.log('[VerificationCode] Sending SMS to:', formattedPhoneNumber);
+
         this.verifyForm.disable();
 
         const user: User = this.userData?.user;
@@ -327,15 +418,25 @@ export class AuthVerificationCodeComponent implements OnInit, AfterViewInit {
                 message: 'User not found',
             };
             this.showAlert = true;
+            this.verifyForm.enable();
             return;
         }
 
-        const recaptchaVerifier = this._firebase2FAService[
-            'recaptchaVerifier'
-        ] as any as RecaptchaVerifier;
+        const recaptchaVerifier = this._firebase2FAService.getRecaptchaVerifier();
+        
+        if (!recaptchaVerifier) {
+            console.error('[VerificationCode] reCAPTCHA verifier not initialized');
+            this.alert = {
+                type: 'error',
+                message: 'reCAPTCHA not initialized. Please try again.',
+            };
+            this.showAlert = true;
+            this.verifyForm.enable();
+            return;
+        }
 
         this._firebase2FAService
-            .enrollMfaSendSms(user, this.phoneNumber, recaptchaVerifier)
+            .enrollMfaSendSms(user, formattedPhoneNumber, recaptchaVerifier)
             .pipe(
                 finalize(() => {
                     this.verifyForm.enable();
@@ -343,6 +444,7 @@ export class AuthVerificationCodeComponent implements OnInit, AfterViewInit {
             )
             .subscribe({
                 next: (verificationId) => {
+                    console.log('[VerificationCode] SMS sent successfully. Verification ID:', verificationId);
                     this.verificationId = verificationId;
                     this.alert = {
                         type: 'success',
@@ -354,14 +456,69 @@ export class AuthVerificationCodeComponent implements OnInit, AfterViewInit {
                     }, 3000);
                 },
                 error: (error) => {
-                    console.error('Error sending SMS:', error);
+                    console.error('[VerificationCode] Error sending SMS:', error);
+                    console.error('[VerificationCode] Error code:', error?.code);
+                    console.error('[VerificationCode] Error message:', error?.message);
+                    
+                    let errorMessage = 'Failed to send SMS. Please try again.';
+                    
+                    // Handle specific Firebase error codes
+                    if (error?.code === 'auth/argument-error') {
+                        errorMessage = 'Invalid phone number format. Please use format: +1234567890';
+                    } else if (error?.code === 'auth/captcha-check-failed') {
+                        errorMessage = 'reCAPTCHA verification failed. Please refresh and try again.';
+                    } else if (error?.code === 'auth/too-many-requests') {
+                        errorMessage = 'Too many attempts. Please wait a few minutes and try again.';
+                    } else if (error?.code === 'auth/quota-exceeded') {
+                        errorMessage = 'SMS quota exceeded. Please try again later or contact support.';
+                    } else if (error?.message) {
+                        errorMessage = this._firebaseService.getFirebaseErrorMessage(error);
+                    }
+                    
                     this.alert = {
                         type: 'error',
-                        message: this._firebaseService.getFirebaseErrorMessage(error),
+                        message: errorMessage,
                     };
                     this.showAlert = true;
                 },
             });
+    }
+
+    /**
+     * Format phone number to E.164 format
+     * @param phoneNumber - Raw phone number input
+     * @returns Formatted phone number with country code (e.g., +1234567890) or null if invalid
+     */
+    private formatPhoneNumber(phoneNumber: string): string | null {
+        // Remove all non-digit characters except +
+        let cleaned = phoneNumber.replace(/[^\d+]/g, '');
+        
+        // If doesn't start with +, assume USA/Canada (+1)
+        if (!cleaned.startsWith('+')) {
+            // If starts with 1 and length is 11, it's already correct
+            if (cleaned.length === 11 && cleaned.startsWith('1')) {
+                cleaned = '+' + cleaned;
+            } 
+            // If length is 10, add +1 prefix
+            else if (cleaned.length === 10) {
+                cleaned = '+1' + cleaned;
+            }
+            // If length is 7, it's just local number - can't format properly
+            else if (cleaned.length === 7) {
+                // Assume USA area code 555 for local numbers (should be handled by UI)
+                cleaned = '+1555' + cleaned;
+            }
+            else {
+                return null; // Invalid format
+            }
+        }
+        
+        // Validate minimum length for E.164 (at least + and 7-15 digits)
+        if (cleaned.length < 8 || cleaned.length > 16) {
+            return null;
+        }
+        
+        return cleaned;
     }
 
     /**
@@ -433,6 +590,7 @@ export class AuthVerificationCodeComponent implements OnInit, AfterViewInit {
                 .subscribe({
                     next: async (cred: UserCredential) => {
                         // Get ID token with 2FA claim
+                        console.log(cred);
                         const idToken = await cred.user.getIdToken();
 
                         // Send to backend to get JWT
@@ -466,6 +624,8 @@ export class AuthVerificationCodeComponent implements OnInit, AfterViewInit {
      * Resend code
      */
     resendCode(): void {
+        console.log('[VerificationCode] Resending code...');
+        
         // Reset timer
         clearInterval(this.timerInterval);
         this.timerSeconds = 899;
@@ -478,14 +638,34 @@ export class AuthVerificationCodeComponent implements OnInit, AfterViewInit {
 
         // Resend SMS
         if (this.isEnrolling && this.userData?.user) {
-            const recaptchaVerifier = this._firebase2FAService[
-                'recaptchaVerifier'
-            ] as any as RecaptchaVerifier;
+            const recaptchaVerifier = this._firebase2FAService.getRecaptchaVerifier();
+            
+            if (!recaptchaVerifier) {
+                console.error('[VerificationCode] reCAPTCHA verifier not found for resend');
+                this.alert = {
+                    type: 'error',
+                    message: 'reCAPTCHA not initialized. Please refresh and try again.',
+                };
+                this.showAlert = true;
+                return;
+            }
+
+            // Format phone number
+            const formattedPhoneNumber = this.formatPhoneNumber(this.phoneNumber);
+            
+            if (!formattedPhoneNumber) {
+                this.alert = {
+                    type: 'error',
+                    message: 'Invalid phone number format',
+                };
+                this.showAlert = true;
+                return;
+            }
 
             this._firebase2FAService
                 .enrollMfaSendSms(
                     this.userData.user,
-                    this.phoneNumber,
+                    formattedPhoneNumber,
                     recaptchaVerifier
                 )
                 .subscribe({
@@ -501,6 +681,7 @@ export class AuthVerificationCodeComponent implements OnInit, AfterViewInit {
                         }, 3000);
                     },
                     error: (error) => {
+                        console.error('[VerificationCode] Error resending SMS:', error);
                         this.alert = {
                             type: 'error',
                             message: this._firebaseService.getFirebaseErrorMessage(error),
@@ -510,6 +691,7 @@ export class AuthVerificationCodeComponent implements OnInit, AfterViewInit {
                 });
         } else if (this.firebaseError) {
             // Re-start 2FA flow for existing user
+            console.log('[VerificationCode] Restarting 2FA flow for resend');
             this.start2faFlow();
             this.alert = {
                 type: 'success',
