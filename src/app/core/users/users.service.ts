@@ -101,6 +101,7 @@ export class UsersService {
      */
     transformUser(backendUser: BackendUser): UserListItem {
         const initials = this._getInitials(backendUser.firstname, backendUser.lastname);
+        console.log(backendUser);
         return {
             id: backendUser.id.toString(),
             name: `${backendUser.firstname} ${backendUser.lastname}`.trim(),
