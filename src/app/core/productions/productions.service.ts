@@ -101,7 +101,7 @@ export class ProductionsService {
         const body = new URLSearchParams();
         body.append('name', dto.name);
         body.append('workspace', dto.workspace);
-        body.append('systemSourcesId', dto.systemSourcesId.toString());
+        body.append('systemSourceId', dto.systemSourcesId.toString());
         body.append('canceled', (dto.canceled ?? false).toString());
         
         if (dto.description) {
