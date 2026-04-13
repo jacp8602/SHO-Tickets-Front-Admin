@@ -1,0 +1,141 @@
+<div class="p-4 sm:p-6 w-full max-w-none">
+    <!-- Header con título a la izquierda y botón de cierre a la derecha -->
+    <div class="flex items-center justify-between mb-4">
+        <h1 class="text-2xl font-bold text-gray-900">Create Production</h1>
+        <button
+            mat-icon-button
+            (click)="onCancel()"
+            class="text-gray-400 hover:text-gray-600"
+            aria-label="Close dialog"
+        >
+            <mat-icon>close</mat-icon>
+        </button>
+    </div>
+
+    <!-- Divisor -->
+    <mat-divider class="!mb-6"></mat-divider>
+
+    <!-- Error message -->
+    @if (errorMessage) {
+        <div class="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm">
+            {{ errorMessage }}
+        </div>
+    }
+
+    <!-- Formulario -->
+    <form [formGroup]="productionForm" class="w-full">
+        <!-- Production Name -->
+        <div class="w-full mb-4">
+            <mat-form-field class="w-full">
+                <mat-label>Production Name</mat-label>
+                <mat-icon matPrefix class="text-gray-400">theaters</mat-icon>
+                <input matInput formControlName="name" placeholder="Enter production name">
+                @if (productionForm.get('name')?.hasError('required') && productionForm.get('name')?.touched) {
+                    <mat-error>Production name is required</mat-error>
+                }
+                @if (productionForm.get('name')?.hasError('minlength') && productionForm.get('name')?.touched) {
+                    <mat-error>Production name must be at least 3 characters</mat-error>
+                }
+                @if (productionForm.get('name')?.hasError('maxlength') && productionForm.get('name')?.touched) {
+                    <mat-error>Production name must be 255 characters or less</mat-error>
+                }
+            </mat-form-field>
+        </div>
+
+        <!-- Workspace -->
+        <div class="w-full mb-4">
+            <mat-form-field class="w-full">
+                <mat-label>Workspace</mat-label>
+                <mat-icon matPrefix class="text-gray-400">dashboard</mat-icon>
+                <input matInput formControlName="workspace" placeholder="Enter workspace identifier">
+                @if (productionForm.get('workspace')?.hasError('required') && productionForm.get('workspace')?.touched) {
+                    <mat-error>Workspace is required</mat-error>
+                }
+                @if (productionForm.get('workspace')?.hasError('maxlength') && productionForm.get('workspace')?.touched) {
+                    <mat-error>Workspace must be 255 characters or less</mat-error>
+                }
+            </mat-form-field>
+        </div>
+
+        <!-- System Sources ID - Dropdown -->
+        <div class="w-full mb-4">
+            <mat-form-field class="w-full">
+                <mat-label>System Source</mat-label>
+                <mat-icon matPrefix class="text-gray-400">source</mat-icon>
+                <mat-select formControlName="systemSourcesId" [disabled]="isLoadingSources">
+                    @if (isLoadingSources) {
+                        <mat-option disabled>
+                            <mat-progress-spinner [diameter]="20" [mode]="'indeterminate'"></mat-progress-spinner>
+                            <span class="ml-2">Loading system sources...</span>
+                        </mat-option>
+                    } @else {
+                        @for (source of systemSources.data; track source.id) {
+                            <mat-option [value]="source.id">{{ source.name }}</mat-option>
+                        } @empty {
+                            <mat-option disabled>No system sources available</mat-option>
+                        }
+                    }
+                </mat-select>
+                @if (productionForm.get('systemSourcesId')?.hasError('required') && productionForm.get('systemSourcesId')?.touched) {
+                    <mat-error>System Source is required</mat-error>
+                }
+            </mat-form-field>
+        </div>
+
+        <!-- Description -->
+        <div class="w-full mb-4">
+            <mat-form-field class="w-full">
+                <mat-label>Description</mat-label>
+                <mat-icon matPrefix class="text-gray-400">description</mat-icon>
+                <textarea 
+                    matInput 
+                    formControlName="description" 
+                    placeholder="Enter production description (optional)"
+                    rows="3"
+                ></textarea>
+            </mat-form-field>
+        </div>
+
+        <!-- OID (Optional) -->
+        <div class="w-full mb-4">
+            <mat-form-field class="w-full">
+                <mat-label>External OID (Optional)</mat-label>
+                <mat-icon matPrefix class="text-gray-400">link</mat-icon>
+                <input matInput formControlName="oid" type="number" placeholder="Enter external OID (optional)">
+            </mat-form-field>
+        </div>
+
+        <!-- Divisor -->
+        <mat-divider class="!my-4"></mat-divider>
+
+        <!-- Acciones - Cancel a la izquierda, Create a la derecha -->
+        <div class="flex items-center justify-between py-2">
+            <!-- Cancel button a la izquierda -->
+            <button
+                type="button"
+                mat-stroked-button
+                (click)="onCancel()"
+                class="px-5 py-2 min-w-[100px] rounded-lg"
+            >
+                Cancel
+            </button>
+
+            <!-- Create button a la derecha -->
+            <button
+                type="button"
+                mat-flat-button
+                color="primary"
+                (click)="onCreate()"
+                [disabled]="productionForm.invalid || isCreating"
+                class="px-5 py-2 min-w-[120px] bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+                @if (isCreating) {
+                    <mat-progress-spinner [diameter]="20" [mode]="'indeterminate'"></mat-progress-spinner>
+                    <span class="ml-2">Creating...</span>
+                } @else {
+                    Create Production
+                }
+            </button>
+        </div>
+    </form>
+</div>
