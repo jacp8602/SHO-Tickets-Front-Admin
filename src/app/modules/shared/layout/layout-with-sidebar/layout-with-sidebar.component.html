@@ -1,0 +1,80 @@
+<!-- <div class="layout-with-sidebar flex h-full w-full"> -->
+<!-- <div class="flex min-w-0 w-100 overflow-hidden"> -->
+    <!-- Header con breadcrumb y botón close -->
+    <div class="flex w-full items-center justify-between px-6 py-4 border-b border-gray-200 bg-white">
+        <div class="flex items-center gap-2 text-sm">
+            <span class="text-gray-900 font-medium">Breadcrumb</span>
+            <mat-icon class="text-lg text-gray-400">chevron_right</mat-icon>
+            <span class="text-gray-500">Header</span>
+        </div>
+        <button
+            type="button"
+            mat-stroked-button
+            class="px-6 py-2 min-w-[100px] rounded-lg"
+        >
+            Close
+        </button>
+    </div>
+
+    <!-- Contenedor principal con menú lateral y contenido -->
+    <!-- <div class="flex flex-1 overflow-hidden"> -->
+    <div class="grid grid-cols-1 sm:grid-cols-12 gap-3 sm:gap-4 px-4 sm:px-6 py-1 border hover:bg-gray-50 transition-colors rounded-2xl">
+        <!-- Sidebar -->
+        <div class="sidebar-wrapper sm:col-span-4 transition-all duration-300"
+            [style.width]="sidebarWidth"
+            [style.flex]="sidebarCollapsed ? '0 0 ' + (sidebarConfig.collapsedWidth || '80px') : '0 0 ' + sidebarWidthPercentage + '%'">
+            <app-sidebar [config]="sidebarConfig"
+                        [menuItems]="sidebarMenuItems"
+                        [(collapsed)]="sidebarCollapsed"
+                        (collapsedChange)="onSidebarCollapsedChange($event)"
+                        (menuItemClick)="onMenuItemClick($event)">
+                
+                @if (sidebarHeader) {
+                    <ng-container sidebar-header>
+                        <ng-container *ngTemplateOutlet="sidebarHeader"></ng-container>
+                    </ng-container>
+                }
+                
+                @if (sidebarFooter) {
+                    <ng-container sidebar-footer>
+                        <ng-container *ngTemplateOutlet="sidebarFooter"></ng-container>
+                    </ng-container>
+                }
+            </app-sidebar>
+        </div>
+
+        <!-- <app-sidebar [config]="sidebarConfig"
+                        [menuItems]="sidebarMenuItems"
+                        [(collapsed)]="sidebarCollapsed"
+                        (collapsedChange)="onSidebarCollapsedChange($event)"
+                        (menuItemClick)="onMenuItemClick($event)">
+                
+                @if (sidebarHeader) {
+                    <ng-container sidebar-header>
+                        <ng-container *ngTemplateOutlet="sidebarHeader"></ng-container>
+                    </ng-container>
+                }
+                
+                @if (sidebarFooter) {
+                    <ng-container sidebar-footer>
+                        <ng-container *ngTemplateOutlet="sidebarFooter"></ng-container>
+                    </ng-container>
+                }
+            </app-sidebar> -->
+        
+        <!-- Main Content -->
+        <div class="flex-1 sm:col-span-8 overflow-y-auto transition-all duration-300 bg-gray-50">
+            
+            <!-- main-content-wrapper  
+            [style.width]="mainContentWidth"
+            [style.flex]="sidebarCollapsed ? '1 1 auto' : '1 1 ' + contentWidthPercentage + '%'" -->
+            <div class="max-w-4xl">
+                Contenedor para componentes dinámicos
+                <ng-content></ng-content>
+            </div>        
+        </div>
+
+        <!-- Contenedor para componentes dinámicos -->
+        <!-- <ng-content></ng-content> -->
+     <!-- </div> -->
+<!-- </div> -->

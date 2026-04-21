@@ -30,11 +30,35 @@
                 <!-- Título de la sección -->
                 <h2 class="text-xl font-bold text-gray-900 mb-6">Information</h2>
 
+                <!-- Alert -->
+                @if (showAlert) {
+                    <fuse-alert
+                        class="mb-4"
+                        [appearance]="'outline'"
+                        [showIcon]="false"
+                        [type]="alert.type"
+                        [@shake]="alert.type === 'error'"
+                    >
+                        {{ alert.message }}
+                    </fuse-alert>
+                }
+
+                <!-- Loading indicator -->
+                @if (isLoading) {
+                    <div class="flex justify-center items-center py-8">
+                        <mat-progress-spinner
+                            [color]="'primary'"
+                            [diameter]="40"
+                            [mode]="'indeterminate'">
+                        </mat-progress-spinner>
+                    </div>
+                }
+
                 <!-- Divisor -->
                 <mat-divider class="!mb-6"></mat-divider>
 
                 <!-- Formulario -->
-                <form [formGroup]="productionForm" class="space-y-1">
+                <form [formGroup]="productionForm" class="space-y-1" [class.pointer-events-none]="isLoading" [class.opacity-50]="isLoading">
                     <div>
                         <mat-form-field class="w-full">
                             <mat-label>Layout Workspace</mat-label>

@@ -1,7 +1,6 @@
 import { Component, OnInit, OnDestroy, ViewEncapsulation, Input, Output, EventEmitter, ViewChild } from '@angular/core';
 import {
     FormsModule,
-    NgForm,
     ReactiveFormsModule,
     UntypedFormBuilder,
     UntypedFormGroup,
@@ -24,7 +23,7 @@ import { finalize, Subject, takeUntil, debounceTime, distinctUntilChanged } from
 import { PaginationComponent } from '../../shared/pagination/pagination.component';
 
 import { UserListItem } from '../../../core/users/users.types';
-import { UsersService, UsersResponse } from '../../../core/users/users.service';
+import { UsersService } from '../../../core/users/users.service';
 import { MatDialog } from '@angular/material/dialog';
 import { UserEditDialogComponent } from '../user-edit-dialog/user-edit-dialog.component';
 
@@ -63,8 +62,6 @@ export class UsersTableComponent implements OnInit, OnDestroy {
     @Output() userCreated = new EventEmitter<void>();
     @Output() userEdited = new EventEmitter<UserListItem>();
     @Output() userDeleted = new EventEmitter<UserListItem>();
-
-    @ViewChild('usersTableNgForm') usersTableNgForm: NgForm;
 
     // Alert properties
     alert: { type: FuseAlertType; message: string } = {
@@ -145,18 +142,17 @@ export class UsersTableComponent implements OnInit, OnDestroy {
             city: ['all']
         });
 
-        // Load users
-        // this._loadUsers();
-        this.loadTestUsers();
+        // Load users from backend
+        this._loadUsers();
 
         // Subscribe to filter changes with debounce
         this.filterForm.valueChanges
             .pipe(
                 takeUntil(this._unsubscribeAll),
                 debounceTime(300),
-                distinctUntilChanged((prev, curr) => 
-                    prev.production === curr.production && 
-                    prev.show === curr.show && 
+                distinctUntilChanged((prev, curr) =>
+                    prev.production === curr.production &&
+                    prev.show === curr.show &&
                     prev.city === curr.city
                 )
             )
@@ -186,14 +182,7 @@ export class UsersTableComponent implements OnInit, OnDestroy {
         this.isLoading = true;
         this.showAlert = false;
 
-        const apiPage = this.pageIndex - 1;
-        const filters = {
-            production: this.filterForm.get('production').value !== 'all' ? this.filterForm.get('production').value : null,
-            show: this.filterForm.get('show').value !== 'all' ? this.filterForm.get('show').value : null,
-            city: this.filterForm.get('city').value !== 'all' ? this.filterForm.get('city').value : null,
-        };
-
-        this._usersService.getUsers(apiPage, this.pageSize, filters)
+        this._usersService.getAllUsers()
             .pipe(
                 takeUntil(this._unsubscribeAll),
                 finalize(() => {
@@ -201,9 +190,10 @@ export class UsersTableComponent implements OnInit, OnDestroy {
                 })
             )
             .subscribe({
-                next: (response: UsersResponse) => {
-                    this.users = response.users;
-                    this.totalUsers = response.total;
+                next: (backendUsers) => {
+                    // Transform backend users to frontend format
+                    this.users = backendUsers.map(user => this._usersService.transformUser(user));
+                    this.totalUsers = backendUsers.length;
                     this._clearSelection();
                 },
                 error: (error) => {
@@ -213,6 +203,7 @@ export class UsersTableComponent implements OnInit, OnDestroy {
                         message: 'Failed to load users. Please try again.',
                     };
                     this.showAlert = true;
+                    this.isLoading = false;
                 }
             });
     }
@@ -255,21 +246,21 @@ export class UsersTableComponent implements OnInit, OnDestroy {
             data: { user: user }
         });
 
-        dialogRef.afterClosed().subscribe((updatedUser: UserListItem) => {
-            if (updatedUser) {
-                console.log('Usuario actualizado:', updatedUser);
-                this.userEdited.emit(updatedUser);
-                
+        dialogRef.afterClosed().subscribe((result) => {
+            if (result) {
+                console.log('[UsersTable] User updated successfully:', result);
+                this.userEdited.emit(result);
+
+                // Recargar la lista de usuarios desde la API
+                this._loadUsers();
+
                 // Mostrar mensaje de éxito
                 this.alert = {
                     type: 'success',
                     message: 'User updated successfully.',
                 };
                 this.showAlert = true;
-                
-                // Recargar usuarios si es necesario
-                this._loadUsers();
-                
+
                 // Ocultar alerta después de 3 segundos
                 setTimeout(() => {
                     this.showAlert = false;
@@ -284,8 +275,8 @@ export class UsersTableComponent implements OnInit, OnDestroy {
     deleteUser(user: UserListItem): void {
         if (confirm(`Are you sure you want to delete ${user.name}?`)) {
             this.isLoading = true;
-            
-            this._usersService.deleteUser(user.id)
+
+            this._usersService.deleteUser(+user.id)
                 .pipe(
                     takeUntil(this._unsubscribeAll),
                     finalize(() => {
@@ -293,15 +284,15 @@ export class UsersTableComponent implements OnInit, OnDestroy {
                     })
                 )
                 .subscribe({
-                    next: () => {
+                    next: (response) => {
                         this.alert = {
                             type: 'success',
-                            message: 'User deleted successfully.',
+                            message: response.message || 'User deleted successfully.',
                         };
                         this.showAlert = true;
                         this._loadUsers();
                         this.userDeleted.emit(user);
-                        
+
                         // Hide alert after 3 seconds
                         setTimeout(() => {
                             this.showAlert = false;
@@ -404,47 +395,4 @@ export class UsersTableComponent implements OnInit, OnDestroy {
     refreshTable(): void {
         this._loadUsers();
     }
-
-    /**
-     * Carga datos de prueba con 3 usuarios para verificar la visualización
-     */
-    loadTestUsers(): void {
-        this.users = [
-            {
-                id: '1',
-                name: 'John Smith',
-                username: 'john.smith',
-                email: 'john.smith@example.com',
-                phone: '22 629098',
-                status: 'active',
-                avatar: null,
-                initials: ''
-            },
-            {
-                id: '2',
-                name: 'Maria Garcia',
-                username: 'maria.garcia',
-                email: 'maria.garcia@example.com',
-                phone: '22 629098',
-                status: 'pending',
-                avatar: null,
-                initials: ''
-            },
-            {
-                id: '3',
-                name: 'Robert Johnson',
-                username: 'robert.johnson',
-                email: 'robert.johnson@example.com',
-                phone: '22 792783',
-                status: 'inactive',
-                avatar: null,
-                initials: ''
-            }
-        ];
-        
-        this.totalUsers = 3;
-        this.isLoading = false;
-        console.log('✅ Datos de prueba cargados: 3 usuarios');
-    }
-
 }

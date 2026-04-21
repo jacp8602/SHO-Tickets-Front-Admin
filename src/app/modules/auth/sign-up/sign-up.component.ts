@@ -17,6 +17,7 @@ import { Router, RouterLink } from '@angular/router';
 import { fuseAnimations } from '@fuse/animations';
 import { FuseAlertComponent, FuseAlertType } from '@fuse/components/alert';
 import { AuthService } from 'app/core/auth/auth.service';
+import { AuthErrorHandlerService } from 'app/core/auth/auth-error-handler.service';
 
 @Component({
     selector: 'auth-sign-up',
@@ -52,7 +53,8 @@ export class AuthSignUpComponent implements OnInit {
     constructor(
         private _authService: AuthService,
         private _formBuilder: UntypedFormBuilder,
-        private _router: Router
+        private _router: Router,
+        private _authErrorHandler: AuthErrorHandlerService
     ) {}
 
     // -----------------------------------------------------------------------------------------------------
@@ -98,17 +100,18 @@ export class AuthSignUpComponent implements OnInit {
                 // Navigate to the confirmation required page
                 this._router.navigateByUrl('/confirmation-required');
             },
-            (response) => {
+            (error) => {
                 // Re-enable the form
                 this.signUpForm.enable();
 
                 // Reset the form
                 this.signUpNgForm.resetForm();
 
-                // Set the alert
+                // Get auth error with user-friendly message
+                const authError = this._authErrorHandler.handleAuthError(error);
                 this.alert = {
-                    type: 'error',
-                    message: 'Something went wrong, please try again.',
+                    type: authError.type,
+                    message: authError.message,
                 };
 
                 // Show the alert

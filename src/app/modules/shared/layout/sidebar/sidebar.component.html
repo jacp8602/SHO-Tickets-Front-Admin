@@ -1,0 +1,109 @@
+<div class="sidebar-container h-full flex flex-col bg-card border-r border-gray-200 transition-all duration-300 overflow-hidden"
+     [class.collapsed]="collapsed"
+     [style.width]="collapsed ? config.collapsedWidth : '100%'"
+     [style.min-width]="collapsed ? config.collapsedWidth : config.minWidth"
+     [style.max-width]="collapsed ? config.collapsedWidth : config.maxWidth">
+    
+    <!-- Sidebar Header -->
+    @if (config?.title || config?.showToggle) {
+        <div class="sidebar-header flex items-center justify-between px-4 py-3 border-b border-gray-200 flex-shrink-0">
+            @if (!collapsed && config?.title) {
+                <h3 class="text-lg font-semibold text-gray-900 truncate">{{ config.title }}</h3>
+            }
+            
+            @if (config?.showToggle && config?.collapsible) {
+                <button mat-icon-button 
+                        (click)="toggleCollapse()"
+                        [matTooltip]="collapsed ? 'Expand' : 'Collapse'"
+                        class="toggle-button flex-shrink-0">
+                    <mat-icon [svgIcon]="collapsed ? 'heroicons_solid:chevron-right' : 'heroicons_solid:chevron-left'"></mat-icon>
+                </button>
+            }
+        </div>
+    }
+    
+    <!-- Menu Items - Scrollable area -->
+    <div class="sidebar-menu flex-1 overflow-y-auto overflow-x-hidden py-4">
+        @for (item of menuItems; track item.id) {
+            @switch (item.type) {
+                @case ('divider') {
+                    <mat-divider class="my-2"></mat-divider>
+                }
+                
+                @case ('header') {
+                    @if (!collapsed) {
+                        <div class="px-4 py-2 text-xs font-bold text-gray-500 uppercase tracking-wider truncate">
+                            {{ item.label }}
+                        </div>
+                    }
+                }
+                
+                @default {
+                    <div class="menu-item-wrapper"
+                         [class.has-children]="item.children?.length">
+                        
+                        <!-- Menu Item -->
+                        <button class="{{ getMenuItemClasses(item) }}"
+                                [class.py-2]="!collapsed"
+                                [class.py-3]="collapsed"
+                                [matTooltip]="collapsed ? item.label : ''"
+                                [matTooltipPosition]="'right'"
+                                (click)="onMenuItemClick(item)">
+                            
+                            <!-- Icon -->
+                            @if (item.icon) {
+                                <mat-icon class="icon-size-5 text-gray-500 flex-shrink-0"
+                                         [class.mr-3]="!collapsed"
+                                         [svgIcon]="item.icon">
+                                </mat-icon>
+                            }
+                            
+                            <!-- Label (solo si no está colapsado) -->
+                            @if (!collapsed) {
+                                <span class="flex-1 text-left text-sm truncate">{{ item.label }}</span>
+                            }
+                            
+                            <!-- Badge -->
+                            @if (!collapsed && item.badge) {
+                                <span class="ml-2 px-2 py-0.5 rounded-full text-xs flex-shrink-0 {{ getBadgeColor(item.badgeColor || 'primary') }}">
+                                    {{ item.badge }}
+                                </span>
+                            }
+                            
+                            <!-- Chevron para submenú -->
+                            @if (!collapsed && item.children?.length) {
+                                <mat-icon class="icon-size-4 text-gray-400 ml-1 flex-shrink-0"
+                                         [svgIcon]="'heroicons_solid:chevron-down'">
+                                </mat-icon>
+                            }
+                        </button>
+                        
+                        <!-- Submenu (si existe) -->
+                        @if (!collapsed && item.children?.length) {
+                            <div class="submenu ml-4 mt-1 space-y-1">
+                                @for (child of item.children; track child.id) {
+                                    <button class="submenu-item w-full flex items-center px-3 py-1.5 text-sm text-gray-600 hover:bg-gray-100 rounded transition-colors"
+                                            (click)="onMenuItemClick(child)">
+                                        @if (child.icon) {
+                                            <mat-icon class="icon-size-4 text-gray-500 mr-2 flex-shrink-0"
+                                                     [svgIcon]="child.icon">
+                                            </mat-icon>
+                                        }
+                                        <span class="flex-1 text-left truncate">{{ child.label }}</span>
+                                    </button>
+                                }
+                            </div>
+                        }
+                    </div>
+                }
+            }
+        }
+    </div>
+    
+    <!-- Sidebar Footer -->
+    @if (!collapsed) {
+        <div class="sidebar-footer p-4 border-t border-gray-200 flex-shrink-0">
+            <ng-content select="[sidebar-footer]"></ng-content>
+        </div>
+    }
+</div>

@@ -1,0 +1,56 @@
+<div class="flex min-w-0 flex-auto flex-col h-full">
+    <!-- Main -->
+    <!-- <div class="flex flex-1 overflow-hidden"> -->
+        <!-- CONTENT GOES HERE -->
+        <div
+            class="h-400 max-h-400 min-h-400 rounded-2xl border-1 border-gray-100"
+        >
+            <div class="grid grid-cols-1 sm:grid-cols-12 gap-0 sm:gap-0 px-1 sm:px-1 py-1 border hover:bg-gray-50">
+                <div class="sm:col-span-3 flex items-center border border-3">
+                    <app-sidebar [config]="sidebarConfig"
+                        [menuItems]="menuItems">
+
+                        <!-- 
+                        [(collapsed)]="true"
+                        (collapsedChange)="onSidebarCollapsedChange($event)"
+                        (menuItemClick)="onMenuItemClick($event)" -->
+                
+                        <!-- @if (sidebarHeader) {
+                            <ng-container sidebar-header>
+                                <ng-container *ngTemplateOutlet="sidebarHeader"></ng-container>
+                            </ng-container>
+                        }
+                        
+                        @if (sidebarFooter) {
+                            <ng-container sidebar-footer>
+                                <ng-container *ngTemplateOutlet="sidebarFooter"></ng-container>
+                            </ng-container>
+                        } -->
+                    </app-sidebar>
+                </div>
+                <div class="sm:col-span-9 flex items-center border border-1">
+                    <!-- Main Content -->
+                    <div class="main-content-wrapper flex-1 overflow-auto transition-all duration-300 bg-gray-50">                        
+                        <app-main-content [component]="activeComponent"
+                            [componentInputs]="activeComponentInputs"
+                            [emptyStateMessage]="'Select an option from the menu to get started'"
+                            [emptyStateIcon]="'heroicons_solid:view-boards'"
+                            [showLoader]="true">
+                        </app-main-content>
+                    </div>
+                </div>
+            </div>
+            <!-- <app-layout-with-sidebar 
+                [sidebarConfig]="sidebarConfig"
+                [sidebarMenuItems]="menuItems"
+                [activeComponent]="activeComponent"
+                [componentInputs]="activeComponentInputs">                
+                
+            </app-layout-with-sidebar>
+            <div class="rounded-2xl border-3 border-dashed border-gray-100">
+                <span>Hola javier .....</span>
+            </div> -->
+            
+        </div>
+    <!-- </div> -->
+</div>

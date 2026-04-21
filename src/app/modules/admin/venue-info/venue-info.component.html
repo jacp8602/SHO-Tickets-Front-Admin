@@ -1,0 +1,176 @@
+<div class="venue-info-container">
+    <!-- Header max-w-5xl mx-auto -->
+    <div class="py-3 px-3">
+        <h1 class="text-2xl font-bold text-gray-900">Venue Information</h1>
+        <!-- <p class="text-sm text-gray-500 mt-1">Manage venue details, layout, and communication settings</p> -->
+    </div>
+
+    <!-- Formulario Principal -->
+    <form [formGroup]="venueForm" class="px-3 space-y-6">
+        <!-- Basic Information Section -->
+        <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+            <div class="p-6">
+                <div class="space-y-6">
+                    <!-- Venue Name -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">
+                            Venue Name <span class="text-red-500">*</span>
+                        </label>
+                        <mat-form-field appearance="outline" class="w-full">
+                            <input matInput 
+                                   formControlName="venueName" 
+                                   placeholder="Enter venue name"
+                                   class="text-gray-900">
+                            @if (venueForm.get('venueName')?.hasError('required') && venueForm.get('venueName')?.touched) {
+                                <mat-error>Venue name is required</mat-error>
+                            }
+                        </mat-form-field>
+                    </div>
+
+                    <!-- Text Area for Message -->
+                    <div class="relative">
+                        <textarea
+                            [(ngModel)]="messageContent"
+                            [ngModelOptions]="{standalone: true}"
+                            rows="8"
+                            class="w-full px-4 py-3 text-gray-700 border border-gray-300 rounded-lg focus:ring-primary-500 focus:border-primary-500 resize-y"
+                            placeholder="Write your message here..."></textarea>
+                        
+                        <!-- Character count -->
+                        <div class="absolute bottom-2 right-3 text-xs text-gray-400">
+                            {{ messageContent.length }} characters
+                        </div>
+                    </div>
+                    
+                    <!-- Location -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">
+                            Location <span class="text-red-500">*</span>
+                        </label>
+                        <mat-form-field appearance="outline" class="w-full">
+                            <mat-icon matPrefix class="text-gray-400 mr-2" [svgIcon]="'heroicons_solid:map-pin'"></mat-icon>
+                            <input matInput 
+                                   formControlName="location" 
+                                   placeholder="Enter venue location"
+                                   class="text-gray-900">
+                        </mat-form-field>
+                    </div>
+
+                    <!-- Select Layout Template -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">
+                            Select Layout Template <span class="text-red-500">*</span>
+                        </label>
+                        <mat-form-field appearance="outline" class="w-full">
+                            <mat-select formControlName="selectedLayout">
+                                @for (template of layoutTemplates; track template.id) {
+                                    <mat-option [value]="template.id">
+                                        <div class="flex items-center justify-between w-full">
+                                            <span>{{ template.name }}</span>
+                                            <span class="text-xs text-gray-400 ml-2">{{ template.seats }} seats</span>
+                                        </div>
+                                    </mat-option>
+                                }
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                    
+                    <!-- Seats (auto-filled from template) -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">
+                            Seats
+                        </label>
+                        <mat-form-field appearance="outline" class="w-full">
+                            <mat-icon matPrefix class="text-gray-400 mr-2" [svgIcon]="'heroicons_solid:users'"></mat-icon>
+                            <input matInput 
+                                   formControlName="seats" 
+                                   type="number"
+                                   placeholder="Number of seats"
+                                   class="text-gray-900"
+                                   readonly>
+                            <span matSuffix class="text-gray-400 text-sm ml-2">seats</span>
+                        </mat-form-field>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            Upload Your Identification Image
+                        </label>
+                        
+                        <!-- Upload Area -->
+                        <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-primary-500 transition-colors"
+                             [class.border-primary-500]="selectedFile"
+                             [class.bg-primary-50]="selectedFile">
+                            
+                            @if (!selectedFile) {
+                                <div class="space-y-2">
+                                    <mat-icon class="text-gray-400 icon-size-12" [svgIcon]="'heroicons_solid:cloud-arrow-up'"></mat-icon>
+                                    <p class="text-sm text-gray-600">
+                                        Drag and drop your file here, or
+                                        <label for="identification-upload" class="text-primary-600 cursor-pointer hover:text-primary-700">
+                                            browse
+                                        </label>
+                                    </p>
+                                    <p class="text-xs text-gray-400">DOCX or PDF formats, up to 5MB.</p>
+                                </div>
+                            }
+                            
+                            @if (selectedFile) {
+                                <div class="flex items-center justify-between p-3 bg-white rounded-lg border border-gray-200">
+                                    <div class="flex items-center gap-3">
+                                        <mat-icon class="text-primary-600" [svgIcon]="'heroicons_solid:document-text'"></mat-icon>
+                                        <div class="text-left">
+                                            <p class="text-sm font-medium text-gray-900">{{ selectedFile.name }}</p>
+                                            <p class="text-xs text-gray-500">{{ (selectedFile.size / 1024 / 1024).toFixed(2) }} MB</p>
+                                        </div>
+                                    </div>
+                                    <button mat-icon-button 
+                                            type="button"
+                                            (click)="removeFile()"
+                                            matTooltip="Remove file"
+                                            class="text-gray-400 hover:text-red-500">
+                                        <mat-icon [svgIcon]="'heroicons_solid:x-mark'"></mat-icon>
+                                    </button>
+                                </div>
+                            }
+                            
+                            <input id="identification-upload"
+                                   type="file"
+                                   accept=".pdf,.doc,.docx"
+                                   class="hidden"
+                                   (change)="onFileSelected($event)">
+                        </div>
+                        
+                        <!-- Upload Progress -->
+                        @if (isUploading) {
+                            <div class="mt-3">
+                                <mat-progress-bar mode="determinate" [value]="uploadProgress"></mat-progress-bar>
+                                <p class="text-xs text-gray-500 mt-1 text-center">{{ uploadProgress }}% uploaded</p>
+                            </div>
+                        }
+                        
+                        <!-- Error Message -->
+                        @if (uploadError) {
+                            <div class="mt-2 text-sm text-red-600 flex items-center gap-1">
+                                <mat-icon [svgIcon]="'heroicons_solid:exclamation-circle'" class="icon-size-4"></mat-icon>
+                                {{ uploadError }}
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="flex justify-start gap-3 pt-4">
+            <button mat-flat-button 
+                    color="primary"
+                    type="button"
+                    (click)="saveChanges()"
+                    [disabled]="venueForm.invalid"
+                    class="px-6 bg-primary-600 hover:bg-primary-700">
+                Save Change
+            </button>
+        </div>
+    </form>
+</div>

@@ -17,6 +17,7 @@ import { fuseAnimations } from '@fuse/animations';
 import { FuseAlertComponent, FuseAlertType } from '@fuse/components/alert';
 import { FuseValidators } from '@fuse/validators';
 import { AuthService } from 'app/core/auth/auth.service';
+import { AuthErrorHandlerService } from 'app/core/auth/auth-error-handler.service';
 import { finalize, Subject, takeUntil } from 'rxjs';
 
 @Component({
@@ -58,6 +59,7 @@ export class AuthResetPasswordComponent implements OnInit {
         private _authService: AuthService,
         private _formBuilder: UntypedFormBuilder,
         private router: Router,
+        private _authErrorHandler: AuthErrorHandlerService
     ) {}
 
     // -----------------------------------------------------------------------------------------------------
@@ -125,11 +127,12 @@ export class AuthResetPasswordComponent implements OnInit {
                         message: 'Your password has been reset.',
                     };
                 },
-                (response) => {
-                    // Set the alert
+                (error) => {
+                    // Get auth error with user-friendly message
+                    const authError = this._authErrorHandler.handleAuthError(error);
                     this.alert = {
-                        type: 'error',
-                        message: 'Something went wrong, please try again.',
+                        type: authError.type,
+                        message: authError.message,
                     };
                 }
             );

@@ -13,10 +13,12 @@ import { MatInputModule } from '@angular/material/input';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatDialogModule, MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { CommonModule } from '@angular/common';
 import { fuseAnimations } from '@fuse/animations';
-
+import { UsersService, BackendUser } from '../../../core/users/users.service';
 import { UserListItem } from '../../../core/users/users.types';
+import { finalize } from 'rxjs';
 
 export interface UserEditDialogData {
     user: UserListItem;
@@ -39,20 +41,24 @@ export interface UserEditDialogData {
         MatDividerModule,
         MatSlideToggleModule,
         MatDialogModule,
+        MatProgressSpinnerModule,
     ],
 })
 export class UserEditDialogComponent {
     userForm: UntypedFormGroup;
     userStatus: boolean = true;
+    isSaving: boolean = false;
+    errorMessage: string = '';
 
     constructor(
         public dialogRef: MatDialogRef<UserEditDialogComponent>,
         @Inject(MAT_DIALOG_DATA) public data: UserEditDialogData,
-        private _formBuilder: UntypedFormBuilder
+        private _formBuilder: UntypedFormBuilder,
+        private _usersService: UsersService
     ) {
         // Inicializar el estado del usuario
         this.userStatus = data.user?.status === 'active';
-        
+
         // Crear el formulario
         this.userForm = this._formBuilder.group({
             username: [data.user?.username || '', Validators.required],
@@ -82,21 +88,46 @@ export class UserEditDialogComponent {
             return;
         }
 
+        // Clear previous errors
+        this.errorMessage = '';
+        this.isSaving = true;
+
         // Construir el nombre completo
-        const fullName = `${this.userForm.get('firstName')?.value} ${this.userForm.get('lastName')?.value}`.trim();
+        const firstName = this.userForm.get('firstName')?.value;
+        const lastName = this.userForm.get('lastName')?.value;
+        const fullName = `${firstName} ${lastName}`.trim();
 
-        // Construir el objeto de usuario actualizado
-        const updatedUser: UserListItem = {
-            ...this.data.user,
-            username: this.userForm.get('username')?.value,
-            name: fullName,
-            email: this.userForm.get('email')?.value,
-            phone: this.userForm.get('phone')?.value,
-            status: this.userStatus ? 'active' : 'inactive',
-        };
+        // Preparar FormData para la API
+        const formData = new FormData();
+        formData.append('firstname', firstName);
+        formData.append('lastname', lastName);
+        formData.append('email', this.userForm.get('email')?.value);
+        formData.append('phone', this.userForm.get('phone')?.value);
+        formData.append('status', this.userStatus ? 'ACTIVE' : 'INACTIVE');
 
-        // Cerrar el diálogo y devolver el usuario actualizado
-        this.dialogRef.close(updatedUser);
+        // Llamar a la API para actualizar el usuario
+        this._usersService.updateUser(+this.data.user.id, formData)
+            .pipe(
+                finalize(() => {
+                    this.isSaving = false;
+                })
+            )
+            .subscribe({
+                next: (updatedBackendUser: BackendUser) => {
+                    console.log('[UserEditDialog] User updated successfully:', updatedBackendUser);
+                    
+                    // Transformar el usuario actualizado al formato del frontend
+                    const updatedUser: UserListItem = this._usersService.transformUser(updatedBackendUser[0].return);
+
+                    // Cerrar el diálogo y devolver el usuario actualizado
+                    this.dialogRef.close(updatedUser);
+                    // this.dialogRef.close();
+                },
+                error: (error) => {
+                    console.error('[UserEditDialog] Error updating user:', error);
+                    this.errorMessage = error?.error?.message || 'Failed to update user. Please try again.';
+                }
+            });
     }
 
     /**

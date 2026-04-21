@@ -10,8 +10,9 @@ export interface TicketItem {
 }
 
 export interface TicketsConfiguration {
-    productionId: string;
+    productionId?: string;
     tickets: TicketItem[];
+    total?: number;
 }
 
 export interface TicketsResponse {
@@ -25,4 +26,11 @@ export interface TicketFilters {
     search?: string;
     enabled?: boolean;
     productionId?: string;
+}
+
+export interface SingleTicketResponse {
+    success: boolean;
+    data?: TicketItem;
+    message?: string;
+    error?: string;
 }

@@ -1,21 +1,60 @@
-import { HttpClient } from '@angular/common/http';
-import { inject, Injectable } from '@angular/core';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Injectable, inject } from '@angular/core';
 import { AuthUtils } from 'app/core/auth/auth.utils';
 import { UserService } from 'app/core/user/user.service';
-import { catchError, Observable, of, switchMap, throwError } from 'rxjs';
+import { Firebase2FAService } from './firebase/firebase-2fa.service';
+import { FirebaseService } from './firebase/firebase.service';
+import { environment } from 'environments/environment.development';
+import { initializeApp, FirebaseError } from 'firebase/app';
+import {
+    MultiFactorError,
+    createUserWithEmailAndPassword,
+    getAuth,
+    sendEmailVerification,
+    signInWithEmailAndPassword,
+    UserCredential,
+} from 'firebase/auth';
+import {
+    Observable,
+    catchError,
+    from,
+    of,
+    switchMap,
+    take,
+    throwError,
+} from 'rxjs';
 
-@Injectable({ providedIn: 'root' })
+@Injectable({
+    providedIn: 'root',
+})
 export class AuthService {
-    verifyCode(code: string) {
-        throw new Error('Method not implemented.');
-    }
     private _authenticated: boolean = false;
     private _httpClient = inject(HttpClient);
     private _userService = inject(UserService);
+    private _firebaseService = inject(FirebaseService);
+    private firebaseMfa = inject(Firebase2FAService);
 
-    // -----------------------------------------------------------------------------------------------------
+    private app = initializeApp(environment.firebaseConfig);
+    private auth = getAuth(this.app);
+
+    private apiUrl = environment.apiUrl;
+
+    // ----------------------------------------------------------------------
     // @ Accessors
-    // -----------------------------------------------------------------------------------------------------
+    // ----------------------------------------------------------------------
+
+    /**
+     * Setter & getter for authentication status
+     */
+    set isAuthenticated(value: boolean) {
+        this._authenticated = value;
+    }
+
+    get isAuthenticated(): boolean {
+        const token = localStorage.getItem('accessToken');
+        const user = localStorage.getItem('logged_user');
+        return token !== null && user !== null;
+    }
 
     /**
      * Setter & getter for access token
@@ -28,154 +67,256 @@ export class AuthService {
         return localStorage.getItem('accessToken') ?? '';
     }
 
-    // -----------------------------------------------------------------------------------------------------
-    // @ Public methods
-    // -----------------------------------------------------------------------------------------------------
+    /**
+     * Setter & getter for user
+     */
+    set user(user: any) {
+        localStorage.setItem('logged_user', JSON.stringify(user));
+        this._userService.user = user;
+    }
+
+    get user(): any {
+        const userStr = localStorage.getItem('logged_user');
+        return userStr ? JSON.parse(userStr) : null;
+    }
+
+    // ----------------------------------------------------------------------
+    // @ Firebase Methods
+    // ----------------------------------------------------------------------
+
+    // ----------------------------------------------------------------------
+    // @ Sign In
+    // ----------------------------------------------------------------------
 
     /**
-     * Forgot password
-     *
-     * @param email
+     * Sign in with Firebase + backend verification
      */
-    forgotPassword(email: string): Observable<any> {
-        return this._httpClient.post('api/auth/forgot-password', email);
+    signInAndSendToken(email: string, password: string): Observable<any> {
+        return new Observable((observer) => {
+            this.signInFirebase(email, password)
+                .pipe(take(1))
+                .subscribe({
+                    next: async (cred: UserCredential) => {
+                        console.log("CRED");
+                        const idToken = await cred.user.getIdToken();
+
+                        // Check email verification
+                        if (cred.user.emailVerified === false) {
+                            this._firebaseService.sendVerificationEmail(
+                                this.auth.currentUser
+                            );
+                            observer.error({
+                                code: 'auth/email-not-verified',
+                                message:
+                                    'Please verify your email before continuing.',
+                            });
+                            return;
+                        }
+
+                        // Send Firebase ID token to backend
+                        this.sendIdTokenToBackend(idToken).subscribe({
+                            next: (userData) => {
+                                this._authenticated = true;
+                                observer.next(userData);
+                                observer.complete();
+                            },
+                            error: (error) => observer.error(error),
+                        });
+                    },
+                    error: (error: MultiFactorError) => {
+                        console.log(this._firebaseService.getFirebaseErrorMessage(error));
+                        // User is already enrolled with MFA
+                        if (error.code === 'auth/multi-factor-auth-required') {
+                            this._authenticated = true;
+                            this.firebaseMfa.start2fa(error).subscribe({
+                                error: (err) => observer.error(err),
+                            });
+                        }
+                        observer.error(error);
+                    }
+                });
+        });
     }
 
     /**
-     * Reset password
-     *
-     * @param password
+     * Sign in with Firebase
      */
-    resetPassword(password: string): Observable<any> {
-        return this._httpClient.post('api/auth/reset-password', password);
+    signInFirebase(email: string, password: string): Observable<any> {
+        return from(signInWithEmailAndPassword(this.auth, email, password));
     }
 
     /**
-     * Sign in
-     *
-     * @param credentials
+     * Send Firebase ID token to backend for verification
      */
-    signIn(credentials: { email: string; password: string }): Observable<any> {
-        // Throw error, if the user is already logged in
-        if (this._authenticated) {
-            return throwError('User is already logged in.');
-        }
+    sendIdTokenToBackend(idToken: string): Observable<any> {
+        const headers = new HttpHeaders({
+            Authorization: `Bearer ${idToken}`,
+            'Content-Type': 'application/json',
+        });
 
-        return this._httpClient.post('api/auth/sign-in', credentials).pipe(
+        const url = `${this.apiUrl}/auth/verify-login`;
+        return this._httpClient.get(url, {
+            headers,
+        });
+    }
+
+    // ----------------------------------------------------------------------
+    // @ 2FA
+    // ----------------------------------------------------------------------
+
+    /**
+     * Complete 2FA sign in and get JWT from backend
+     */
+    complete2FaSignIn(idToken2fa: string): Observable<any> {
+        const headers = new HttpHeaders({
+            Authorization: `Bearer ${idToken2fa}`,
+            'Content-Type': 'application/json',
+        });
+
+        const url = `${this.apiUrl}/auth/get-token-sho`;
+
+        return this._httpClient.post(url, {}, { headers }).pipe(
             switchMap((response: any) => {
-                // Store the access token in the local storage
-                this.accessToken = response.accessToken;
-
-                // Set the authenticated flag to true
-                this._authenticated = true;
-
-                // Store the user on the user service
-                this._userService.user = response.user;
-
-                // Return a new observable with the response
-                return of(response);
+                const result = Array.isArray(response) ? response[0] : response;
+                this.user = result.user;
+                this.accessToken = result.jwt.jwt;
+                return of(true);
+            }),
+            catchError((error) => {
+                console.error('Error in method complete2FaSignIn:', error);
+                return throwError(() => error);
             })
         );
     }
 
+    // ----------------------------------------------------------------------
+    // @ Public methods
+    // ----------------------------------------------------------------------
+
     /**
-     * Sign in using the access token
+     * Check the authentication status
      */
-    signInUsingToken(): Observable<any> {
-        // Sign in using the token
-        return this._httpClient
-            .post('api/auth/sign-in-with-token', {
-                accessToken: this.accessToken,
-            })
-            .pipe(
-                catchError(() =>
-                    // Return false
-                    of(false)
-                ),
-                switchMap((response: any) => {
-                    // Replace the access token with the new one if it's available on
-                    // the response object.
-                    //
-                    // This is an added optional step for better security. Once you sign
-                    // in using the token, you should generate a new one on the server
-                    // side and attach it to the response object. Then the following
-                    // piece of code can replace the token with the refreshed one.
-                    if (response.accessToken) {
-                        this.accessToken = response.accessToken;
-                    }
+    check(): Observable<boolean> {
+        if (this.isAuthenticated) {
+            return of(true);
+        }
 
-                    // Set the authenticated flag to true
-                    this._authenticated = true;
+        if (!this.accessToken) {
+            return of(false);
+        }
 
-                    // Store the user on the user service
-                    this._userService.user = response.user;
+        if (AuthUtils.isTokenExpired(this.accessToken)) {
+            return of(false);
+        }
 
-                    // Return true
-                    return of(true);
-                })
-            );
+        return of(false);
     }
 
     /**
      * Sign out
      */
     signOut(): Observable<any> {
-        // Remove the access token from the local storage
         localStorage.removeItem('accessToken');
-
-        // Set the authenticated flag to false
+        localStorage.removeItem('logged_user');
         this._authenticated = false;
-
-        // Return the observable
         return of(true);
     }
 
     /**
+     * Verify code
+     */
+    verifyCode(code: string): Observable<any> {
+        return this._httpClient.post(`${this.apiUrl}/auth/verify-code`, {
+            code,
+        });
+    }
+
+    /**
+     * Send verification email
+     */
+    sendVerificationEmail(user: any): void {
+        sendEmailVerification(user)
+            .then(() => {
+                console.log('Verification email sent');
+            })
+            .catch((error) => {
+                console.error('Error sending verification email:', error);
+            });
+    }
+
+    /**
+     * Forgot password
+     */
+    forgotPassword(email: string): Observable<any> {
+        return this._httpClient.post(`${this.apiUrl}/users/forgot-password`, {
+            email,
+        });
+    }
+
+    /**
+     * Reset password
+     */
+    resetPassword(password: string): Observable<any> {
+        return this._httpClient.post(`${this.apiUrl}/users/change-password`, {
+            password,
+        });
+    }
+
+    /**
      * Sign up
-     *
-     * @param user
      */
-    signUp(user: {
-        name: string;
-        email: string;
-        password: string;
-        company: string;
-    }): Observable<any> {
-        return this._httpClient.post('api/auth/sign-up', user);
+    signUpFirebaseSendIdTokenToBackend(
+        email: string,
+        password: string
+    ): Observable<any> {
+        return new Observable((observer) => {
+            createUserWithEmailAndPassword(this.auth, email, password)
+                .then(async (userCredential) => {
+                    sendEmailVerification(userCredential.user);
+                    const idToken = await userCredential.user.getIdToken();
+
+                    this.sendIdTokenToBackendSignUp(
+                        idToken,
+                        userCredential.user.uid!,
+                        userCredential.user.email!
+                    ).subscribe({
+                        next: (res) => {
+                            observer.next(res);
+                            observer.complete();
+                        },
+                        error: (error) => {
+                            observer.error(error);
+                        },
+                    });
+                })
+                .catch((error) => {
+                    observer.error(error);
+                });
+        });
     }
 
-    /**
-     * Unlock session
-     *
-     * @param credentials
-     */
-    unlockSession(credentials: {
-        email: string;
-        password: string;
-    }): Observable<any> {
-        return this._httpClient.post('api/auth/unlock-session', credentials);
-    }
+    private sendIdTokenToBackendSignUp(
+        idToken: string,
+        uid: string,
+        email: string
+    ): Observable<any> {
+        const headers = new HttpHeaders({
+            Authorization: `Bearer ${idToken}`,
+            'Content-Type': 'application/json',
+        });
 
-    /**
-     * Check the authentication status
-     */
-    check(): Observable<boolean> {
-        // Check if the user is logged in
-        if (this._authenticated) {
-            return of(true);
-        }
-
-        // Check the access token availability
-        if (!this.accessToken) {
-            return of(false);
-        }
-
-        // Check the access token expire date
-        if (AuthUtils.isTokenExpired(this.accessToken)) {
-            return of(false);
-        }
-
-        // If the access token exists, and it didn't expire, sign in using it
-        return this.signInUsingToken();
+        return this._httpClient
+            .post(
+                `${this.apiUrl}/auth/signup-firebase`,
+                { uid, email },
+                { headers }
+            )
+            .pipe(
+                switchMap(() => of(true)),
+                catchError((error) => {
+                    console.error('Authentication error.', error);
+                    return of(false);
+                })
+            );
     }
 }
