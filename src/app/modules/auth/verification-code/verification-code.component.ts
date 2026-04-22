@@ -133,21 +133,17 @@ export class AuthVerificationCodeComponent implements OnInit, AfterViewInit {
     /**
      * After view init - Initialize reCAPTCHA and start 2FA flow if needed
      */
-    ngAfterViewInit(): void {
+    async ngAfterViewInit(): Promise<void> {
         console.log('[VerificationCode] ngAfterViewInit called');
         
-        // Initialize reCAPTCHA verifier first
-        this.initializeRecaptcha();
+        // Initialize reCAPTCHA verifier first and wait for it to be ready
+        await this.initializeRecaptcha();
 
         // If we have a firebaseError (user with existing MFA), start the 2FA flow
-        // after reCAPTCHA is initialized
+        // now that reCAPTCHA is fully initialized and rendered
         if (this.firebaseError && !this.isEnrolling) {
-            // Wait for reCAPTCHA to be fully initialized
-            // reCAPTCHA needs time to load the script and render
-            setTimeout(() => {
-                console.log('[VerificationCode] Attempting to start 2FA flow after delay');
-                this.start2faFlow();
-            }, 1000);
+            console.log('[VerificationCode] Starting 2FA flow after reCAPTCHA ready');
+            this.start2faFlow();
         }
     }
 
@@ -166,9 +162,9 @@ export class AuthVerificationCodeComponent implements OnInit, AfterViewInit {
     }
 
     /**
-     * Initialize reCAPTCHA verifier
+     * Initialize reCAPTCHA verifier and wait for it to be ready
      */
-    initializeRecaptcha(): void {
+    async initializeRecaptcha(): Promise<void> {
         const auth = this._firebase2FAService['auth'];
 
         // Clear any existing reCAPTCHA container
@@ -177,27 +173,13 @@ export class AuthVerificationCodeComponent implements OnInit, AfterViewInit {
             existingContainer.innerHTML = '';
         }
 
-        // Get reCAPTCHA site key from environment
-        // const recaptchaSiteKey = environment.recaptchaSiteKey;
-        
-        // if (!recaptchaSiteKey) {
-        //     console.error('[VerificationCode] reCAPTCHA site key not configured in environment');
-        //     this.alert = {
-        //         type: 'error',
-        //         message: 'reCAPTCHA is not configured. Please contact support.',
-        //     };
-        //     this.showAlert = true;
-        //     return;
-        // }
-
-        // console.log('[VerificationCode] Initializing reCAPTCHA with site key:', recaptchaSiteKey.substring(0, 8) + '...');
+        console.log('[VerificationCode] Creating reCAPTCHA verifier...');
 
         this._firebase2FAService.recaptchaVerifier = new RecaptchaVerifier(
             auth,
             'recaptcha-container',
             {
                 size: 'invisible',
-                // sitekey: recaptchaSiteKey,
                 callback: (response: any) => {
                     console.log('[VerificationCode] reCAPTCHA resolved:', response);
                 },
@@ -220,7 +202,21 @@ export class AuthVerificationCodeComponent implements OnInit, AfterViewInit {
             }
         );
         
-        console.log('[VerificationCode] reCAPTCHA verifier created');
+        console.log('[VerificationCode] reCAPTCHA verifier created, waiting for render...');
+        
+        // Wait for reCAPTCHA to be fully rendered and ready
+        try {
+            await this._firebase2FAService.recaptchaVerifier.render();
+            console.log('[VerificationCode] reCAPTCHA verifier is now ready!');
+        } catch (error) {
+            console.error('[VerificationCode] Error rendering reCAPTCHA:', error);
+            this.alert = {
+                type: 'error',
+                message: 'Failed to initialize reCAPTCHA. Please refresh and try again.',
+            };
+            this.showAlert = true;
+            throw error;
+        }
     }
 
     /**
@@ -234,12 +230,14 @@ export class AuthVerificationCodeComponent implements OnInit, AfterViewInit {
 
         const recaptchaVerifier = this._firebase2FAService.getRecaptchaVerifier();
         
+        // This should not happen anymore since we wait for reCAPTCHA in ngAfterViewInit
         if (!recaptchaVerifier) {
-            console.error('[VerificationCode] reCAPTCHA verifier not initialized, waiting...');
-            // Wait a bit and try again
-            setTimeout(() => {
-                this.start2faFlow();
-            }, 500);
+            console.error('[VerificationCode] reCAPTCHA verifier not initialized - this should not happen!');
+            this.alert = {
+                type: 'error',
+                message: 'reCAPTCHA not initialized. Please refresh and try again.',
+            };
+            this.showAlert = true;
             return;
         }
 
