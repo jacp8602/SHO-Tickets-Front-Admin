@@ -3,7 +3,7 @@
 
 <!-- Navigation bg-white-->
 <fuse-vertical-navigation
-    class="light bg-[#353e5b] print:hidden"
+    class="light bg-[#C0D4D4] print:hidden"
     [mode]="isScreenSmall ? 'over' : 'side'"
     [name]="'mainNavigation'"
     [navigation]="navigation.default"
@@ -11,15 +11,22 @@
 >
     <!-- Navigation header hook -->
     <ng-container fuseVerticalNavigationContentHeader>
-        <!-- Logo -->
-        <div class="flex h-20 items-center justify-center p-6 pb-0 gap-3">            
-            <!-- <div class="w-14 h-14 rounded-full bg-[#353e5b] flex items-center justify-center">  <!-- ← AQUÍ VA EL CÓDIGO DEL LOGO -->
-                <img src="images/logo/logo-evinra-with-text.svg" alt="Logo image" class="w-30 h-15">
-            <!-- </div> -->
-            <!-- <h1 class="text-3xl font-bold text-black">SHOhub</h1> -->
+        <div data-mode="Ligth" class="w-full h-16 px-6 bg-gray-50 border-b border-zinc-200 inline-flex justify-between items-center">
+            <div class="h-9 inline-flex justify-start items-center gap-1.5">
+                <img src="images/logo/logo-evinra-login.svg" alt="Logo image" class="w-6 h-8">
+
+                <div class="h-14 inline-flex flex-col justify-center items-start gap-1">
+                    <div>
+                        <img src="images/logo/evinra.svg" alt="EVINRA" class="w-24 h-6">
+                    </div>
+                    <div>
+                        <img src="images/logo/TICKETING-SYSTEMS.svg" alt="TICKETING SYSTEMS" class="w-24 h-2">
+                    </div>
+                </div>
+            </div>
         </div>
     </ng-container>
-    
+
 </fuse-vertical-navigation>
 
 <!-- Wrapper -->
@@ -30,7 +37,7 @@
     >
         <!-- Navigation toggle button -->
         <button mat-icon-button (click)="toggleNavigation('mainNavigation')">
-            <mat-icon [svgIcon]="'heroicons_outline:bars-3'"></mat-icon>
+            <mat-icon [svgIcon]="'heroicons_outline:chevron-left'"></mat-icon>
         </button>
 
         <!-- Components -->
