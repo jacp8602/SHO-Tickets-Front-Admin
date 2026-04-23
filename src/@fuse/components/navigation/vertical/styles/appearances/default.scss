@@ -152,7 +152,10 @@ fuse-vertical-navigation {
 
             /* Group */
             > fuse-vertical-navigation-group-item {
-                margin-top: 24px;
+                padding: 12px 10px 10px 10px;
+                align-items: flex-start;
+                /*gap: 3px;*/
+                align-self: stretch;
             }
         }
 
@@ -213,14 +216,31 @@ fuse-vertical-navigation {
         flex-direction: column;
         flex: 1 0 auto;
         user-select: none;
+        color: #4A5565;
 
         .fuse-vertical-navigation-item-wrapper {
+            height: 39px;
+            padding: 6px 12px;
+            justify-content: left;
+            align-items: flex-start;
+            gap: 2px;
+            flex-shrink: 0;
+            align-self: stretch;
+            font-family: Inter;
+            font-size: 10px;
+            font-style: normal;
+            font-weight: 600;
+            line-height: 15px; /* 150% */
+            letter-spacing: 1.5px;
+
             .fuse-vertical-navigation-item {
                 position: relative;
                 display: flex;
+                height: 36px;
                 align-items: center;
-                justify-content: flex-start;
-                padding: 10px 16px;
+                justify-content: space-between;
+                align-self: stretch;
+                padding: 1px 3px;
                 font-size: 13px;
                 font-weight: 500;
                 line-height: 20px;
@@ -230,7 +250,7 @@ fuse-vertical-navigation {
                 /* Disabled state */
                 &.fuse-vertical-navigation-item-disabled {
                     cursor: default;
-                    opacity: 0.4;
+                    opacity: 0;
                 }
 
                 .fuse-vertical-navigation-item-icon {
@@ -452,19 +472,19 @@ fuse-vertical-navigation-collapsable-item,
 fuse-vertical-navigation-group-item {
     .fuse-vertical-navigation-item-wrapper {
         .fuse-vertical-navigation-item {
-            color: #ffffff;
+            color: text-gray-600;
 
             .fuse-vertical-navigation-item-icon {
-                @apply text-current opacity-60;
+                @apply text-current opacity-100;
             }
 
             .fuse-vertical-navigation-item-title-wrapper {
                 .fuse-vertical-navigation-item-title {
-                    @apply text-current opacity-80;
+                    @apply text-current opacity-100;
                 }
 
                 .fuse-vertical-navigation-item-subtitle {
-                    @apply text-current opacity-50;
+                    @apply text-current opacity-100;
                 }
             }
         }
@@ -482,7 +502,7 @@ fuse-vertical-navigation-collapsable-item {
                 &.fuse-vertical-navigation-item-active,
                 &.fuse-vertical-navigation-item-active-forced {
                     @apply bg-gray-900 bg-opacity-5 dark:bg-white dark:bg-opacity-12;
-                    background-color: #1565FF;
+                    /*background-color: #1565FF;*/
 
                     .fuse-vertical-navigation-item-icon {
                         @apply opacity-100;
@@ -550,9 +570,10 @@ fuse-vertical-navigation-collapsable-item {
 fuse-vertical-navigation-group-item {
     > .fuse-vertical-navigation-item-wrapper {
         .fuse-vertical-navigation-item {
+            @apply bg-opacity-5;
             .fuse-vertical-navigation-item-title-wrapper {
                 .fuse-vertical-navigation-item-title {
-                    @apply text-primary-100 opacity-100 dark:text-primary-100;
+                    @apply text-gray-600 opacity-100 dark:text-gray-600;
                 }
             }
         }
