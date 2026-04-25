@@ -575,6 +575,15 @@ fuse-vertical-navigation-group-item {
                 .fuse-vertical-navigation-item-title {
                     @apply text-gray-600 dark:text-gray-600;
                 }
+
+                &::after {
+                    content: '';
+                    display: block;
+                    width: 100%;
+                    height: 3px;
+                    margin-top: 8px;
+                    background: linear-gradient(90deg, #CFDDE1, #C0D4D4, #C9DADD);
+                }
             }
         }
     }
