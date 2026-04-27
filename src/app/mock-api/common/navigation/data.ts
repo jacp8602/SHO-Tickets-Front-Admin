@@ -12,7 +12,7 @@ export const defaultNavigation: FuseNavigationItem[] = [
         title: "Dashboard",
         type: "basic",
         icon: "sho_sidebar:dashboard",
-        link: "/example",
+        link: "/dashboard",
       },
       {
         id: "venue-mgmt",

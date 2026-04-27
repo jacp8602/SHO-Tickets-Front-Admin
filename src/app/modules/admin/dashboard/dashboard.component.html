@@ -1,0 +1,362 @@
+<div class="flex min-w-0 flex-auto flex-col p-6 sm:p-10">
+    <!-- Primera fila: filtros izquierda y derecha -->
+    <div class="flex flex-wrap items-center justify-between gap-4 mb-6">
+        <!-- Filtros izquierda -->
+        <div class="flex items-center gap-3">
+            <mat-form-field class="w-28" appearance="outline">
+                <mat-label>Today</mat-label>
+                <mat-select [(value)]="selectedLeftToday">
+                    <mat-option value="today">Today</mat-option>
+                    <mat-option value="yesterday">Yesterday</mat-option>
+                    <mat-option value="this-week">This Week</mat-option>
+                </mat-select>
+            </mat-form-field>
+            <mat-form-field class="w-28" appearance="outline">
+                <mat-label>Birth</mat-label>
+                <mat-select [(value)]="selectedBirth">
+                    <mat-option value="birth">Birth</mat-option>
+                    <mat-option value="all">All</mat-option>
+                </mat-select>
+            </mat-form-field>
+            <button mat-stroked-button class="h-14 px-4">Month</button>
+        </div>
+
+        <!-- Filtros derecha -->
+        <div class="flex items-center gap-3">
+            <mat-form-field class="w-28" appearance="outline">
+                <mat-label>Today</mat-label>
+                <mat-select [(value)]="selectedRightToday">
+                    <mat-option value="today">Today</mat-option>
+                    <mat-option value="yesterday">Yesterday</mat-option>
+                </mat-select>
+            </mat-form-field>
+            <mat-form-field class="w-32" appearance="outline">
+                <mat-label>All shows</mat-label>
+                <mat-select [(value)]="selectedShow">
+                    <mat-option value="all">All shows</mat-option>
+                    <mat-option value="circus">Circus</mat-option>
+                    <mat-option value="monster">Monster Truck</mat-option>
+                </mat-select>
+            </mat-form-field>
+            <mat-form-field class="w-28" appearance="outline">
+                <mat-label>Venue</mat-label>
+                <mat-select [(value)]="selectedVenue">
+                    <mat-option value="all">All</mat-option>
+                    <mat-option value="miami">Miami</mat-option>
+                    <mat-option value="orlando">Orlando</mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+    </div>
+
+    <!-- Alert -->
+    @if (showAlert) {
+        <fuse-alert class="mb-6" [appearance]="'outline'" [showIcon]="false" [type]="alert.type" [@shake]="alert.type === 'error'">
+            {{ alert.message }}
+        </fuse-alert>
+    }
+
+    @if (isLoading) {
+        <div class="flex flex-col items-center justify-center py-16">
+            <mat-progress-spinner [diameter]="48" [mode]="'indeterminate'"></mat-progress-spinner>
+            <p class="text-gray-500 mt-4">Loading dashboard...</p>
+        </div>
+    } @else {
+        <!-- Fila de KPIs con mini gráficos -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <!-- Tarjeta 1: Total Tickets Sold (línea azul) -->
+            <div class="bg-white rounded-xl border border-gray-200 p-5 shadow-sm">
+                <div class="flex items-start justify-between">
+                    <div>
+                        <h3 class="text-sm font-medium text-gray-500">Total Tickets Sold</h3>
+                        <p class="text-2xl font-bold text-gray-900 mt-1">{{ formatNumber(dashboardData?.summary.totalTicketsSold || 0) }}</p>
+                    </div>
+                    <span class="text-xs font-medium text-green-600 bg-green-50 px-2 py-1 rounded-full flex items-center gap-0.5">
+                        ↑ {{ dashboardData?.summary.totalTicketsSoldPercentage }}%
+                    </span>
+                </div>                
+                <!-- Sparkline de línea (azul) a la derecha -->
+                <div class="flex justify-end mt-2">                    
+                    <svg width="80" height="30" viewBox="0 0 80 30" class="overflow-visible">
+                        <polyline points="0,25 10,15 20,20 30,5 40,12 50,8 60,18 70,10 80,15"
+                                fill="none" stroke="#3b82f6" stroke-width="2"/>
+                    </svg>
+                </div>                
+            </div>
+
+            <!-- Tarjeta 2: Total Revenue (línea verde) -->
+            <div class="bg-white rounded-xl border border-gray-200 p-5 shadow-sm">
+                <div class="flex items-start justify-between">
+                    <div>
+                        <h3 class="text-sm font-medium text-gray-500">Total Revenue</h3>
+                        <p class="text-2xl font-bold text-gray-900 mt-1">{{ formatCurrency(dashboardData?.summary.totalRevenue || 0) }}</p>
+                    </div>
+                </div>
+                <div class="flex justify-end mt-2">
+                    <svg width="80" height="30" viewBox="0 0 80 30" class="overflow-visible">
+                        <polyline points="0,20 10,25 20,10 30,15 40,5 50,18 60,12 70,22 80,8"
+                                fill="none" stroke="#3b82f6" stroke-width="2"/>
+                    </svg>
+                </div>
+            </div>
+            
+            <!-- Tarjeta 3: Average Ticket Price -->
+            <div class="bg-white rounded-xl border border-gray-200 p-5 shadow-sm">
+                <div class="flex items-start justify-between">
+                    <div>
+                        <h3 class="text-sm font-medium text-gray-500">Average Ticket Price</h3>
+                        <p class="text-2xl font-bold text-gray-900 mt-1">${{ dashboardData?.summary.averageTicketPrice }}</p>
+                    </div>
+                </div>
+                <div class="flex justify-end mt-2">                    
+                    <div class="flex items-end gap-1 mt-4 h-8">
+                        <div class="w-2 bg-blue-500 rounded-sm h-4"></div>
+                        <div class="w-2 bg-blue-500 rounded-sm h-6"></div>
+                        <div class="w-2 bg-blue-500 rounded-sm h-8"></div>
+                        <div class="w-2 bg-blue-500 rounded-sm h-7"></div>
+                        <div class="w-2 bg-blue-500 rounded-sm h-5"></div>
+                        <div class="w-2 bg-blue-500 rounded-sm h-4"></div>
+                        <div class="w-2 bg-blue-500 rounded-sm h-3"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tarjeta 4: Attendance Rate (círculo de progreso) -->
+            <div class="bg-white rounded-xl border border-gray-200 p-5 shadow-sm">
+                <div class="flex items-start justify-between">
+                    <div>
+                        <h3 class="text-sm font-medium text-gray-500">Attendance Rate</h3>
+                        <p class="text-2xl font-bold text-gray-900 mt-1">{{ dashboardData?.summary.attendanceRate }}%</p>
+                    </div>
+                </div>
+                <div class="flex justify-end mt-2">
+                    <svg width="40" height="40" viewBox="0 0 40 40">
+                        <circle cx="20" cy="20" r="16" fill="none" stroke="#e5e7eb" stroke-width="4"/>
+                        <circle cx="20" cy="20" r="16" fill="none" stroke="#3b82f6" stroke-width="4"
+                                stroke-dasharray="100.53" stroke-dashoffset="18.1" 
+                                transform="rotate(-90 20 20)" />
+                    </svg>
+                </div>
+            </div>
+        </div>
+
+        <!-- Divisor -->
+        <mat-divider class="!mb-8"></mat-divider>
+
+        <!-- Segunda fila: Revenue Trend y Tickets Sold Trend (simplificadas) -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+            <!-- Revenue Trend -->
+            <div class="bg-white rounded-xl border border-gray-200 p-5 shadow-sm">
+                <h3 class="text-lg font-semibold text-gray-900 mb-3"># Revenue Trend</h3>
+                <div class="relative h-32 w-full">
+                    <svg viewBox="0 0 300 110" preserveAspectRatio="none" class="w-full h-full">
+                        <!-- Líneas de fondo continuas -->
+                        <line x1="0" y1="20" x2="300" y2="20" stroke="#f3f4f6" stroke-width="1" />
+                        <line x1="0" y1="50" x2="300" y2="50" stroke="#f3f4f6" stroke-width="1" />
+                        <line x1="0" y1="80" x2="300" y2="80" stroke="#f3f4f6" stroke-width="1" />
+                        <line x1="0" y1="110" x2="300" y2="110" stroke="#f3f4f6" stroke-width="1" />
+
+                        <!-- Línea curva -->
+                        <polyline
+                            [attr.points]="getRevenueTrendPoints(300, 100)"
+                            fill="none"
+                            stroke="#3b82f6"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                        />
+                    </svg>
+                </div>
+            </div>
+
+            <!-- Tickets Sold Trend -->
+            <div class="bg-white rounded-xl border border-gray-200 p-5 shadow-sm">
+                <h3 class="text-lg font-semibold text-gray-900 mb-3">Tickets Sold Trend</h3>
+                
+                <!-- Contenedor relativo para las líneas de fondo y las barras -->
+                <div class="relative h-40 mt-2">
+                    <!-- Líneas de fondo (watermark) continuas -->
+                    <svg class="absolute inset-0 w-full h-full pointer-events-none" preserveAspectRatio="none">
+                        <line x1="0" y1="25%" x2="100%" y2="25%" stroke="#f3f4f6" stroke-width="1" />
+                        <line x1="0" y1="50%" x2="100%" y2="50%" stroke="#f3f4f6" stroke-width="1" />
+                        <line x1="0" y1="75%" x2="100%" y2="75%" stroke="#f3f4f6" stroke-width="1" />                        
+                    </svg>
+
+                    <!-- Contenedor de barras -->
+                    <div class="absolute inset-0 flex items-end justify-around gap-4">
+                        @for (value of dashboardData?.ticketsSoldTrend; track $index) {
+                            @let max = getMaxTicketsSold();
+                            @let barHeight = max > 0 ? (value / max) * 128 : 0;
+                            <div class="flex flex-col items-center w-16">
+                                <div class="w-full bg-blue-500 rounded-t-md transition-all duration-300" 
+                                    [style.height.px]="barHeight"
+                                    style="min-height: 4px;"></div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tercera fila: Tickets by Channel y New vs Returning Customers (alineados) -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+            <!-- Tarjeta: Tickets by Channel -->
+            <div class="bg-white rounded-xl border border-gray-200 p-5 shadow-sm">
+                <h3 class="text-lg font-semibold text-gray-900 mb-4"># Tickets by Channel</h3>
+                <div class="flex items-center gap-6"> <!-- Cambiado a items-center -->
+                    <!-- Gráfico donut -->
+                    <svg viewBox="0 0 100 100" class="w-32 h-32 flex-shrink-0">
+                        @for (channel of dashboardData?.ticketsByChannel; track channel.label) {
+                            <path [attr.d]="getPieSlicePath(channel.startAngle, channel.endAngle, 40, 50, 50)"
+                                [attr.fill]="channel.color"
+                                transform="rotate(-90 50 50)" />
+                        }
+                        <circle cx="50" cy="50" r="28" fill="white" />
+                    </svg>
+                    <!-- Leyenda a la derecha, centrada verticalmente -->
+                    <div class="flex flex-col gap-2 h-full justify-center"> <!-- Agregado h-full y justify-center -->
+                        @for (channel of dashboardData?.ticketsByChannel; track channel.label) {
+                            <div class="flex items-center gap-2">
+                                <span class="w-3 h-3 rounded-full" [style.background-color]="channel.color"></span>
+                                <span class="text-sm text-gray-700">{{ channel.label }}</span>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tarjeta: New vs Returning Customers -->
+            <div class="bg-white rounded-xl border border-gray-200 p-5 shadow-sm">
+                <h3 class="text-lg font-semibold text-gray-900 mb-4"># New vs Returning Customers</h3>
+                <div class="flex items-center gap-6"> <!-- Cambiado a items-center -->
+                    <!-- Gráfico donut grande (New/Returning) -->
+                    <svg viewBox="0 0 100 100" class="w-32 h-32 flex-shrink-0">
+                        @for (type of dashboardData?.customerTypes; track type.label) {
+                            <path [attr.d]="getPieSlicePath(type.startAngle, type.endAngle, 40, 50, 50)"
+                                [attr.fill]="type.color"
+                                transform="rotate(-90 50 50)" />
+                        }
+                        <circle cx="50" cy="50" r="28" fill="white" />
+                    </svg>
+
+                    <!-- Columna derecha dividida en dos subcolumnas, con altura completa y centrado vertical -->
+                    <div class="flex flex-1 gap-4 h-full"> <!-- Agregado h-full -->
+                        <!-- Subcolumna izquierda: Leyenda New / Returning, centrada verticalmente -->
+                        <div class="flex flex-col space-y-2 justify-center"> <!-- Agregado justify-center -->
+                            @for (type of dashboardData?.customerTypes; track type.label) {
+                                <div class="flex items-center gap-2">
+                                    <span class="w-3 h-3 rounded-full" [style.background-color]="type.color"></span>
+                                    <span class="text-sm text-gray-700">{{ type.label }}</span>
+                                </div>
+                            }
+                        </div>
+
+                        <!-- Subcolumna derecha: Unique game, centrada verticalmente -->
+                        @if (dashboardData?.uniqueGamePercentage !== undefined) {
+                            <div class="flex flex-col items-end justify-center h-full"> <!-- Agregado justify-center y h-full -->
+                                <div class="flex items-center gap-2">                                    
+                                    <div class="relative inline-flex">
+                                        <svg viewBox="0 0 100 100" class="w-14 h-14">
+                                            <!-- Fondo gris (100%) -->
+                                            <path [attr.d]="getPieSlicePath(0, 360, 40, 50, 50)"
+                                                fill="#e5e7eb"
+                                                transform="rotate(-90 50 50)" />
+                                            <!-- Segmento del porcentaje -->
+                                            <path [attr.d]="getPieSlicePath(0, dashboardData.uniqueGamePercentage * 3.6, 40, 50, 50)"
+                                                fill="#3b82f6"
+                                                transform="rotate(-90 50 50)" />
+                                            <circle cx="50" cy="50" r="30" fill="white" />
+                                        </svg>
+                                        <span class="absolute inset-0 flex items-center justify-center text-xs font-bold text-gray-900">
+                                            {{ dashboardData.uniqueGamePercentage }}%
+                                        </span>
+                                    </div>
+                                    <span class="text-sm font-medium text-gray-700">Unique game</span>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Cuarta fila: Event Performance y Promo Code Usage -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+            <!-- Event Performance (tabla) - ocupa 2 columnas en lg -->
+            <div class="lg:col-span-2 bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm">
+                <h3 class="text-lg font-semibold text-gray-900 p-5 pb-2"># Event Performance</h3>
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead class="bg-gray-50 border-y border-gray-200">
+                            <tr>
+                                <th class="text-left text-xs font-bold text-gray-600 uppercase tracking-wider px-5 py-3">Show</th>
+                                <th class="text-left text-xs font-bold text-gray-600 uppercase tracking-wider px-5 py-3">City</th>
+                                <th class="text-right text-xs font-bold text-gray-600 uppercase tracking-wider px-5 py-3">Capita</th>
+                                <th class="text-right text-xs font-bold text-gray-600 uppercase tracking-wider px-5 py-3">Revenue</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-200">
+                            @for (event of dashboardData?.eventPerformance; track event.id) {
+                                <tr class="hover:bg-gray-50 transition-colors">
+                                    <td class="px-5 py-3 text-sm text-gray-900">{{ event.show }}</td>
+                                    <td class="px-5 py-3 text-sm text-gray-600">{{ event.city }}</td>
+                                    <td class="px-5 py-3 text-sm text-gray-600 text-right">{{ formatNumber(event.capita) }}</td>
+                                    <td class="px-5 py-3 text-sm text-gray-600 text-right">{{ formatCurrency(event.revenue) }}</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Promo Code Usage -->
+            <div class="bg-white rounded-xl border border-gray-200 p-5 shadow-sm">
+                <h3 class="text-lg font-semibold text-gray-900 mb-3"># Promo Code Usage</h3>
+                <ul class="space-y-2">
+                    @for (promo of dashboardData?.promoCodes; track promo.id) {
+                        <li class="text-sm text-gray-700">{{ promo.code }}</li>
+                    }
+                </ul>
+            </div>
+        </div>
+
+        <!-- Quinta fila: Peak Booking Times y Revenue by Ticket Type -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <!-- Peak Booking Times -->
+            <div class="bg-white rounded-xl border border-gray-200 p-5 shadow-sm">
+                <h3 class="text-lg font-semibold text-gray-900 mb-4"># Peak Booking Times</h3>
+                <div class="flex justify-between items-center">
+                    @for (day of weekDays; track $index; let i = $index) {
+                        <div class="flex flex-col items-center">
+                            <span class="text-xs text-gray-500 mb-2">{{ day }}</span>
+                            <div class="w-8 h-8 flex items-center justify-center rounded-full text-sm font-medium transition-colors cursor-pointer"
+                                 [class.bg-blue-600]="i === activeDayIndex"
+                                 [class.text-white]="i === activeDayIndex"
+                                 [class.text-gray-700]="i !== activeDayIndex"
+                                 [class.hover:bg-gray-100]="i !== activeDayIndex"
+                                 (click)="setActiveDay(i)">
+                                {{ i + 1 }}
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <!-- Revenue by Ticket Type -->
+            <div class="bg-white rounded-xl border border-gray-200 p-5 shadow-sm">
+                <h3 class="text-lg font-semibold text-gray-900 mb-4"># Revenue by Ticket Type</h3>
+                <div class="space-y-3">
+                    @for (type of dashboardData?.ticketTypes; track type.type) {
+                        <div class="flex items-center gap-3">
+                            <span class="w-4 h-4 rounded-full {{ type.color }}"></span>
+                            <span class="text-sm text-gray-700">{{ type.type }}</span>
+                        </div>
+                    }
+                </div>
+                <div class="mt-4 text-xs text-gray-400">
+                    * Los colores representan cada tipo
+                </div>
+            </div>
+        </div>
+    }
+</div>
