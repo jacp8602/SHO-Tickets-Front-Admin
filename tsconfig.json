@@ -1,9 +1,19 @@
 /* To learn more about this file see: https://angular.io/config/tsconfig. */
 {
     "compileOnSave": false,
-    "compilerOptions": {
-        "baseUrl": "./src",
+    "compilerOptions": {                
+        // "baseUrl": "./src",
+        "rootDir": "./src", 
         "outDir": "./dist/out-tsc",
+        "paths": {
+            "@fuse/*": ["./src/@fuse/*"],
+            "@fuse": ["./src/@fuse"],            
+            "@app/*": ["./src/@app/*"],            
+            "app/*": ["./src/app/*"],
+            "core/*": ["./src/app/core/*"],
+            "environments/*": ["./src/environments/*"],
+            "modules/*": ["./src/app/modules/*"],
+        },
         "esModuleInterop": true,
         "sourceMap": true,
         "declaration": false,
