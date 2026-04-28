@@ -23,6 +23,9 @@
             <ng-container *ngTemplateOutlet="itemTemplate"></ng-container>
         </a>
     }
+    <!-- [routerLinkActive]="'fuse-vertical-navigation-item-active'" -->
+    <!-- [routerLinkActive]="item.activeClasses ?? 'fuse-vertical-navigation-item-active'" -->
+    <!-- [routerLinkActive]="['bg-primary-600', 'text-white']" -->
 
     <!-- Item with an external link -->
     @if (item.link && item.externalLink && !item.function && !item.disabled) {

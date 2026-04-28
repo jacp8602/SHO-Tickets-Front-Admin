@@ -538,8 +538,8 @@ fuse-vertical-navigation-collapsable-item {
             &:not(.fuse-vertical-navigation-item-disabled) {
                 &.fuse-vertical-navigation-item-active,
                 &.fuse-vertical-navigation-item-active-forced {
-                    background-color: var(--nav-item-active-bg-light);
-                    color: var(--nav-item-text-light);
+                    /*background-color: var(--nav-item-active-bg-light);*/
+                    /*color: var(--nav-item-text-light);*/
 
                     .fuse-vertical-navigation-item-icon {
                         color: var(--nav-item-text-light);
@@ -639,14 +639,14 @@ fuse-vertical-navigation-group-item {
                     color: var(--nav-item-text-light);
                 }
 
-                &::after {
+                /*&::after {
                     content: '';
                     display: block;
                     width: 100%;
                     height: 2px;
                     margin-top: 8px;
                     background-color: var(--nav-group-divider-light);
-                }
+                }*/
             }
         }
     }
