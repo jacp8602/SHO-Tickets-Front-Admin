@@ -578,7 +578,8 @@ export class AuthVerificationCodeComponent implements OnInit, AfterViewInit {
             // Send to backend to get JWT
             this._authService.complete2FaSignIn(idToken).subscribe({
               next: () => {
-                this._router.navigateByUrl("/example");
+                // this._router.navigateByUrl("/example");
+                this._router.navigateByUrl("/dashboard");
               },
               error: (error) => {
                 console.error("Error completing sign in:", error);
@@ -619,7 +620,8 @@ export class AuthVerificationCodeComponent implements OnInit, AfterViewInit {
             // Send to backend to get JWT
             this._authService.complete2FaSignIn(idToken).subscribe({
               next: () => {
-                this._router.navigateByUrl("/example");
+                // this._router.navigateByUrl("/example");
+                this._router.navigateByUrl("/dashboard");
               },
               error: (error) => {
                 console.error("Error completing sign in:", error);

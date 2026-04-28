@@ -12,14 +12,7 @@ export const defaultNavigation: FuseNavigationItem[] = [
         title: "Dashboard",
         type: "basic",
         icon: "sho_sidebar:dashboard",
-        classes: {
-          icon: "w-4 h-4 relative",
-          title:
-            "justify-start text-gray-600 text-xs font-medium font-['Inter'] leading-5",
-          wrapper:
-            "self-stretch !w-full h-9 inline-flex justify-between items-center",
-        },
-        link: "/example",
+        link: "/dashboard",
       },
       {
         id: "venue-mgmt",
