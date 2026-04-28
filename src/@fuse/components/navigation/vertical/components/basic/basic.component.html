@@ -2,7 +2,10 @@
 <div
     class="fuse-vertical-navigation-item-wrapper"
     [class.fuse-vertical-navigation-item-has-subtitle]="!!item.subtitle"
+    [class.menu-item-active-custom]="isActive()"
     [ngClass]="item.classes?.wrapper"
+    [ngStyle]="cssVariables()"
+    (click)="onItemClick()"
 >
     <!-- Item with an internal link -->
     @if (item.link && !item.externalLink && !item.function && !item.disabled) {
@@ -23,6 +26,9 @@
             <ng-container *ngTemplateOutlet="itemTemplate"></ng-container>
         </a>
     }
+    <!-- [routerLinkActive]="'fuse-vertical-navigation-item-active'" -->
+    <!-- [routerLinkActive]="item.activeClasses ?? 'fuse-vertical-navigation-item-active'" -->
+    <!-- [routerLinkActive]="['bg-primary-600', 'text-white']" -->
 
     <!-- Item with an external link -->
     @if (item.link && item.externalLink && !item.function && !item.disabled) {

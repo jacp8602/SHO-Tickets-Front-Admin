@@ -1,6 +1,21 @@
 /* Variables */
 :root {
     --fuse-vertical-navigation-width: 280px;
+    /* Design token colors – light sidebar */
+    --nav-bg-light: #E7EDF8;
+    --nav-header-bg-light: #FBFCFD;
+    --nav-header-border-light: #DFE1E7;
+    --nav-item-text-light: #4A5565;
+    --nav-group-divider-light: #C0D4D4;
+    --nav-item-active-bg-light: #FFFFFF;
+    --nav-item-hover-bg-light: rgba(255,255,255,0.55);
+    /* Design token colors – dark sidebar */
+    --nav-bg-dark: #171B27;
+    --nav-item-text-dark: #AEAEAE;
+    --nav-group-label-dark: #EDEDED;
+    --nav-group-divider-dark: #272E37;
+    --nav-item-active-bg-dark: #272E37;
+    --nav-item-hover-bg-dark: #1E2634;
 }
 
 fuse-vertical-navigation {
@@ -216,7 +231,7 @@ fuse-vertical-navigation {
         flex-direction: column;
         flex: 1 0 auto;
         user-select: none;
-        color: #4A5565;
+        color: var(--nav-item-text-light);
 
         .fuse-vertical-navigation-item-wrapper {
             height: 39px;
@@ -245,12 +260,11 @@ fuse-vertical-navigation {
                 font-weight: 500;
                 line-height: 20px;
                 text-decoration: none;
-                border-radius: 6px;
+                border-radius: 8px;
 
                 /* Disabled state */
                 &.fuse-vertical-navigation-item-disabled {
                     cursor: default;
-                    opacity: 0;
                 }
 
                 .fuse-vertical-navigation-item-icon {
@@ -308,6 +322,8 @@ fuse-vertical-navigation {
 
     /* Basic */
     fuse-vertical-navigation-basic-item {
+        /*width: 100%; ancho completo */
+        box-sizing: border-box; /* Evita que padding o border causen desbordamiento */
     }
 
     /* Collapsable */
@@ -398,13 +414,15 @@ fuse-vertical-navigation {
 
         .fuse-vertical-navigation-item-wrapper {
             height: 1px;
-            box-shadow: 0 1px 0 0;
+            box-shadow: 0 1px 0 0 var(--nav-group-divider-light);
         }
     }
 
     /* Group */
     fuse-vertical-navigation-group-item {
         > .fuse-vertical-navigation-item-wrapper {
+            position: relative;
+
             .fuse-vertical-navigation-item {
                 .fuse-vertical-navigation-item-badge,
                 .fuse-vertical-navigation-item-icon {
@@ -419,6 +437,17 @@ fuse-vertical-navigation {
                         text-transform: uppercase;
                     }
                 }
+            }
+
+            /* Línea divisoria debajo del grupo */
+            &::after {
+                content: '';
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                width: 100%;
+                height: 1px;
+                background-color: var(--nav-group-divider-light);
             }
         }
     }
@@ -439,7 +468,6 @@ fuse-vertical-navigation {
     left: 0;
     right: 0;
     z-index: 170;
-    opacity: 0;
     background-color: rgba(0, 0, 0, 0.6);
 
     + .fuse-vertical-navigation-aside-overlay {
@@ -457,7 +485,6 @@ fuse-vertical-navigation {
     left: 0;
     right: 0;
     z-index: 169;
-    opacity: 0;
     background-color: rgba(0, 0, 0, 0.3);
 }
 
@@ -472,21 +499,33 @@ fuse-vertical-navigation-collapsable-item,
 fuse-vertical-navigation-group-item {
     .fuse-vertical-navigation-item-wrapper {
         .fuse-vertical-navigation-item {
-            color: text-gray-600;
+            color: var(--nav-item-text-light);
 
             .fuse-vertical-navigation-item-icon {
-                @apply text-current opacity-100;
+                @apply text-current;
             }
 
             .fuse-vertical-navigation-item-title-wrapper {
                 .fuse-vertical-navigation-item-title {
-                    @apply text-current opacity-100;
+                    @apply text-current;
                 }
 
                 .fuse-vertical-navigation-item-subtitle {
-                    @apply text-current opacity-100;
+                    @apply text-current;
                 }
             }
+        }
+    }
+}
+
+/* Dark theme common item color */
+.dark fuse-vertical-navigation-aside-item,
+.dark fuse-vertical-navigation-basic-item,
+.dark fuse-vertical-navigation-collapsable-item,
+.dark fuse-vertical-navigation-group-item {
+    .fuse-vertical-navigation-item-wrapper {
+        .fuse-vertical-navigation-item {
+            color: var(--nav-item-text-dark);
         }
     }
 }
@@ -501,19 +540,19 @@ fuse-vertical-navigation-collapsable-item {
             &:not(.fuse-vertical-navigation-item-disabled) {
                 &.fuse-vertical-navigation-item-active,
                 &.fuse-vertical-navigation-item-active-forced {
-                    @apply bg-gray-900 bg-opacity-5 dark:bg-white dark:bg-opacity-12;
-                    /*background-color: #1565FF;*/
+                    /*background-color: var(--nav-item-active-bg-light);*/
+                    /*color: var(--nav-item-text-light);*/
 
                     .fuse-vertical-navigation-item-icon {
-                        @apply opacity-100;
+                        color: var(--nav-item-text-light);
                     }
 
                     .fuse-vertical-navigation-item-title {
-                        @apply opacity-100;
+                        color: var(--nav-item-text-light);
                     }
 
                     .fuse-vertical-navigation-item-subtitle {
-                        @apply opacity-100;
+                        color: var(--nav-item-text-light);
                     }
                 }
             }
@@ -523,20 +562,50 @@ fuse-vertical-navigation-collapsable-item {
                     .fuse-vertical-navigation-item-active
                 ):not(.fuse-vertical-navigation-item-disabled) {
                 &:hover {
-                    @apply bg-gray-800 bg-opacity-5 dark:bg-white dark:bg-opacity-12;
+                    background-color: var(--nav-item-hover-bg-light);
 
                     .fuse-vertical-navigation-item-icon {
-                        @apply opacity-100;
                     }
 
                     .fuse-vertical-navigation-item-title,
                     .fuse-vertical-navigation-item-arrow {
-                        @apply opacity-100;
                     }
 
                     .fuse-vertical-navigation-item-subtitle {
-                        @apply opacity-100;
                     }
+                }
+            }
+        }
+    }
+}
+
+/* Dark theme overrides */
+.dark fuse-vertical-navigation-aside-item,
+.dark fuse-vertical-navigation-basic-item,
+.dark fuse-vertical-navigation-collapsable-item {
+    > .fuse-vertical-navigation-item-wrapper {
+        .fuse-vertical-navigation-item {
+            &:not(.fuse-vertical-navigation-item-disabled) {
+                &.fuse-vertical-navigation-item-active,
+                &.fuse-vertical-navigation-item-active-forced {
+                    background-color: var(--nav-item-active-bg-dark);
+                    color: #FFFFFF;
+
+                    .fuse-vertical-navigation-item-icon {
+                        color: #FFFFFF;
+                    }
+
+                    .fuse-vertical-navigation-item-title {
+                        color: #FFFFFF;
+                    }
+                }
+            }
+
+            &:not(.fuse-vertical-navigation-item-active-forced):not(
+                    .fuse-vertical-navigation-item-active
+                ):not(.fuse-vertical-navigation-item-disabled) {
+                &:hover {
+                    background-color: var(--nav-item-hover-bg-dark);
                 }
             }
         }
@@ -550,16 +619,13 @@ fuse-vertical-navigation-collapsable-item {
         > .fuse-vertical-navigation-item-wrapper {
             .fuse-vertical-navigation-item {
                 .fuse-vertical-navigation-item-icon {
-                    @apply opacity-100;
                 }
 
                 .fuse-vertical-navigation-item-title,
                 .fuse-vertical-navigation-item-arrow {
-                    @apply opacity-100;
                 }
 
                 .fuse-vertical-navigation-item-subtitle {
-                    @apply opacity-100;
                 }
             }
         }
@@ -570,10 +636,35 @@ fuse-vertical-navigation-collapsable-item {
 fuse-vertical-navigation-group-item {
     > .fuse-vertical-navigation-item-wrapper {
         .fuse-vertical-navigation-item {
-            @apply bg-opacity-5;
             .fuse-vertical-navigation-item-title-wrapper {
                 .fuse-vertical-navigation-item-title {
-                    @apply text-gray-600 opacity-100 dark:text-gray-600;
+                    color: var(--nav-item-text-light);
+                }
+
+                /*&::after {
+                    content: '';
+                    display: block;
+                    width: 100%;
+                    height: 2px;
+                    margin-top: 8px;
+                    background-color: var(--nav-group-divider-light);
+                }*/
+            }
+        }
+    }
+}
+
+/* Dark theme group title */
+.dark fuse-vertical-navigation-group-item {
+    > .fuse-vertical-navigation-item-wrapper {
+        .fuse-vertical-navigation-item {
+            .fuse-vertical-navigation-item-title-wrapper {
+                .fuse-vertical-navigation-item-title {
+                    color: var(--nav-group-label-dark);
+                }
+
+                &::after {
+                    background-color: var(--nav-group-divider-dark);
                 }
             }
         }

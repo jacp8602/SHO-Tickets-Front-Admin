@@ -1,0 +1,81 @@
+/* ----------------------------------------------------------------------------------------------------- */
+/*  @ Per-item active menu colors using CSS custom properties
+/* ----------------------------------------------------------------------------------------------------- */
+
+:root {
+    --menu-active-text-color: #ef4444;
+    /*--menu-active-icon-color: #ef4444;*/
+    --menu-active-bg-color:  rgba(152, 150, 178, 0.15);
+}
+
+.dark {
+    --menu-active-text-color: #f87171;
+    /*--menu-active-icon-color: #f87171;*/
+    /*--menu-active-bg-color: rgba(239, 68, 68, 0.15);*/
+}
+
+.menu-item-active-custom {
+    background-color: var(--menu-active-bg-color) !important;
+    border-radius: 8px;
+    transition:
+        background-color 250ms ease,
+        color 250ms ease;
+
+    .fuse-vertical-navigation-item-title span {
+        color: var(--menu-active-text-color) !important;
+        font-weight: 600;
+    }
+
+    .fuse-vertical-navigation-item-subtitle span {
+        color: var(--menu-active-text-color) !important;
+        opacity: 0.8;
+    }
+
+    /*.fuse-vertical-navigation-item-icon {
+        color: var(--menu-active-icon-color) !important;
+
+        svg {
+            path,
+            circle,
+            rect,
+            line,
+            polyline,
+            polygon {
+                stroke: var(--menu-active-icon-color) !important;
+            }
+        }
+    }*/
+}
+
+fuse-vertical-navigation-basic-item
+    > .fuse-vertical-navigation-item-wrapper:not(.menu-item-active-custom) {
+    transition:
+        background-color 250ms ease,
+        color 250ms ease;
+}
+
+/* ----------------------------------------------------------------------------------------------------- */
+/*  @ Ancho uniforme para todos los menu items
+/* ----------------------------------------------------------------------------------------------------- */
+
+fuse-vertical-navigation-aside-item,
+fuse-vertical-navigation-basic-item,
+fuse-vertical-navigation-collapsable-item {
+    > .fuse-vertical-navigation-item-wrapper {
+        margin-left: 8px !important;
+        margin-right: 8px !important;
+        width: calc(100% - 16px) !important;
+        max-width: calc(100% - 16px) !important;
+        box-sizing: border-box;
+    }
+}
+
+.fuse-vertical-navigation-item-wrapper .fuse-vertical-navigation-item {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.menu-item-active-custom {
+    width: 100% !important;
+    box-sizing: border-box;
+}
