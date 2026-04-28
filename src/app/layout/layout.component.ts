@@ -20,7 +20,7 @@ import { EnterpriseLayoutComponent } from './layouts/horizontal/enterprise/enter
 import { MaterialLayoutComponent } from './layouts/horizontal/material/material.component';
 import { ModernLayoutComponent } from './layouts/horizontal/modern/modern.component';
 import { ClassicLayoutComponent } from './layouts/vertical/classic/classic.component';
-import { ClassicCustomLayoutComponent } from './layouts/vertical/classic-custom/classic-custom.component';
+// import { ClassicCustomLayoutComponent } from './layouts/vertical/classic-custom/classic-custom.component';
 import { ClassyLayoutComponent } from './layouts/vertical/classy/classy.component';
 import { CompactLayoutComponent } from './layouts/vertical/compact/compact.component';
 import { DenseLayoutComponent } from './layouts/vertical/dense/dense.component';
@@ -39,7 +39,7 @@ import { ThinLayoutComponent } from './layouts/vertical/thin/thin.component';
         MaterialLayoutComponent,
         ModernLayoutComponent,
         ClassicLayoutComponent,
-        ClassicCustomLayoutComponent,
+        // ClassicCustomLayoutComponent,
         ClassyLayoutComponent,
         CompactLayoutComponent,
         DenseLayoutComponent,
@@ -49,10 +49,10 @@ import { ThinLayoutComponent } from './layouts/vertical/thin/thin.component';
     ],
 })
 export class LayoutComponent implements OnInit, OnDestroy {
-    config: FuseConfig;
-    layout: string;
-    scheme: 'dark' | 'light';
-    theme: string;
+    config!: FuseConfig;
+    layout!: string;
+    scheme!: 'dark' | 'light';
+    theme!: string;
     private _unsubscribeAll: Subject<any> = new Subject<any>();
 
     /**
