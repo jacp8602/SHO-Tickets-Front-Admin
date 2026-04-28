@@ -4,19 +4,19 @@
 
 :root {
     --menu-active-text-color: #ef4444;
-    --menu-active-icon-color: #ef4444;
-    --menu-active-bg-color: #fee2e2;
+    /*--menu-active-icon-color: #ef4444;*/
+    --menu-active-bg-color:  rgba(152, 150, 178, 0.15);
 }
 
 .dark {
     --menu-active-text-color: #f87171;
-    --menu-active-icon-color: #f87171;
-    --menu-active-bg-color: rgba(239, 68, 68, 0.15);
+    /*--menu-active-icon-color: #f87171;*/
+    /*--menu-active-bg-color: rgba(239, 68, 68, 0.15);*/
 }
 
 .menu-item-active-custom {
     background-color: var(--menu-active-bg-color) !important;
-    border-radius: 6px;
+    border-radius: 8px;
     transition:
         background-color 250ms ease,
         color 250ms ease;
@@ -31,7 +31,7 @@
         opacity: 0.8;
     }
 
-    .fuse-vertical-navigation-item-icon {
+    /*.fuse-vertical-navigation-item-icon {
         color: var(--menu-active-icon-color) !important;
 
         svg {
@@ -44,7 +44,7 @@
                 stroke: var(--menu-active-icon-color) !important;
             }
         }
-    }
+    }*/
 }
 
 fuse-vertical-navigation-basic-item

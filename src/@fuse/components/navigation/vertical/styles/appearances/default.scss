@@ -260,7 +260,7 @@ fuse-vertical-navigation {
                 font-weight: 500;
                 line-height: 20px;
                 text-decoration: none;
-                border-radius: 6px;
+                border-radius: 8px;
 
                 /* Disabled state */
                 &.fuse-vertical-navigation-item-disabled {
@@ -322,6 +322,8 @@ fuse-vertical-navigation {
 
     /* Basic */
     fuse-vertical-navigation-basic-item {
+        /*width: 100%; ancho completo */
+        box-sizing: border-box; /* Evita que padding o border causen desbordamiento */
     }
 
     /* Collapsable */
