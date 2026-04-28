@@ -47,10 +47,9 @@
     }
 }
 
-fuse-vertical-navigation-basic-item:not(.menu-item-active-custom) {
-    > .fuse-vertical-navigation-item-wrapper {
-        transition:
-            background-color 250ms ease,
-            color 250ms ease;
-    }
+fuse-vertical-navigation-basic-item
+    > .fuse-vertical-navigation-item-wrapper:not(.menu-item-active-custom) {
+    transition:
+        background-color 250ms ease,
+        color 250ms ease;
 }

@@ -54,7 +54,6 @@ export class FuseVerticalNavigationBasicItemComponent
     isActiveMatchOptions: IsActiveMatchOptions =
         this._fuseUtilsService.subsetMatchOptions;
 
-    private _fuseVerticalNavigationComponent: FuseVerticalNavigationComponent;
     private _navComponent = signal<FuseVerticalNavigationComponent | null>(null);
     private _unsubscribeAll: Subject<any> = new Subject<any>();
 
@@ -99,18 +98,16 @@ export class FuseVerticalNavigationBasicItemComponent
                 ? this._fuseUtilsService.exactMatchOptions
                 : this._fuseUtilsService.subsetMatchOptions;
 
-        // Get the parent navigation component
-        this._fuseVerticalNavigationComponent =
-            this._fuseNavigationService.getComponent(this.name);
-
-        // Expose the parent navigation component to the signals
-        this._navComponent.set(this._fuseVerticalNavigationComponent);
+        // Get the parent navigation component and expose it to signals
+        this._navComponent.set(
+            this._fuseNavigationService.getComponent(this.name)
+        );
 
         // Mark for check
         this._changeDetectorRef.markForCheck();
 
         // Subscribe to onRefreshed on the navigation component
-        this._fuseVerticalNavigationComponent.onRefreshed
+        this._navComponent().onRefreshed
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe(() => {
                 // Mark for check
@@ -135,8 +132,9 @@ export class FuseVerticalNavigationBasicItemComponent
      * Handle item click to set this item as active
      */
     onItemClick(): void {
-        if (this.item?.id && this._fuseVerticalNavigationComponent) {
-            this._fuseVerticalNavigationComponent.setActiveMenuItem(this.item.id);
+        const navComponent = this._navComponent();
+        if (this.item?.id && navComponent) {
+            navComponent.setActiveMenuItem(this.item.id);
         }
     }
 }
