@@ -9,10 +9,16 @@ export const defaultNavigation: FuseNavigationItem[] = [
     disabled: true,
     children: [
       {
+        id: "dashboard",
         title: "Dashboard",
         type: "basic",
         icon: "sho_sidebar:dashboard",
         link: "/dashboard",
+        activeColors: {
+          text: "#10b981",
+          icon: "#10b981",
+          background: "#d1fae5",
+        },
       },
       {
         id: "venue-mgmt",
@@ -26,6 +32,11 @@ export const defaultNavigation: FuseNavigationItem[] = [
           wrapper: "self-stretch h-9 inline-flex justify-between items-center",
         },
         link: "/venue-management",
+        activeColors: {
+          text: "#3b82f6",
+          icon: "#3b82f6",
+          background: "#dbeafe",
+        },
       },
       {
         id: "purchase-sales",
@@ -39,6 +50,11 @@ export const defaultNavigation: FuseNavigationItem[] = [
           wrapper: "self-stretch h-9 inline-flex justify-between items-center",
         },
         link: "/example",
+        activeColors: {
+          text: "#8b5cf6",
+          icon: "#8b5cf6",
+          background: "#ede9fe",
+        },
       },
     ],
   },
@@ -59,6 +75,11 @@ export const defaultNavigation: FuseNavigationItem[] = [
             "justify-start text-gray-600 text-xs font-medium font-['Inter'] leading-5",
         },
         link: "/venue-layouts",
+        activeColors: {
+          text: "#f97316",
+          icon: "#f97316",
+          background: "#ffedd5",
+        },
       },
       {
         id: "order",
@@ -71,6 +92,11 @@ export const defaultNavigation: FuseNavigationItem[] = [
             "justify-start text-gray-600 text-xs font-medium font-['Inter'] leading-5",
         },
         link: "/order",
+        activeColors: {
+          text: "#ec4899",
+          icon: "#ec4899",
+          background: "#fce7f3",
+        },
       },
     ],
   },
@@ -91,6 +117,11 @@ export const defaultNavigation: FuseNavigationItem[] = [
             "justify-start text-gray-600 text-xs font-medium font-['Inter'] leading-5",
         },
         link: "/overview-totals",
+        activeColors: {
+          text: "#14b8a6",
+          icon: "#14b8a6",
+          background: "#ccfbf1",
+        },
       },
       {
         id: "current-future-sales",
@@ -103,6 +134,11 @@ export const defaultNavigation: FuseNavigationItem[] = [
             "justify-start text-gray-600 text-xs font-medium font-['Inter'] leading-5",
         },
         link: "/current-future",
+        activeColors: {
+          text: "#6366f1",
+          icon: "#6366f1",
+          background: "#e0e7ff",
+        },
       },
       {
         id: "gross-sales",
@@ -115,6 +151,11 @@ export const defaultNavigation: FuseNavigationItem[] = [
             "justify-start text-gray-600 text-xs font-medium font-['Inter'] leading-5",
         },
         link: "/gross_sales",
+        activeColors: {
+          text: "#84cc16",
+          icon: "#84cc16",
+          background: "#ecfccb",
+        },
       },
       {
         id: "administrative",
@@ -127,6 +168,11 @@ export const defaultNavigation: FuseNavigationItem[] = [
             "justify-start text-gray-600 text-xs font-medium font-['Inter'] leading-5",
         },
         link: "/administrative",
+        activeColors: {
+          text: "#a855f7",
+          icon: "#a855f7",
+          background: "#f3e8ff",
+        },
       },
     ],
   },
@@ -147,6 +193,11 @@ export const defaultNavigation: FuseNavigationItem[] = [
             "justify-start text-gray-600 text-xs font-medium font-['Inter'] leading-5",
         },
         link: "/users",
+        activeColors: {
+          text: "#0ea5e9",
+          icon: "#0ea5e9",
+          background: "#e0f2fe",
+        },
       },
       {
         id: "fee_taxes",
@@ -159,6 +210,11 @@ export const defaultNavigation: FuseNavigationItem[] = [
             "justify-start text-gray-600 text-xs font-medium font-['Inter'] leading-5",
         },
         link: "/fees_taxes",
+        activeColors: {
+          text: "#f59e0b",
+          icon: "#f59e0b",
+          background: "#fef3c7",
+        },
       },
       {
         id: "discounts",
@@ -171,6 +227,11 @@ export const defaultNavigation: FuseNavigationItem[] = [
             "justify-start text-gray-600 text-xs font-medium font-['Inter'] leading-5",
         },
         link: "/discounts",
+        activeColors: {
+          text: "#ef4444",
+          icon: "#ef4444",
+          background: "#fee2e2",
+        },
       },
       {
         id: "productions",
@@ -183,6 +244,11 @@ export const defaultNavigation: FuseNavigationItem[] = [
             "justify-start text-gray-600 text-xs font-medium font-['Inter'] leading-5",
         },
         link: "/productions",
+        activeColors: {
+          text: "#06b6d4",
+          icon: "#06b6d4",
+          background: "#cffafe",
+        },
       },
       {
         id: "shows",
@@ -195,6 +261,11 @@ export const defaultNavigation: FuseNavigationItem[] = [
             "justify-start text-gray-600 text-xs font-medium font-['Inter'] leading-5",
         },
         link: "/shows",
+        activeColors: {
+          text: "#d946ef",
+          icon: "#d946ef",
+          background: "#fae8ff",
+        },
       },
       {
         id: "vendors",
@@ -207,6 +278,11 @@ export const defaultNavigation: FuseNavigationItem[] = [
             "justify-start text-gray-600 text-xs font-medium font-['Inter'] leading-5",
         },
         link: "/vendors",
+        activeColors: {
+          text: "#737373",
+          icon: "#737373",
+          background: "#f3f4f6",
+        },
       },
       {
         id: "catalogs",
@@ -219,6 +295,11 @@ export const defaultNavigation: FuseNavigationItem[] = [
             "justify-start text-gray-600 text-xs font-medium font-['Inter'] leading-5",
         },
         link: "/example",
+        activeColors: {
+          text: "#64748b",
+          icon: "#64748b",
+          background: "#f1f5f9",
+        },
       },
     ],
   },

@@ -24,6 +24,7 @@ import {
     Output,
     QueryList,
     Renderer2,
+    signal,
     SimpleChanges,
     ViewChild,
     ViewChildren,
@@ -115,6 +116,7 @@ export class FuseVerticalNavigationComponent
     @ViewChild('navigationContent') private _navigationContentEl: ElementRef;
 
     activeAsideItemId: string | null = null;
+    activeMenuItemId = signal<string | null>(null);
     onCollapsableItemCollapsed: ReplaySubject<FuseNavigationItem> =
         new ReplaySubject<FuseNavigationItem>(1);
     onCollapsableItemExpanded: ReplaySubject<FuseNavigationItem> =
@@ -826,5 +828,14 @@ export class FuseVerticalNavigationComponent
 
         // Execute the observable
         this.openedChanged.next(open);
+    }
+
+    /**
+     * Set the active menu item by ID
+     *
+     * @param itemId
+     */
+    setActiveMenuItem(itemId: string | null): void {
+        this.activeMenuItemId.set(itemId);
     }
 }
