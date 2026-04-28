@@ -19,6 +19,12 @@ export const defaultNavigation: FuseNavigationItem[] = [
         title: "Venue Management",
         type: "basic",
         icon: "sho_sidebar:venue-mgmt",
+        classes: {
+          icon: "w-4 h-4 relative overflow-hidden",
+          title:
+            "justify-start text-gray-600 text-xs font-medium font-['Inter'] leading-5",
+          wrapper: "self-stretch h-9 inline-flex justify-between items-center",
+        },
         link: "/venue-management",
       },
       {
@@ -26,6 +32,12 @@ export const defaultNavigation: FuseNavigationItem[] = [
         title: "In Purchase Sales",
         type: "basic",
         icon: "sho_sidebar:in-purchase-sales",
+        classes: {
+          icon: "w-4 h-4 relative overflow-hidden",
+          title:
+            "justify-start text-gray-600 text-xs font-medium font-['Inter'] leading-5",
+          wrapper: "self-stretch h-9 inline-flex justify-between items-center",
+        },
         link: "/example",
       },
     ],
@@ -41,6 +53,11 @@ export const defaultNavigation: FuseNavigationItem[] = [
         title: "Layout Management",
         type: "basic",
         icon: "sho_sidebar:layout-mgmt",
+        classes: {
+          icon: "w-4 h-4 relative overflow-hidden",
+          title:
+            "justify-start text-gray-600 text-xs font-medium font-['Inter'] leading-5",
+        },
         link: "/venue-layouts",
       },
       {
@@ -48,6 +65,11 @@ export const defaultNavigation: FuseNavigationItem[] = [
         title: "Orders",
         type: "basic",
         icon: "sho_sidebar:order",
+        classes: {
+          icon: "w-4 h-4 relative overflow-hidden",
+          title:
+            "justify-start text-gray-600 text-xs font-medium font-['Inter'] leading-5",
+        },
         link: "/order",
       },
     ],
@@ -63,6 +85,11 @@ export const defaultNavigation: FuseNavigationItem[] = [
         title: "Overview Total Sales Info",
         type: "basic",
         icon: "sho_sidebar:overview-total-sales-info",
+        classes: {
+          icon: "w-4 h-4 relative overflow-hidden",
+          title:
+            "justify-start text-gray-600 text-xs font-medium font-['Inter'] leading-5",
+        },
         link: "/overview-totals",
       },
       {
@@ -70,6 +97,11 @@ export const defaultNavigation: FuseNavigationItem[] = [
         title: "Current and Future Sales",
         type: "basic",
         icon: "sho_sidebar:current-future-sales",
+        classes: {
+          icon: "w-4 h-4 relative overflow-hidden",
+          title:
+            "justify-start text-gray-600 text-xs font-medium font-['Inter'] leading-5",
+        },
         link: "/current-future",
       },
       {
@@ -77,6 +109,11 @@ export const defaultNavigation: FuseNavigationItem[] = [
         title: "Gross Sales",
         type: "basic",
         icon: "sho_sidebar:gross-sales",
+        classes: {
+          icon: "w-4 h-4 relative overflow-hidden",
+          title:
+            "justify-start text-gray-600 text-xs font-medium font-['Inter'] leading-5",
+        },
         link: "/gross_sales",
       },
       {
@@ -84,6 +121,11 @@ export const defaultNavigation: FuseNavigationItem[] = [
         title: "Administrative",
         type: "basic",
         icon: "sho_sidebar:administrative",
+        classes: {
+          icon: "w-4 h-4 relative overflow-hidden",
+          title:
+            "justify-start text-gray-600 text-xs font-medium font-['Inter'] leading-5",
+        },
         link: "/administrative",
       },
     ],
@@ -99,6 +141,11 @@ export const defaultNavigation: FuseNavigationItem[] = [
         title: "Users",
         type: "basic",
         icon: "sho_sidebar:users",
+        classes: {
+          icon: "w-4 h-4 relative overflow-hidden",
+          title:
+            "justify-start text-gray-600 text-xs font-medium font-['Inter'] leading-5",
+        },
         link: "/users",
       },
       {
@@ -106,6 +153,11 @@ export const defaultNavigation: FuseNavigationItem[] = [
         title: "Fee and Taxes",
         type: "basic",
         icon: "sho_sidebar:fee-taxes",
+        classes: {
+          icon: "w-4 h-4 relative overflow-hidden",
+          title:
+            "justify-start text-gray-600 text-xs font-medium font-['Inter'] leading-5",
+        },
         link: "/fees_taxes",
       },
       {
@@ -113,6 +165,11 @@ export const defaultNavigation: FuseNavigationItem[] = [
         title: "Discounts",
         type: "basic",
         icon: "sho_sidebar:discounts",
+        classes: {
+          icon: "w-4 h-4 relative overflow-hidden",
+          title:
+            "justify-start text-gray-600 text-xs font-medium font-['Inter'] leading-5",
+        },
         link: "/discounts",
       },
       {
@@ -120,6 +177,11 @@ export const defaultNavigation: FuseNavigationItem[] = [
         title: "Productions",
         type: "basic",
         icon: "sho_sidebar:productions",
+        classes: {
+          icon: "w-4 h-4 relative overflow-hidden",
+          title:
+            "justify-start text-gray-600 text-xs font-medium font-['Inter'] leading-5",
+        },
         link: "/productions",
       },
       {
@@ -127,6 +189,11 @@ export const defaultNavigation: FuseNavigationItem[] = [
         title: "Shows",
         type: "basic",
         icon: "sho_sidebar:shows",
+        classes: {
+          icon: "w-4 h-4 relative overflow-hidden",
+          title:
+            "justify-start text-gray-600 text-xs font-medium font-['Inter'] leading-5",
+        },
         link: "/shows",
       },
       {
@@ -134,6 +201,11 @@ export const defaultNavigation: FuseNavigationItem[] = [
         title: "Other Vendors",
         type: "basic",
         icon: "sho_sidebar:vendors",
+        classes: {
+          icon: "w-4 h-4 relative overflow-hidden",
+          title:
+            "justify-start text-gray-600 text-xs font-medium font-['Inter'] leading-5",
+        },
         link: "/vendors",
       },
       {
@@ -141,6 +213,11 @@ export const defaultNavigation: FuseNavigationItem[] = [
         title: "Catalogs",
         type: "basic",
         icon: "sho_sidebar:catalogs",
+        classes: {
+          icon: "w-4 h-4 relative overflow-hidden",
+          title:
+            "justify-start text-gray-600 text-xs font-medium font-['Inter'] leading-5",
+        },
         link: "/example",
       },
     ],
