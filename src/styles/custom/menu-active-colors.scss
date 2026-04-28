@@ -1,0 +1,56 @@
+/* ----------------------------------------------------------------------------------------------------- */
+/*  @ Per-item active menu colors using CSS custom properties
+/* ----------------------------------------------------------------------------------------------------- */
+
+:root {
+    --menu-active-text-color: #ef4444;
+    --menu-active-icon-color: #ef4444;
+    --menu-active-bg-color: #fee2e2;
+}
+
+.dark {
+    --menu-active-text-color: #f87171;
+    --menu-active-icon-color: #f87171;
+    --menu-active-bg-color: rgba(239, 68, 68, 0.15);
+}
+
+.menu-item-active-custom {
+    background-color: var(--menu-active-bg-color) !important;
+    border-radius: 6px;
+    transition:
+        background-color 250ms ease,
+        color 250ms ease;
+
+    .fuse-vertical-navigation-item-title span {
+        color: var(--menu-active-text-color) !important;
+        font-weight: 600;
+    }
+
+    .fuse-vertical-navigation-item-subtitle span {
+        color: var(--menu-active-text-color) !important;
+        opacity: 0.8;
+    }
+
+    .fuse-vertical-navigation-item-icon {
+        color: var(--menu-active-icon-color) !important;
+
+        svg {
+            path,
+            circle,
+            rect,
+            line,
+            polyline,
+            polygon {
+                stroke: var(--menu-active-icon-color) !important;
+            }
+        }
+    }
+}
+
+fuse-vertical-navigation-basic-item:not(.menu-item-active-custom) {
+    > .fuse-vertical-navigation-item-wrapper {
+        transition:
+            background-color 250ms ease,
+            color 250ms ease;
+    }
+}

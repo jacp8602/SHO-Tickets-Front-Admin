@@ -2,7 +2,10 @@
 <div
     class="fuse-vertical-navigation-item-wrapper"
     [class.fuse-vertical-navigation-item-has-subtitle]="!!item.subtitle"
+    [class.menu-item-active-custom]="isActive()"
     [ngClass]="item.classes?.wrapper"
+    [ngStyle]="cssVariables()"
+    (click)="onItemClick()"
 >
     <!-- Item with an internal link -->
     @if (item.link && !item.externalLink && !item.function && !item.disabled) {

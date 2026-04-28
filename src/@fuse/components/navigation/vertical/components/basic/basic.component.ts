@@ -1,12 +1,14 @@
-import { NgClass, NgTemplateOutlet } from '@angular/common';
+import { NgClass, NgStyle, NgTemplateOutlet } from '@angular/common';
 import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
+    computed,
     Input,
     OnDestroy,
     OnInit,
     inject,
+    signal,
 } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
@@ -27,6 +29,7 @@ import { Subject, takeUntil } from 'rxjs';
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         NgClass,
+        NgStyle,
         RouterLink,
         RouterLinkActive,
         MatTooltipModule,
@@ -52,7 +55,33 @@ export class FuseVerticalNavigationBasicItemComponent
         this._fuseUtilsService.subsetMatchOptions;
 
     private _fuseVerticalNavigationComponent: FuseVerticalNavigationComponent;
+    private _navComponent = signal<FuseVerticalNavigationComponent | null>(null);
     private _unsubscribeAll: Subject<any> = new Subject<any>();
+
+    isActive = computed(() => {
+        const navComponent = this._navComponent();
+        if (!navComponent || !this.item?.id) {
+            return false;
+        }
+        return navComponent.activeMenuItemId() === this.item.id;
+    });
+
+    cssVariables = computed<{ [key: string]: string }>(() => {
+        if (!this.isActive() || !this.item?.activeColors) {
+            return {};
+        }
+        const vars: { [key: string]: string } = {};
+        if (this.item.activeColors.text) {
+            vars['--menu-active-text-color'] = this.item.activeColors.text;
+        }
+        if (this.item.activeColors.icon) {
+            vars['--menu-active-icon-color'] = this.item.activeColors.icon;
+        }
+        if (this.item.activeColors.background) {
+            vars['--menu-active-bg-color'] = this.item.activeColors.background;
+        }
+        return vars;
+    });
 
     // -----------------------------------------------------------------------------------------------------
     // @ Lifecycle hooks
@@ -74,6 +103,9 @@ export class FuseVerticalNavigationBasicItemComponent
         this._fuseVerticalNavigationComponent =
             this._fuseNavigationService.getComponent(this.name);
 
+        // Expose the parent navigation component to the signals
+        this._navComponent.set(this._fuseVerticalNavigationComponent);
+
         // Mark for check
         this._changeDetectorRef.markForCheck();
 
@@ -93,5 +125,18 @@ export class FuseVerticalNavigationBasicItemComponent
         // Unsubscribe from all subscriptions
         this._unsubscribeAll.next(null);
         this._unsubscribeAll.complete();
+    }
+
+    // -----------------------------------------------------------------------------------------------------
+    // @ Public methods
+    // -----------------------------------------------------------------------------------------------------
+
+    /**
+     * Handle item click to set this item as active
+     */
+    onItemClick(): void {
+        if (this.item?.id && this._fuseVerticalNavigationComponent) {
+            this._fuseVerticalNavigationComponent.setActiveMenuItem(this.item.id);
+        }
     }
 }
