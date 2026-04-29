@@ -1,0 +1,70 @@
+<!-- Loading bar -->
+<fuse-loading-bar></fuse-loading-bar>
+
+<!-- Navigation bg-white-->
+<fuse-vertical-navigation
+    class="light bg-[##171B27] print:hidden"
+    [mode]="isScreenSmall ? 'over' : 'side'"
+    [name]="'mainNavigation'"
+    [navigation]="navigation.default"
+    [opened]="!isScreenSmall"
+>
+    <!-- Navigation header hook -->
+    <ng-container fuseVerticalNavigationContentHeader>
+        <div data-mode="light" class="w-full h-16 px-6 bg-[#FBFCFD] border-b border-[#DFE1E7] inline-flex justify-between items-center">
+            <div class="h-9 inline-flex justify-start items-center gap-1.5">
+                <img src="images/logo/logo-evinra-login.svg" alt="Logo image" class="w-6 h-8">
+
+                <div class="h-14 inline-flex flex-col justify-center items-start gap-1">
+                    <div>
+                        <img src="images/logo/evinra.svg" alt="EVINRA" class="w-24 h-6">
+                    </div>
+                    <div>
+                        <img src="images/logo/TICKETING-SYSTEMS.svg" alt="TICKETING SYSTEMS" class="w-24 h-2">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </ng-container>
+
+</fuse-vertical-navigation>
+
+<!-- Wrapper -->
+<div class="flex w-full min-w-0 flex-auto flex-col">
+    <!-- Header -->
+    <div
+        class="bg-card relative z-49 flex h-16 w-full flex-0 items-center px-4 shadow dark:border-b dark:bg-transparent dark:shadow-none md:px-6 print:hidden"
+    >
+        <!-- Navigation toggle button -->
+        <button mat-icon-button (click)="toggleNavigation('mainNavigation')">
+            <mat-icon [svgIcon]="'heroicons_outline:chevron-left'"></mat-icon>
+        </button>
+
+        <!-- Components -->
+        <div class="ml-auto flex items-center space-x-0.5 pl-2 sm:space-x-2">
+            <notifications></notifications>
+            <user></user>
+        </div>
+    </div>
+
+    <!-- Content -->
+    <div class="flex flex-auto flex-col">
+        <!-- *ngIf="true" hack is required here for router-outlet to work correctly.
+             Otherwise, layout changes won't be registered and the view won't be updated! -->
+        @if (true) {
+            <router-outlet></router-outlet>
+        }
+    </div>
+
+    <!-- Footer -->
+    <!-- <div
+        class="bg-card relative z-49 flex h-14 w-full flex-0 items-center justify-start border-t px-4 dark:bg-transparent md:px-6 print:hidden"
+    >
+        <span class="text-secondary font-medium"
+            >Fuse &copy; {{ currentYear }}</span
+        >
+    </div> -->
+</div>
+
+<!-- Quick chat -->
+<!-- <quick-chat #quickChat="quickChat"></quick-chat> -->
