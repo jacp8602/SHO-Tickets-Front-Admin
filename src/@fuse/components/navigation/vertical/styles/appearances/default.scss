@@ -322,8 +322,8 @@ fuse-vertical-navigation {
 
     /* Basic */
     fuse-vertical-navigation-basic-item {
-        /*width: 100%; ancho completo */
-        box-sizing: border-box; /* Evita que padding o border causen desbordamiento */
+        width: 100%;
+        box-sizing: border-box;
     }
 
     /* Collapsable */
