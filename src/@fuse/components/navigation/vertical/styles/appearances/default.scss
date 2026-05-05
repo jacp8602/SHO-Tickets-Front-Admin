@@ -169,7 +169,7 @@ fuse-vertical-navigation {
             > fuse-vertical-navigation-group-item {
                 padding: 12px 10px 10px 10px;
                 align-items: flex-start;
-                /*gap: 3px;*/
+                gap: 10px;
                 align-self: stretch;
             }
         }
@@ -234,11 +234,13 @@ fuse-vertical-navigation {
         color: var(--nav-item-text-light);
 
         .fuse-vertical-navigation-item-wrapper {
-            height: 39px;
-            padding: 6px 12px;
-            justify-content: left;
+            height: 39px !important;
+            /* padding: 12px 12px !important; */
+            justify-content: center;
+            /*justify-content: left;*/
             align-items: flex-start;
-            gap: 2px;
+            /*gap: 2px;*/
+            gap: 10px !important;
             flex-shrink: 0;
             align-self: stretch;
             font-family: Inter;
@@ -253,9 +255,10 @@ fuse-vertical-navigation {
                 display: flex;
                 height: 36px;
                 align-items: center;
-                justify-content: space-between;
+                /*justify-content: space-between;*/
+                gap: 12px;
                 align-self: stretch;
-                padding: 1px 3px;
+                padding: 0px 12px;
                 font-size: 13px;
                 font-weight: 500;
                 line-height: 20px;
@@ -268,7 +271,8 @@ fuse-vertical-navigation {
                 }
 
                 .fuse-vertical-navigation-item-icon {
-                    margin-right: 16px;
+                    /*margin-right: 16px;*/
+                    margin-right: 0;
                 }
 
                 .fuse-vertical-navigation-item-title-wrapper {
@@ -309,7 +313,7 @@ fuse-vertical-navigation {
     fuse-vertical-navigation-aside-item,
     fuse-vertical-navigation-basic-item,
     fuse-vertical-navigation-collapsable-item {
-        margin-bottom: 4px;
+        margin-bottom: 1px;
 
         .fuse-vertical-navigation-item {
             cursor: pointer;
@@ -443,7 +447,7 @@ fuse-vertical-navigation {
             &::after {
                 content: '';
                 position: absolute;
-                bottom: 0;
+                bottom: 3px;
                 left: 0;
                 width: 100%;
                 height: 1px;

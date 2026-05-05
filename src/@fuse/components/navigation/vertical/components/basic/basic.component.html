@@ -1,8 +1,7 @@
-<!-- Item wrapper -->
+<!-- Item wrapper [class.menu-item-active-custom]="isActive()" -->
 <div
     class="fuse-vertical-navigation-item-wrapper"
     [class.fuse-vertical-navigation-item-has-subtitle]="!!item.subtitle"
-    [class.menu-item-active-custom]="isActive()"
     [ngClass]="item.classes?.wrapper"
     [ngStyle]="cssVariables()"
     (click)="onItemClick()"
@@ -14,6 +13,7 @@
             [ngClass]="{
                 'fuse-vertical-navigation-item-active-forced': item.active,
             }"
+            [class.menu-item-active-custom]="isActive()"
             [routerLink]="[item.link]"
             [fragment]="item.fragment ?? null"
             [preserveFragment]="item.preserveFragment ?? false"

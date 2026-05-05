@@ -82,7 +82,7 @@ export const defaultNavigation: FuseNavigationItem[] = [
         type: "basic",
         icon: "sho_sidebar:layout-mgmt",
         classes: {
-          icon: "w-4 h-4 shrink-0",
+          icon: "w-4 h-4 relative overflow-hidden",
           title:
             "text-[#4A5565] font-['Inter'] text-[13px] font-medium leading-[19.5px]",
         },
