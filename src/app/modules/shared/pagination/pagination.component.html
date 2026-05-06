@@ -1,70 +1,92 @@
 @if (totalItems > 0) {
-    <div class="mt-6 flex items-center justify-between w-full">
-        <!-- Contenedor centrado con números y flechas -->
-        <div class="flex-1 flex justify-center">
-            <div class="flex items-center gap-1">
-                <!-- Flecha anterior -->
-                <button
-                    mat-icon-button
-                    [disabled]="pageIndex === 1"
-                    (click)="goToPage(pageIndex - 1)"
-                    class="text-gray-400 hover:text-gray-600"
-                    matTooltip="Previous page"
-                    aria-label="Previous page"
-                >
-                    <mat-icon>chevron_left</mat-icon>
-                </button>
+    <div
+        data-breakpoints="Desktop"
+        data-dark-mode="False"
+        data-type="Pagination"
+        class="self-stretch p-4 bg-white flex justify-between items-center">
+        <!-- class="self-stretch p-4 bg-white rounded-bl-lg rounded-br-lg shadow-[0px_1px_2px_-1px_rgba(0,0,0,0.10)] shadow-[0px_1px_3px_0px_rgba(0,0,0,0.10)] inline-flex justify-between items-center"> -->
 
-                <!-- Números de página -->
-                @for (page of pagesToShow; track $index) {
-                    @if (page === -1) {
-                        <span class="w-8 h-8 flex items-center justify-center text-gray-500">...</span>
-                    } @else {
-                        <button
-                            class="w-8 h-8 flex items-center justify-center rounded-full text-sm font-medium transition-colors"
-                            [class.bg-blue-600]="pageIndex === page"
-                            [class.text-white]="pageIndex === page"
-                            [class.text-gray-700]="pageIndex !== page"
-                            [class.hover:bg-gray-100]="pageIndex !== page"
-                            (click)="goToPage(page)"
-                            [attr.aria-label]="'Page ' + page"
-                        >
-                            {{ page }}
-                        </button>
-                    }
-                }
-
-                <!-- Flecha siguiente -->
-                <button
-                    mat-icon-button
-                    [disabled]="pageIndex >= totalPages"
-                    (click)="goToPage(pageIndex + 1)"
-                    class="text-gray-400 hover:text-gray-600"
-                    matTooltip="Next page"
-                    aria-label="Next page"
-                >
-                    <mat-icon>chevron_right</mat-icon>
-                </button>
+        <!-- <div class="w-[951px] inline-flex flex-col justify-start items-start gap-2.5"> -->
+        <div class="inline-flex flex-col justify-start items-start gap-2.5">
+            <div class="justify-start">
+                <span class="text-gray-500 text-sm font-normal font-['Inter'] leading-5">Showing </span>
+                <span class="text-gray-900 text-sm font-semibold font-['Inter'] leading-5">1-{{pageSize}}</span>
+                <span class="text-gray-500 text-sm font-normal font-['Inter'] leading-5"> of </span>
+                <span class="text-gray-900 text-sm font-semibold font-['Inter'] leading-5">{{ totalItems }}</span>
             </div>
         </div>
 
-        <!-- Go to X of Y a la derecha -->
-        <div class="flex items-center gap-2">
-            <span class="text-sm text-gray-600">Go to</span>
-            <div class="relative">
-                <input
-                    type="text"
-                    inputmode="numeric"
-                    pattern="[0-9]*"
-                    [value]="pageInputValue"
-                    (input)="onPageInputChange($event)"
-                    (keydown.enter)="onPageEnter($event)"
-                    (blur)="validateAndGoToPage()"
-                    class="w-12 h-8 text-center text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
-                    aria-label="Go to page"
-                >
+        <div data-dark-mode="False"
+            data-size="Default"
+            data-state="Active"
+            data-type="More pages"
+            class="h-8 rounded outline outline-1 outline-offset-[-0.50px] outline-gray-300 flex justify-start items-center overflow-hidden">
+
+            <div class="self-stretch px-3 py-1.5 bg-white inline-flex flex-col justify-center items-center">
+                <!-- <div class="w-3 h-3 relative overflow-hidden"> -->
+                    <!-- <div class="w-1.5 h-2.5 left-[3px] top-[0.60px] absolute text-gray-500"> -->
+                        <button
+                            mat-icon-button
+                            class="mat-mdc-icon-button-pagination"
+                            [disabled]="pageIndex === 1"
+                            (click)="goToPage(pageIndex - 1)"
+                            matTooltip="Previous page"
+                            aria-label="Previous page"
+                        >
+                            <mat-icon
+                                [svgIcon]="'heroicons_solid:chevron-left'"
+                                class="w-1.5 h-2.5 absolute text-gray-500"
+                            ></mat-icon>
+                        </button>
+                    <!-- </div> -->
+                <!-- </div> -->
             </div>
-            <span class="text-sm text-gray-600">of {{ totalPages }}</span>
+
+            @for (page of pagesToShow; track $index) {
+                <div
+                    class="self-stretch px-3 py-1.5 outline outline-1 outline-offset-[-0.50px] outline-gray-300 inline-flex flex-col justify-center items-center"
+                    [class.div-number-pagination]="pageIndex === page"
+                    [class.bg-white]="pageIndex !== page"
+                >
+                    <!-- <div class="text-center justify-center text-gray-500 text-sm font-medium font-['Inter'] leading-5"> -->
+                    <div class="text-center justify-center text-sm font-medium font-['Inter'] leading-5">
+                        @if (page === -1) {
+                            <span>...</span>
+                        } @else {
+                            <button
+                                [class.div-number-pagination-active]="pageIndex === page"
+                                [class.text-gray-500]="pageIndex !== page"
+                                (click)="goToPage(page)"
+                                [attr.aria-label]="'Page ' + page"
+                            >
+                                {{ page }}
+                            </button>
+                        }
+                    </div>
+                </div>
+            }
+
+            <div class="self-stretch px-3 py-1.5 bg-white outline outline-1 outline-offset-[-0.50px] outline-gray-300 inline-flex flex-col justify-center items-center">
+                <!-- <div class="w-3 h-3 relative overflow-hidden"> -->
+                    <!-- <div class="w-1.5 h-2.5 left-[3px] top-[0.60px] absolute bg-gray-500"> -->
+                        <!-- Flecha siguiente -->
+                        <button
+                            mat-icon-button
+                            class="mat-mdc-icon-button-pagination"
+                            [disabled]="pageIndex >= totalPages"
+                            (click)="goToPage(pageIndex + 1)"
+                            matTooltip="Next page"
+                            aria-label="Next page"
+                        >
+                            <mat-icon
+                                [svgIcon]="'heroicons_solid:chevron-right'"
+                                class="w-1.5 h-2.5 absolute text-gray-500"
+                            ></mat-icon>
+                        </button>
+                    <!-- </div> -->
+                <!-- </div> -->
+            </div>
         </div>
     </div>
+
 }
