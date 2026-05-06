@@ -10,7 +10,7 @@
         <div class="inline-flex flex-col justify-start items-start gap-2.5">
             <div class="justify-start">
                 <span class="text-gray-500 text-sm font-normal font-['Inter'] leading-5">Showing </span>
-                <span class="text-gray-900 text-sm font-semibold font-['Inter'] leading-5">1-{{pageSize}}</span>
+                <span class="text-gray-900 text-sm font-semibold font-['Inter'] leading-5">{{pageSize * (pageIndex-1) + 1 }}-{{pageSize * pageIndex}}</span>
                 <span class="text-gray-500 text-sm font-normal font-['Inter'] leading-5"> of </span>
                 <span class="text-gray-900 text-sm font-semibold font-['Inter'] leading-5">{{ totalItems }}</span>
             </div>
