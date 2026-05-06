@@ -79,3 +79,17 @@ fuse-vertical-navigation-collapsable-item {
     width: 100% !important;
     box-sizing: border-box;
 }
+
+.mat-mdc-icon-button-pagination {
+    width: 10px !important;
+    height: 10px !important;
+}
+
+.div-number-pagination {
+    border: 1px solid var(--gray-300, #D1D5DB);
+    background: var(--primary-100, #E1EFFE);
+}
+
+.div-number-pagination-active {
+    color: var(--Buttons-Primary, #267666);
+}
