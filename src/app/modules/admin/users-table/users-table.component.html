@@ -89,7 +89,7 @@
                 <div class="overflow-x-auto">
                     <table class="w-full">
                         <thead class="bg-gray-50 border-b border-gray-200">
-                            <tr>                                
+                            <tr>
                                 <th class="text-left text-xs font-bold text-gray-600 tracking-wider px-4 py-3">Username</th>
                                 <th class="text-left text-xs font-bold text-gray-600 tracking-wider px-4 py-3">Full Name</th>
                                 <th class="text-left text-xs font-bold text-gray-600 tracking-wider px-4 py-3">Email</th>
@@ -100,7 +100,7 @@
                         </thead>
                         <tbody class="divide-y divide-gray-200">
                         @for (user of users; track user.id; let i = $index) {
-                            <tr 
+                            <tr
                                 class="hover:bg-gray-50 transition-colors cursor-pointer"
                                 [class.bg-blue-50]="isSelected(user)"
                                 (click)="editUser(user)"
@@ -159,18 +159,31 @@
                                 </td>
                             </tr>
                         }
+                        @if (totalUsers !== 0) {
+                            <tr>
+                                <td colspan="6">
+                                    <app-pagination
+                                        [totalItems]="totalUsers"
+                                        [pageSize]="pageSize"
+                                        [pageIndex]="pageIndex"
+                                        (pageChange)="onPageChange($event)"
+                                    ></app-pagination>
+                                </td>
+                            </tr>
+                        }
+
                     </tbody>
                     </table>
                 </div>
             </div>
 
             <!-- Componente de Paginación -->
-            <app-pagination
+            <!-- <app-pagination
                 [totalItems]="totalUsers"
                 [pageSize]="pageSize"
                 [pageIndex]="pageIndex"
                 (pageChange)="onPageChange($event)"
-            ></app-pagination>
+            ></app-pagination> -->
         }
     </div>
 </div>
