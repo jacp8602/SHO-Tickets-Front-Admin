@@ -1,0 +1,515 @@
+// users-table styles - React Design
+
+// Main container
+.users-table-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    align-self: stretch;
+    flex-wrap: nowrap;
+    flex-shrink: 0;
+    position: relative;
+    min-width: 0;
+    background: #ffffff;
+    z-index: 100;
+    border-radius: 8px;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.1);
+    overflow: visible;
+}
+
+// Header
+.table-header {
+    display: flex;
+    align-items: center;
+    align-self: stretch;
+    flex-wrap: nowrap;
+    flex-shrink: 0;
+    gap: 10px;
+    position: relative;
+    padding: 16px;
+    background: #ffffff;
+    z-index: 100;
+    overflow: visible;
+    border-radius: 8px 8px 0 0;
+}
+
+// Search Input
+.search-input-wrapper {
+    display: flex;
+    padding: 8px 16px;
+    align-items: center;
+    gap: 10px;
+    align-self: stretch;
+    border-radius: 8px;
+    border: 1px solid #D1D5DB;
+    background: #F9FAFB;
+    position: relative;
+    z-index: 101;
+    min-width: 200px;
+
+    .search-input {
+        flex: 1 0 0;
+        border: none;
+        background: transparent;
+        outline: none;
+        font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        font-size: 14px;
+        font-weight: 400;
+        line-height: 150%;
+        color: #6B7280;
+
+        &::placeholder {
+            color: #9CA3AF;
+        }
+    }
+
+    .search-icon {
+        width: 20px;
+        height: 20px;
+        flex-shrink: 0;
+    }
+}
+
+// Status Dropdown
+.status-dropdown {
+    display: flex;
+    padding: 8px 16px;
+    align-items: center;
+    gap: 10px;
+    align-self: stretch;
+    border-radius: 8px;
+    border: 1px solid #D1D5DB;
+    background: #F9FAFB;
+    cursor: pointer;
+    position: relative;
+    z-index: 101;
+    min-width: 140px;
+
+.status-text {
+        flex: 1 0 0;
+        color: #6B7280;
+        font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        font-size: 14px;
+        font-weight: 400;
+        line-height: 150%;
+    }
+
+    .dropdown-arrow {
+        width: 16px;
+        height: 16px;
+    }
+
+    .dropdown-menu {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: #fff;
+        border: 1px solid #D1D5DB;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        z-index: 200;
+        margin-top: 4px;
+        overflow: hidden;
+
+        .dropdown-item {
+            padding: 10px 16px;
+            color: #6B7280;
+            font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            font-size: 14px;
+            font-weight: 400;
+            line-height: 150%;
+            cursor: pointer;
+            transition: background 0.2s;
+
+            &:hover {
+                background: #F9FAFB;
+            }
+        }
+    }
+
+    &.dropdown-open {
+        border-color: #267666;
+
+        .dropdown-arrow {
+            transform: rotate(180deg);
+        }
+    }
+}
+
+// Clear Filters
+.clear-filters-btn {
+    display: flex;
+    align-items: center;
+    flex-wrap: nowrap;
+    flex-shrink: 0;
+    gap: 4px;
+    position: relative;
+    width: 92px;
+    height: 24px;
+    cursor: pointer;
+    padding: 0;
+    
+    .clear-icon {
+        width: 24px;
+        height: 24px;
+    }
+    
+    .clear-filters-text {
+        flex-shrink: 0;
+        flex-basis: auto;
+        position: relative;
+        height: 18px;
+        color: #267666;
+        font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        font-size: 12px;
+        font-weight: 400;
+        line-height: 18px;
+        text-align: left;
+        white-space: nowrap;
+    }
+    
+    &:hover .clear-filters-text {
+        text-decoration: underline;
+    }
+}
+
+// Add User Button
+.buttons-wrapper {
+    display: flex;
+    padding: 0;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 16px;
+    flex: 1 0 0;
+}
+
+.buttons {
+    display: flex;
+    height: 36px;
+    padding: 8px 12px;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    border-radius: 8px;
+    background: #267666;
+    cursor: pointer;
+    transition: opacity 0.2s;
+
+    &:hover {
+        opacity: 0.7;
+    }
+
+    svg {
+        width: 12px;
+        height: 12px;
+    }
+
+    .button-text {
+        color: #fff;
+        font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        font-size: 14px;
+        font-weight: 500;
+        line-height: 150%;
+    }
+}
+
+// Table Columns
+.table-columns {
+    display: flex;
+    align-items: center;
+    align-self: stretch;
+    flex-wrap: nowrap;
+    flex-shrink: 0;
+    position: relative;
+    z-index: 19;
+}
+
+.column {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    align-self: stretch;
+    flex-wrap: nowrap;
+    flex-shrink: 0;
+    position: relative;
+}
+
+.tables-cell {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    align-self: stretch;
+    flex-wrap: nowrap;
+    flex-shrink: 0;
+    gap: 4px;
+    position: relative;
+    min-width: 0;
+    height: 36px;
+    padding: 16px;
+    border-top: 1px solid #e5e7eb;
+}
+
+.header-cell {
+    background: #f9fafb;
+    border-top: 1px solid #e5e7eb;
+    
+    .column-title {
+        flex-shrink: 0;
+        flex-basis: auto;
+        position: relative;
+        height: 18px;
+        color: #6B7280;
+        font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        font-size: 12px;
+        font-weight: 600;
+        font-style: normal;
+        line-height: 150%;
+        text-align: center;
+        text-transform: uppercase;
+        white-space: nowrap;
+    }
+    
+    .sort-icon {
+        width: 10px;
+        height: 10px;
+        display: block;
+    }
+}
+
+.data-cell {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+    .cell-text {
+        flex-shrink: 0;
+        flex-basis: auto;
+        position: relative;
+        height: 17px;
+        color: #6b7280;
+        font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        font-size: 14px;
+        font-weight: 400;
+        line-height: 17px;
+        text-align: left;
+        white-space: nowrap;
+    }
+}
+
+.empty-cell {
+    height: 36px;
+    border-top: 1px solid #e5e7eb;
+}
+
+// Column widths
+.photo-column {
+    width: 126px;
+}
+
+.name-column {
+    flex: 1;
+    flex-grow: 1;
+    flex-shrink: 0;
+    flex-basis: 0;
+}
+
+.phone-column {
+    width: 143px;
+}
+
+.email-column {
+    width: 252px;
+    
+    .data-cell {
+        justify-content: flex-start;
+        
+        .cell-text {
+            text-align: left;
+        }
+    }
+}
+
+.role-column {
+    width: 100px;
+}
+
+.status-column {
+    width: 100px;
+}
+
+.actions-column {
+    width: 120px;
+}
+
+// Avatar
+.avatar-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    overflow: hidden;
+    background: #e5e7eb;
+}
+
+.avatar {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.avatar-initials {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    font-size: 10px;
+    font-weight: 500;
+    color: #6b7280;
+}
+
+// Logged user row style - bold text with color #111928
+.logged-user {
+    display: flex;
+    height: 36px;
+    padding: 16px;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    align-self: stretch;
+    border-bottom: 1px solid #E5E7EB;
+    background: #F9FAFB;
+    
+    .cell-text {
+        font-weight: 500;
+        color: #111928;
+    }
+    
+    .avatar-container {
+        display: flex;
+        justify-content: center;
+    }
+}
+
+// Badges
+.badge-active {
+    display: flex;
+    padding: 2px 10px;
+    justify-content: center;
+    align-items: center;
+    gap: 4px;
+    border-radius: 6px;
+    background: #DEF7EC;
+    
+    .badge-text {
+        color: #03543F;
+        font-size: 12px;
+        font-weight: 500;
+    }
+}
+
+.badge-inactive {
+    display: flex;
+    padding: 2px 10px;
+    justify-content: center;
+    align-items: center;
+    gap: 4px;
+    border-radius: 6px;
+    background: #F3F4F6;
+    
+    .badge-text {
+        color: #111928;
+        font-size: 12px;
+        font-weight: 500;
+    }
+}
+
+// Action buttons
+.action-buttons {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.action-icon {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+    transition: opacity 0.2s;
+    
+    &:hover {
+        opacity: 0.7;
+    }
+}
+
+.delete-icon {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+    
+    &:hover {
+        opacity: 0.7;
+    }
+}
+
+// Empty State
+.empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 48px;
+    width: 100%;
+    
+    .empty-icon {
+        font-size: 48px;
+        width: 48px;
+        height: 48px;
+        color: #d1d5db;
+    }
+    
+    .empty-title {
+        font-size: 18px;
+        font-weight: 500;
+        color: #111827;
+        margin: 8px 0 4px;
+    }
+    
+    .empty-text {
+        font-size: 14px;
+        color: #6b7280;
+    }
+}
+
+// Loading
+.loading-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 48px;
+    width: 100%;
+}
+
+// Footer
+.table-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+    border-top: 1px solid #e5e7eb;
+    background: #ffffff;
+    border-radius: 0 0 8px 8px;
+}
+
+.showing-items {
+    display: flex;
+    align-items: center;
+    
+    .showing-text {
+        font-size: 14px;
+        color: #6b7280;
+    }
+}

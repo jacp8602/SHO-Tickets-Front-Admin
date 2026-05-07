@@ -1,17 +1,22 @@
 // src/app/core/users/users.types.ts
-import { User } from '../user/user.types';
 
 /**
  * User item for list display
- * Extends base User interface with additional properties
  */
-export interface UserListItem extends User {
+export interface UserListItem {
+    id: string;
+    name: string;
+    email: string;
+    avatar?: string;
+    status?: string;
     username?: string;
     phone?: string;
     role?: string;
     roleDescription?: string;
     lastActive?: Date;
-    initials: string; // Calculated from name
+    initials: string;
+    firstname: string;
+    lastname: string;
     createdAt?: Date;
     updatedAt?: Date;
 }
