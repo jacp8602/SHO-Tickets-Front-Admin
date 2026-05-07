@@ -24,7 +24,7 @@
         <div class="mb-6 w-full">
             <div class="relative w-full group">
                 <mat-icon class="absolute left-0 top-1/2 -translate-y-1/2 text-gray-400 text-xl">search</mat-icon>
-                <input 
+                <input
                     type="text"
                     [formControl]="searchForm.get('keyword')"
                     placeholder="Search"
@@ -115,18 +115,23 @@
                                     </td>
                                 </tr>
                             }
+                            @if (totalItems !== 0) {
+                                <tr>
+                                    <td colspan="3">
+                                        <app-pagination
+                                            [totalItems]="totalItems"
+                                            [pageSize]="pageSize"
+                                            [pageIndex]="pageIndex"
+                                            (pageChange)="onPageChange($event)"
+                                        ></app-pagination>
+                                    </td>
+                                </tr>
+                            }
                         </tbody>
                     </table>
                 </div>
             </div>
 
-            <!-- Paginación -->
-            <app-pagination
-                [totalItems]="totalItems"
-                [pageSize]="pageSize"
-                [pageIndex]="pageIndex"
-                (pageChange)="onPageChange($event)"
-            ></app-pagination>
         }
     </div>
 </div>
