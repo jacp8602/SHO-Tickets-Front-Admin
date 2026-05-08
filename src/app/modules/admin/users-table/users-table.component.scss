@@ -286,14 +286,15 @@
     align-items: center;
 
     .cell-text {
-        font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
         font-size: 14px;
         font-style: normal;
-        font-weight: 500;
+        font-weight: 400;
         line-height: normal;
         overflow: hidden;
+        white-space: nowrap;
         text-overflow: ellipsis;
-        color: #111928;
+        color: #6B7280;
     }
 }
 
@@ -755,18 +756,20 @@
 }
 
 .table-row.logged-user .cell-text {
-    font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     font-size: 14px;
     font-style: normal;
     font-weight: 600;
     line-height: normal;
     overflow: hidden;
+    white-space: nowrap;
     text-overflow: ellipsis;
     color: #111928;
 }
 
 .users-table td {
     padding: 8px 16px;
+    text-align: center;
 }
 
 .td-photo {
@@ -786,6 +789,7 @@
 
 .td-email {
     min-width: 180px;
+    text-align: left;
 }
 
 .td-actions {
@@ -797,12 +801,12 @@
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     font-size: 14px;
     font-style: normal;
-    font-weight: 500;
+    font-weight: 400;
     line-height: normal;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
-    color: #111928;
+    color: #6B7280;
 }
 
 .avatar-container {
