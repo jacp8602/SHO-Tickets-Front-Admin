@@ -10,11 +10,12 @@
     flex-shrink: 0;
     position: relative;
     min-width: 0;
+    max-width: 100%;
+    width: 100%;
     background: #ffffff;
     z-index: 100;
     border-radius: 8px;
     box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.1);
-    overflow: visible;
 }
 
 // Header
@@ -220,9 +221,11 @@
     align-items: center;
     align-self: stretch;
     flex-wrap: nowrap;
-    flex-shrink: 0;
+    flex: 1;
     position: relative;
     z-index: 19;
+    width: 100%;
+    background: #E5E7EB;
 }
 
 .column {
@@ -281,19 +284,16 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    
+
     .cell-text {
-        flex-shrink: 0;
-        flex-basis: auto;
-        position: relative;
-        height: 17px;
-        color: #6b7280;
         font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
         font-size: 14px;
-        font-weight: 400;
-        line-height: 17px;
-        text-align: left;
-        white-space: nowrap;
+        font-style: normal;
+        font-weight: 500;
+        line-height: normal;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        color: #111928;
     }
 }
 
@@ -302,24 +302,26 @@
     border-top: 1px solid #e5e7eb;
 }
 
-// Column widths
+// Column widths - Flexible to fit container
 .photo-column {
-    width: 126px;
+    width: 50px;
+    min-width: 50px;
+    flex: 0 0 50px;
 }
 
 .name-column {
+    min-width: 80px;
     flex: 1;
-    flex-grow: 1;
-    flex-shrink: 0;
-    flex-basis: 0;
 }
 
 .phone-column {
-    width: 143px;
+    min-width: 90px;
+    flex: 0.8;
 }
 
 .email-column {
-    width: 252px;
+    min-width: 100px;
+    flex: 1.2;
     
     .data-cell {
         justify-content: flex-start;
@@ -331,15 +333,38 @@
 }
 
 .role-column {
-    width: 100px;
+    min-width: 60px;
+    flex: 0.5;
 }
 
 .status-column {
-    width: 100px;
+    min-width: 70px;
+    flex: 0.6;
 }
 
 .actions-column {
-    width: 120px;
+    min-width: 70px;
+    flex: 0.5;
+}
+
+// Hide columns on mobile
+@media (max-width: 768px) {
+    .photo-column,
+    .phone-column,
+    .email-column,
+    .role-column {
+        display: none;
+    }
+}
+
+@media (max-width: 480px) {
+    .photo-column,
+    .phone-column,
+    .email-column,
+    .role-column,
+    .status-column {
+        display: none;
+    }
 }
 
 // Avatar
@@ -432,6 +457,59 @@
     display: flex;
     align-items: center;
     gap: 4px;
+    justify-content: center;
+}
+
+.action-btn {
+    background: none;
+    border: none;
+    padding: 4px;
+    cursor: pointer;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.15s ease;
+
+    &:hover {
+        background: #F3F4F6;
+    }
+}
+
+.action-icon {
+    width: 18px;
+    height: 18px;
+    display: block;
+}
+
+.delete-btn:hover {
+    background: #FEE2E2;
+}
+
+.action-btn {
+    background: none;
+    border: none;
+    padding: 4px;
+    cursor: pointer;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.15s ease;
+
+    &:hover {
+        background: #F3F4F6;
+    }
+}
+
+.action-icon {
+    width: 18px;
+    height: 18px;
+    display: block;
+}
+
+.delete-btn:hover {
+    background: #FEE2E2;
 }
 
 .action-icon {
@@ -512,4 +590,326 @@
         font-size: 14px;
         color: #6b7280;
     }
+}
+
+// Responsive styles for mobile
+@media (max-width: 768px) {
+    .table-header {
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    .search-input-wrapper {
+        width: 100%;
+        min-width: 100%;
+    }
+
+    .status-dropdown {
+        width: 100%;
+    }
+
+    .buttons-wrapper {
+        width: 100%;
+        justify-content: flex-start;
+    }
+
+    .buttons {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .table-columns {
+        flex-wrap: wrap;
+    }
+
+    .column {
+        width: 100%;
+        min-width: 100%;
+        border-bottom: 1px solid #e5e7eb;
+    }
+
+    .header-cell {
+        display: none;
+    }
+
+    .data-cell {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 8px;
+    }
+
+    .cell-text {
+        margin-bottom: 4px;
+    }
+
+    .photo-column .data-cell {
+        flex-direction: row;
+        align-items: center;
+        gap: 8px;
+    }
+}
+
+@media (max-width: 480px) {
+    .users-table-container {
+        padding: 8px;
+    }
+
+    .table-header {
+        padding: 8px;
+    }
+
+    .clear-filters-btn {
+        display: none;
+    }
+
+    .table-footer {
+        flex-direction: column;
+        gap: 8px;
+    }
+}
+
+// Table HTML Styles
+.table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.users-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #FFFFFF;
+}
+
+.table-header-row {
+    background: #FFFFFF;
+}
+
+.users-table th {
+    height: 36px;
+    padding: 16px;
+    border-bottom: 1px solid #E5E7EB;
+    background: #F9FAFB;
+    color: #6B7280;
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 150%;
+    text-transform: uppercase;
+    white-space: nowrap;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.th-label {
+    margin-right: 4px;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.sort-icon {
+    width: 10px;
+    height: 10px;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.th-photo {
+    width: 50px;
+}
+
+.th-firstname,
+.th-lastname,
+.th-phone,
+.th-email,
+.th-role,
+.th-status,
+.th-actions {
+    min-width: 100px;
+}
+
+.th-email {
+    min-width: 180px;
+}
+
+.th-actions {
+    width: 80px;
+}
+
+.table-body {
+    background: #FFFFFF;
+}
+
+.table-row {
+    border-bottom: 1px solid #E5E7EB;
+    transition: background 0.15s ease;
+}
+
+.table-row:hover {
+    background: #F3F4F6;
+}
+
+.table-row.logged-user {
+    background: #F9FAFB;
+}
+
+.table-row.logged-user .cell-text {
+    font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: #111928;
+}
+
+.users-table td {
+    padding: 8px 16px;
+}
+
+.td-photo {
+    width: 50px;
+    padding: 8px;
+}
+
+.td-firstname,
+.td-lastname,
+.td-phone,
+.td-email,
+.td-role,
+.td-status,
+.td-actions {
+    padding: 8px 16px;
+}
+
+.td-email {
+    min-width: 180px;
+}
+
+.td-actions {
+    width: 80px;
+    text-align: center;
+}
+
+.cell-text {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    color: #111928;
+}
+
+.avatar-container {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.avatar {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.avatar-initials {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: #267666;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.badge-active {
+    display: inline-flex;
+    padding: 2px 10px;
+    border-radius: 6px;
+    background: #DEF7EC;
+}
+
+.badge-active .badge-text {
+    color: #267666;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.badge-inactive {
+    display: inline-flex;
+    padding: 2px 10px;
+    border-radius: 6px;
+    background: #F3F4F6;
+}
+
+.badge-inactive .badge-text {
+    color: #6B7280;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.action-buttons {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    justify-content: center;
+}
+
+.action-icon {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+    transition: opacity 0.15s ease;
+}
+
+.action-icon:hover {
+    opacity: 0.8;
+}
+
+.delete-icon {
+    margin-left: 4px;
+}
+
+.empty-row td {
+    padding: 48px 16px;
+}
+
+.empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    width: 100%;
+}
+
+.empty-icon {
+    font-size: 48px;
+    width: 48px;
+    height: 48px;
+    color: #D1D5DB;
+}
+
+.empty-title {
+    font-size: 18px;
+    font-weight: 500;
+    color: #111928;
+    margin: 8px 0 4px;
+}
+
+.empty-text {
+    font-size: 14px;
+    color: #6B7280;
 }

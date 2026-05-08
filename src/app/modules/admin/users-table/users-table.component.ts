@@ -58,6 +58,8 @@ export class UsersTableComponent implements OnInit, OnDestroy {
     @Output() userCreated = new EventEmitter<void>();
     @Output() userEdited = new EventEmitter<UserListItem>();
     @Output() userDeleted = new EventEmitter<UserListItem>();
+    @Output() passwordReset = new EventEmitter<UserListItem>();
+    @Output() statusToggled = new EventEmitter<UserListItem>();
 
     alert: { type: FuseAlertType; message: string } = {
         type: 'success',
@@ -105,6 +107,17 @@ export class UsersTableComponent implements OnInit, OnDestroy {
     getSelectedStatusLabel(): string {
         const option = this.statusOptions.find(o => o.value === this.statusFilter);
         return option ? option.label : 'Status';
+    }
+
+    clearFilters(): void {
+        this.statusFilter = 'status';
+        this.filterForm.reset({
+            search: '',
+            status: 'status'
+        });
+        this.searchQuery = '';
+        this.pageIndex = 1;
+        this._loadUsers();
     }
 
     private _unsubscribeAll: Subject<void> = new Subject<void>();
@@ -270,15 +283,35 @@ export class UsersTableComponent implements OnInit, OnDestroy {
         }
     }
 
-    clearFilters(): void {
-        this.filterForm.reset({
-            search: '',
-            status: 'status'
-        });
-        this.searchQuery = '';
-        this.statusFilter = 'status';
-        this.pageIndex = 1;
-        this._loadUsers();
+    resetPassword(user: UserListItem): void {
+        if (confirm(`Are you sure you want to reset the password for ${user.firstname} ${user.lastname}?`)) {
+            this.passwordReset.emit(user);
+            this.alert = {
+                type: 'success',
+                message: `Password reset email sent to ${user.email}.`,
+            };
+            this.showAlert = true;
+
+            setTimeout(() => {
+                this.showAlert = false;
+            }, 3000);
+        }
+    }
+
+    toggleUserStatus(user: UserListItem): void {
+        const newStatus = user.status === 'ACTIVE' ? 'INACTIVE' : 'ACTIVE';
+        if (confirm(`Are you sure you want to ${newStatus === 'ACTIVE' ? 'activate' : 'deactivate'} ${user.firstname} ${user.lastname}?`)) {
+            this.statusToggled.emit(user);
+            this.alert = {
+                type: 'success',
+                message: `User ${newStatus === 'ACTIVE' ? 'activated' : 'deactivated'} successfully.`,
+            };
+            this.showAlert = true;
+
+            setTimeout(() => {
+                this.showAlert = false;
+            }, 3000);
+        }
     }
 
     getShowingText(): string {
